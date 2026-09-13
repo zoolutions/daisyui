@@ -2,6 +2,14 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Memory
+
+Durable project memory lives in `lode/` (index: `lode/lode-map.md`). Read it
+before exploring the code. `lode/review/` holds accepted review findings as rules
+about the system; `/lode:gate` enforces them before any push, and `/lode:learn`
+adds to them. `lode/workflow.md` is the profile the shared `/lode:` workflow
+skills read.
+
 ## Repository Structure
 
 This is a monorepo containing:
@@ -119,18 +127,28 @@ HEADLESS=false bundle exec rspec         # Watch browser tests run
 
 | Command | Purpose |
 |---------|---------|
-| `/plan` | Fable-powered planning → GitHub issue or `docs/plans/` markdown (read-only; execute with `/lfg`) |
-| `/lfg` | Full autonomous engineering workflow with verification |
+| `/lode:plan` | Read-only planning → GitHub issue or `lode/plans/` markdown (execute with `/lode:lfg`) |
+| `/lode:lfg` | Full autonomous engineering workflow with verification |
+| `/lode:tdd` | RED → GREEN → REFACTOR cycle |
+| `/lode:review-pr` | Full PR pass: resolve merge conflicts, then fix CI failures, then resolve review comments (in that order) |
+| `/lode:finish-prs` | Drive a stack of open PRs to merge-ready, one at a time |
+| `/lode:debug-flaky` | Root-cause an intermittent test — evidence, repro, stress-proofed fix |
+| `/lode:gate` | Pre-PR gate: fresh-context review against the rules and `lode/review/`; the push hook requires it |
+| `/lode:learn` | Write accepted review findings into `lode/review/` |
+| `/lode:sync` | Keep `lode/` true to the code after a change |
 | `/add-component` | Create a new DaisyUI component with tests and docs |
 | `/check-component` | Verify a single component against DaisyUI 5 spec |
 | `/audit-components` | Audit all components against DaisyUI 5 |
-| `/tdd` | RED → GREEN → REFACTOR cycle |
 | `/test-all` | Run complete test suite (gem + docs) |
 | `/fix-docs-tests` | Fix failing docs specs |
 | `/review-pr` | Review a GitHub PR for quality and patterns |
-| `/github-review-pr` | Full PR pass: resolve merge conflicts, then fix CI failures, then resolve review comments (in that order) |
-| `/github-review-comments` | Respond to unresolved PR review comments |
 | `/github-ci-failures` | Diagnose and fix CI failures |
+
+The `/lode:` commands come from the `lode@zoolutions` plugin, enabled in
+`.claude/settings.json`; they read `lode/workflow.md` for this repository's
+commands, shapes, CI and conflict rules. The local `lfg`, `plan`, `tdd`,
+`github-review-pr` and `github-review-comments` commands were retired in favour
+of them.
 
 ### Model tier convention
 

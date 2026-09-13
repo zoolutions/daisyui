@@ -22,3 +22,6 @@
 /docs/public/assets/
 /docs/public/vite*/
 /docs/bun.lockb
+
+# Lode scratch (never committed)
+/lode/tmp/
