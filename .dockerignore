@@ -16,6 +16,7 @@
 /.rubocop.yml
 /.rspec
 /CLAUDE.md
+/AGENTS.md
 /codedb.snapshot
 /coverage/
 /pkg/

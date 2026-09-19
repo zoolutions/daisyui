@@ -29,7 +29,7 @@ Protect this session's context: delegate mechanical exploration to cheaper subag
 
 1. Fan out Explore agents (`model: haiku`) for file discovery and naming-convention sweeps; use `model: sonnet` agents when a subsystem needs to be read and summarized. Launch independent explorations in parallel.
 2. Read the load-bearing files yourself — the ones the design decision actually hinges on. Don't design from subagent summaries alone.
-3. Check CLAUDE.md and any layer-specific CLAUDE.md files for past decisions and gotchas.
+3. Check AGENTS.md and any layer-specific CLAUDE.md files for past decisions and gotchas.
 4. Check `git log` for recent related work; the design should extend it, not fight it.
 
 ## Phase 2 — Design
