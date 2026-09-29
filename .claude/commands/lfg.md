@@ -137,7 +137,7 @@ Re-read the original requirements and verify:
 
 ---
 
-## Phase 6.5: Fable validation
+## Phase 5.5: Fable validation
 
 Spawn the `fable-validator` agent (it is pinned to Fable) with the issue, the acceptance criteria from Phase 1 and the base branch. On **BLOCK**, fix every blocker (back to Phase 4 for code, with a failing test first), re-verify, and run the validator again. On **PASS WITH NOTES**, fix the risks you agree with and list the rest in the pull request under "Accepted risks". Put the validator's one-line verdict and its "Not verified" list in the pull request body. Do not open the pull request before a PASS or PASS WITH NOTES.
 
@@ -178,6 +178,13 @@ gh pr create --title "feat(scope): brief description" --body "$(cat <<'EOF'
 
 Closes #<issue_number>
 
+## Validation
+- fable-validator: <PASS | PASS WITH NOTES>
+- Not verified: <list from the validator>
+
+## Accepted risks
+- <risk and why it is accepted, or "None">
+
 ## Test plan
 - [ ] Scenario 1
 - [ ] Scenario 2
@@ -193,7 +200,7 @@ EOF
 - [ ] Tests written BEFORE implementation
 - [ ] `bundle exec rubocop` passes
 - [ ] `bundle exec rspec` passes
-- [ ] `fable-validator` verdict is PASS or PASS WITH NOTES (Phase 6.5)
+- [ ] `fable-validator` verdict is PASS or PASS WITH NOTES (Phase 5.5)
 - [ ] DaisyUI class names verified via MCP server
 - [ ] Responsive comments present on all modifiers
 - [ ] PR created with description
