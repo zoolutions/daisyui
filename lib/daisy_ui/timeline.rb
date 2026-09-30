@@ -49,20 +49,22 @@ module DaisyUI
       # "lg:timeline-compact"
       # "@lg:timeline-compact"
       compact: "timeline-compact",
-      # "sm:timeline-vertical"
-      # "@sm:timeline-vertical"
-      # "md:timeline-vertical"
-      # "@md:timeline-vertical"
-      # "lg:timeline-vertical"
-      # "@lg:timeline-vertical"
-      vertical: "timeline-vertical",
-      # "sm:timeline-horizontal"
-      # "@sm:timeline-horizontal"
-      # "md:timeline-horizontal"
-      # "@md:timeline-horizontal"
-      # "lg:timeline-horizontal"
-      # "@lg:timeline-horizontal"
-      horizontal: "timeline-horizontal"
+      direction: {
+        # "sm:timeline-vertical"
+        # "@sm:timeline-vertical"
+        # "md:timeline-vertical"
+        # "@md:timeline-vertical"
+        # "lg:timeline-vertical"
+        # "@lg:timeline-vertical"
+        vertical: "timeline-vertical",
+        # "sm:timeline-horizontal"
+        # "@sm:timeline-horizontal"
+        # "md:timeline-horizontal"
+        # "@md:timeline-horizontal"
+        # "lg:timeline-horizontal"
+        # "@lg:timeline-horizontal"
+        horizontal: "timeline-horizontal"
+      }
     )
   end
 end

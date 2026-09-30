@@ -9,7 +9,6 @@ module DaisyUI
     end
 
     register_modifiers(
-      # Styles
       # "sm:aura-dual"
       # "@sm:aura-dual"
       # "md:aura-dual"
@@ -52,42 +51,43 @@ module DaisyUI
       # "lg:aura-glow"
       # "@lg:aura-glow"
       glow: "aura-glow",
-      # Sizes
-      # "sm:aura-xs"
-      # "@sm:aura-xs"
-      # "md:aura-xs"
-      # "@md:aura-xs"
-      # "lg:aura-xs"
-      # "@lg:aura-xs"
-      xs: "aura-xs",
-      # "sm:aura-sm"
-      # "@sm:aura-sm"
-      # "md:aura-sm"
-      # "@md:aura-sm"
-      # "lg:aura-sm"
-      # "@lg:aura-sm"
-      sm: "aura-sm",
-      # "sm:aura-md"
-      # "@sm:aura-md"
-      # "md:aura-md"
-      # "@md:aura-md"
-      # "lg:aura-md"
-      # "@lg:aura-md"
-      md: "aura-md",
-      # "sm:aura-lg"
-      # "@sm:aura-lg"
-      # "md:aura-lg"
-      # "@md:aura-lg"
-      # "lg:aura-lg"
-      # "@lg:aura-lg"
-      lg: "aura-lg",
-      # "sm:aura-xl"
-      # "@sm:aura-xl"
-      # "md:aura-xl"
-      # "@md:aura-xl"
-      # "lg:aura-xl"
-      # "@lg:aura-xl"
-      xl: "aura-xl"
+      size: {
+        # "sm:aura-xs"
+        # "@sm:aura-xs"
+        # "md:aura-xs"
+        # "@md:aura-xs"
+        # "lg:aura-xs"
+        # "@lg:aura-xs"
+        xs: "aura-xs",
+        # "sm:aura-sm"
+        # "@sm:aura-sm"
+        # "md:aura-sm"
+        # "@md:aura-sm"
+        # "lg:aura-sm"
+        # "@lg:aura-sm"
+        sm: "aura-sm",
+        # "sm:aura-md"
+        # "@sm:aura-md"
+        # "md:aura-md"
+        # "@md:aura-md"
+        # "lg:aura-md"
+        # "@lg:aura-md"
+        md: "aura-md",
+        # "sm:aura-lg"
+        # "@sm:aura-lg"
+        # "md:aura-lg"
+        # "@md:aura-lg"
+        # "lg:aura-lg"
+        # "@lg:aura-lg"
+        lg: "aura-lg",
+        # "sm:aura-xl"
+        # "@sm:aura-xl"
+        # "md:aura-xl"
+        # "@md:aura-xl"
+        # "lg:aura-xl"
+        # "@lg:aura-xl"
+        xl: "aura-xl"
+      }
     )
   end
 end

@@ -103,7 +103,7 @@ describe DaisyUI::Badge do
 
     it "is expected to match the formatted HTML" do
       expected_html = html <<~HTML
-        <span class="badge badge-neutral badge-secondary"><div>+</div>Badge</span>
+        <span class="badge badge-secondary"><div>+</div>Badge</span>
       HTML
 
       expect(output).to eq(expected_html)

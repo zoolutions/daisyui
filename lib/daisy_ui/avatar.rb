@@ -9,20 +9,22 @@ module DaisyUI
     end
 
     register_modifiers(
-      # "sm:avatar-online"
-      # "@sm:avatar-online"
-      # "md:avatar-online"
-      # "@md:avatar-online"
-      # "lg:avatar-online"
-      # "@lg:avatar-online"
-      online: "avatar-online",
-      # "sm:avatar-offline"
-      # "@sm:avatar-offline"
-      # "md:avatar-offline"
-      # "@md:avatar-offline"
-      # "lg:avatar-offline"
-      # "@lg:avatar-offline"
-      offline: "avatar-offline",
+      presence: {
+        # "sm:avatar-online"
+        # "@sm:avatar-online"
+        # "md:avatar-online"
+        # "@md:avatar-online"
+        # "lg:avatar-online"
+        # "@lg:avatar-online"
+        online: "avatar-online",
+        # "sm:avatar-offline"
+        # "@sm:avatar-offline"
+        # "md:avatar-offline"
+        # "@md:avatar-offline"
+        # "lg:avatar-offline"
+        # "@lg:avatar-offline"
+        offline: "avatar-offline"
+      },
       # "sm:avatar-placeholder"
       # "@sm:avatar-placeholder"
       # "md:avatar-placeholder"

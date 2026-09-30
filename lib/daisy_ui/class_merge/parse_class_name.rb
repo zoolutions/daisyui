@@ -1,0 +1,110 @@
+# frozen_string_literal: true
+
+# Ported from tailwind_merge 1.5.6 (https://github.com/gjtorikian/tailwind_merge)
+# Copyright (c) 2022 Garen J. Torikian. MIT License, see LICENSE-tailwind_merge.txt.
+
+module DaisyUI
+  module ClassMerge
+    module ParseClassName
+      TailwindClass = Struct.new(:is_external, :modifiers, :has_important_modifier, :base_class_name, :maybe_postfix_modifier_position)
+
+      IMPORTANT_MODIFIER = "!"
+      EMPTY_MODIFIERS = [].freeze
+      MODIFIER_SEPARATOR = ":"
+      MODIFIER_SEPARATOR_LENGTH = MODIFIER_SEPARATOR.length
+
+      MODIFIER_SEPARATOR_BYTE = MODIFIER_SEPARATOR.ord
+      POSTFIX_SEPARATOR_BYTE = "/".ord
+      OPEN_BRACKET_BYTE = "[".ord
+      CLOSE_BRACKET_BYTE = "]".ord
+      OPEN_PAREN_BYTE = "(".ord
+      CLOSE_PAREN_BYTE = ")".ord
+
+      ##
+      # Parse class name into parts.
+      #
+      # Inspired by `splitAtTopLevelOnly` used in Tailwind CSS
+      # @see https://github.com/tailwindlabs/tailwindcss/blob/v3.2.2/src/util/splitAtTopLevelOnly.js
+      def parse_class_name(class_name, prefix: nil)
+        unless prefix.nil?
+          full_prefix = "#{prefix}#{MODIFIER_SEPARATOR}"
+          return parse_class_name(class_name[full_prefix.length..]) if class_name.start_with?(full_prefix)
+
+          return TailwindClass.new(
+            is_external: true,
+            modifiers: EMPTY_MODIFIERS,
+            has_important_modifier: false,
+            base_class_name: class_name,
+            maybe_postfix_modifier_position: nil
+          )
+
+        end
+
+        # Stays nil until the first modifier separator, so the common no-modifier
+        # class (`px-2`, `block`) never allocates an array.
+        modifiers = nil
+
+        bracket_depth = 0
+        paren_depth = 0
+        modifier_start = 0
+        postfix_modifier_position = nil
+
+        # Byte-wise scan: all separators are ASCII, so byte positions are safe
+        # for multibyte class names (UTF-8 continuation bytes never match ASCII).
+        # Positions produced here (including maybe_postfix_modifier_position)
+        # are byte offsets and must be consumed with String#byteslice.
+        index = 0
+        size = class_name.bytesize
+        while index < size
+          byte = class_name.getbyte(index)
+
+          if bracket_depth.zero? && paren_depth.zero?
+            if byte == MODIFIER_SEPARATOR_BYTE
+              (modifiers ||= []) << class_name.byteslice(modifier_start, index - modifier_start)
+              modifier_start = index + MODIFIER_SEPARATOR_LENGTH
+              index += 1
+              next
+            elsif byte == POSTFIX_SEPARATOR_BYTE
+              postfix_modifier_position = index
+              index += 1
+              next
+            end
+          end
+
+          case byte
+          when OPEN_BRACKET_BYTE then bracket_depth += 1
+          when CLOSE_BRACKET_BYTE then bracket_depth -= 1
+          when OPEN_PAREN_BYTE then paren_depth += 1
+          when CLOSE_PAREN_BYTE then paren_depth -= 1
+          end
+
+          index += 1
+        end
+
+        base_class_name_with_important_modifier = modifiers ? class_name.byteslice(modifier_start, size - modifier_start) : class_name
+
+        base_class_name, has_important_modifier = strip_important_modifier(base_class_name_with_important_modifier)
+
+        maybe_postfix_modifier_position = (postfix_modifier_position - modifier_start if postfix_modifier_position && postfix_modifier_position > modifier_start)
+
+        TailwindClass.new(
+          is_external: false,
+          modifiers: modifiers || EMPTY_MODIFIERS,
+          has_important_modifier:,
+          base_class_name: base_class_name,
+          maybe_postfix_modifier_position:
+        )
+      end
+
+      def strip_important_modifier(base_class_name)
+        return [base_class_name[0...-IMPORTANT_MODIFIER.length], true] if base_class_name.end_with?(IMPORTANT_MODIFIER)
+
+        # In Tailwind CSS v3 the important modifier was at the start of the base class name. This is still supported for legacy reasons.
+        # @see https://github.com/dcastil/tailwind-merge/issues/513#issuecomment-2614029864
+        return [base_class_name[1..], true] if base_class_name.start_with?(IMPORTANT_MODIFIER)
+
+        [base_class_name, false]
+      end
+    end
+  end
+end

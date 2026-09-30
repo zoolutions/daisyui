@@ -65,9 +65,9 @@ describe DaisyUI::Button do
     context "when given multiple conditions" do
       subject(:output) { render described_class.new(:neutral, :primary) }
 
-      it "renders them separately" do
+      it "keeps only the last conflicting modifier" do
         expected_html = html <<~HTML
-          <button class="btn btn-neutral btn-primary"></button>
+          <button class="btn btn-primary"></button>
         HTML
 
         expect(output).to eq(expected_html)

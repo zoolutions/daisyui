@@ -24,41 +24,43 @@ module DaisyUI
       # "lg:rating-hidden"
       # "@lg:rating-hidden"
       hidden: "rating-hidden",
-      # "sm:rating-xs"
-      # "@sm:rating-xs"
-      # "md:rating-xs"
-      # "@md:rating-xs"
-      # "lg:rating-xs"
-      # "@lg:rating-xs"
-      xs: "rating-xs",
-      # "sm:rating-sm"
-      # "@sm:rating-sm"
-      # "md:rating-sm"
-      # "@md:rating-sm"
-      # "lg:rating-sm"
-      # "@lg:rating-sm"
-      sm: "rating-sm",
-      # "sm:rating-md"
-      # "@sm:rating-md"
-      # "md:rating-md"
-      # "@md:rating-md"
-      # "lg:rating-md"
-      # "@lg:rating-md"
-      md: "rating-md",
-      # "sm:rating-lg"
-      # "@sm:rating-lg"
-      # "md:rating-lg"
-      # "@md:rating-lg"
-      # "lg:rating-lg"
-      # "@lg:rating-lg"
-      lg: "rating-lg",
-      # "sm:rating-xl"
-      # "@sm:rating-xl"
-      # "md:rating-xl"
-      # "@md:rating-xl"
-      # "lg:rating-xl"
-      # "@lg:rating-xl"
-      xl: "rating-xl"
+      size: {
+        # "sm:rating-xs"
+        # "@sm:rating-xs"
+        # "md:rating-xs"
+        # "@md:rating-xs"
+        # "lg:rating-xs"
+        # "@lg:rating-xs"
+        xs: "rating-xs",
+        # "sm:rating-sm"
+        # "@sm:rating-sm"
+        # "md:rating-sm"
+        # "@md:rating-sm"
+        # "lg:rating-sm"
+        # "@lg:rating-sm"
+        sm: "rating-sm",
+        # "sm:rating-md"
+        # "@sm:rating-md"
+        # "md:rating-md"
+        # "@md:rating-md"
+        # "lg:rating-md"
+        # "@lg:rating-md"
+        md: "rating-md",
+        # "sm:rating-lg"
+        # "@sm:rating-lg"
+        # "md:rating-lg"
+        # "@md:rating-lg"
+        # "lg:rating-lg"
+        # "@lg:rating-lg"
+        lg: "rating-lg",
+        # "sm:rating-xl"
+        # "@sm:rating-xl"
+        # "md:rating-xl"
+        # "@md:rating-xl"
+        # "lg:rating-xl"
+        # "@lg:rating-xl"
+        xl: "rating-xl"
+      }
     )
   end
 end

@@ -23,6 +23,7 @@ Create a new DaisyUI component with full test coverage and documentation.
    - Set `self.component_class` to the DaisyUI class name
    - Use `register_modifiers` with ALL modifiers from the snippet
    - Include responsive comments (sm:, md:, lg:) for EVERY modifier
+   - Nest mutually exclusive modifiers under a group (`size: {...}`, `color: {...}`, `placement: {...}`); leave combinable ones ungrouped
    - Implement `initialize` and `view_template` methods
 
 3. Create the spec at `spec/lib/daisy_ui/$ARGUMENTS_spec.rb`:

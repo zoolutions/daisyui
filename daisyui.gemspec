@@ -19,14 +19,14 @@ Gem::Specification.new do |s|
     files = IO.popen(%w[git ls-files -z], chdir: __dir__, err: IO::NULL) do |ls|
       ls.readlines("\x0", chomp: true).select do |f|
         f.start_with?("exe/", "lib/", "app/", "config/") ||
-          f == "CHANGELOG.md" || f == "LICENSE.txt" || f == "README.md"
+          f == "CHANGELOG.md" || f == "LICENSE.txt" || f == "LICENSE-tailwind_merge.txt" || f == "README.md"
       end
     end
     files.empty? ? raise(Errno::ENOENT) : files
   rescue Errno::ENOENT
     Dir[
       "exe/*", "lib/**/*.rb", "app/**/*", "config/**/*",
-      "CHANGELOG.md", "LICENSE.txt", "README.md"
+      "CHANGELOG.md", "LICENSE.txt", "LICENSE-tailwind_merge.txt", "README.md"
     ].select { |f| File.file?(f) }
   end
   s.bindir = "exe"
@@ -42,5 +42,5 @@ Gem::Specification.new do |s|
   s.required_ruby_version = ">= 3.2"
 
   s.add_dependency "phlex", "~> 2.0", ">= 2.0.0"
-  s.add_dependency "zeitwerk", "~> 2.6"
+  s.add_dependency "zeitwerk", "~> 2.6", ">= 2.6.2"
 end

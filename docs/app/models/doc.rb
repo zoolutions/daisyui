@@ -10,6 +10,7 @@ class Doc
     { slug: "installation", title: "Installation", group: "Guide", view: "Installation" },
     { slug: "getting-started", title: "Getting started", group: "Guide", view: "GettingStarted" },
     { slug: "theming", title: "Theming", group: "Guide", view: "Theming" },
+    { slug: "class-merging", title: "Class merging", group: "Guide", view: "ClassMerging" },
   ].freeze
 
   attr_reader :slug, :title, :group, :view_name

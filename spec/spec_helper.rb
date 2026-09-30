@@ -35,6 +35,8 @@ end
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   config.include ComponentHelpers
+  # Timing-sensitive specs run only on request: `bundle exec rspec --tag perf`
+  config.filter_run_excluding :perf
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

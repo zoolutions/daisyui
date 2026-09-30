@@ -14,20 +14,22 @@ module DaisyUI
     end
 
     register_modifiers(
-      # "sm:join-vertical"
-      # "@sm:join-vertical"
-      # "md:join-vertical"
-      # "@md:join-vertical"
-      # "lg:join-vertical"
-      # "@lg:join-vertical"
-      vertical: "join-vertical",
-      # "sm:join-horizontal"
-      # "@sm:join-horizontal"
-      # "md:join-horizontal"
-      # "@md:join-horizontal"
-      # "lg:join-horizontal"
-      # "@lg:join-horizontal"
-      horizontal: "join-horizontal"
+      direction: {
+        # "sm:join-vertical"
+        # "@sm:join-vertical"
+        # "md:join-vertical"
+        # "@md:join-vertical"
+        # "lg:join-vertical"
+        # "@lg:join-vertical"
+        vertical: "join-vertical",
+        # "sm:join-horizontal"
+        # "@sm:join-horizontal"
+        # "md:join-horizontal"
+        # "@md:join-horizontal"
+        # "lg:join-horizontal"
+        # "@lg:join-horizontal"
+        horizontal: "join-horizontal"
+      }
     )
   end
 end

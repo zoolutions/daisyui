@@ -119,6 +119,64 @@ module.exports = {
 };
 ```
 
+## Class merging
+
+Components merge their classes so the last conflicting class wins, for Tailwind
+utilities and daisyUI modifiers alike:
+
+```ruby
+Button(:sm, class: "btn-lg")          # => class="btn btn-lg"
+Badge(:primary, class: "badge-error") # => class="badge badge-error"
+Card(class: "p-2 p-4")                # => class="card p-4"
+```
+
+Tailwind conflicts follow [tailwind_merge](https://github.com/gjtorikian/tailwind_merge)
+(its engine is ported into the gem as `DaisyUI::ClassMerge`, with no runtime
+dependency). daisyUI modifiers conflict when the component declares them as
+alternatives in one group: `btn-sm btn-lg` keeps `btn-lg`, while
+`dropdown-top dropdown-end` keeps both (placement and alignment are separate
+groups). Ungrouped modifiers (`btn-wide`, `btn-active`) never conflict.
+Component base classes such as `table` and `collapse` are never dropped.
+
+Register custom utilities so the merger knows what they are. Unregistered,
+`text-display` reads as a color and a later `text-error` drops it. Custom
+colors (`bg-brand`, `text-brand`) need no registration.
+
+```ruby
+DaisyUI.configure do |config|
+  # text-display and text-hero are font sizes, like text-lg
+  config.class_merge.utility("text-display", "text-hero", like: "text-lg")
+
+  # Extend a Tailwind theme scale: p-gutter, m-gutter, gap-gutter, ...
+  config.class_merge.theme(spacing: %w[gutter])
+end
+```
+
+`class_groups` and `conflicts` take raw tailwind_merge groups for anything
+else.
+
+Your own components declare groups the same way the gem's do, by nesting
+modifiers under a group name:
+
+```ruby
+class Widget < DaisyUI::Base
+  register_modifiers(
+    size: { sm: "widget-sm", lg: "widget-lg" }, # widget-sm widget-lg -> widget-lg
+    round: "widget-round"                       # ungrouped, never conflicts
+  )
+end
+
+# Configured modifiers can join a component's group too
+DaisyUI.configure do |config|
+  config.modifiers.add(:huge, classes: "btn-huge", component: DaisyUI::Button, group: :size)
+end
+```
+
+Merge in your own components with `DaisyUI::ClassMerge.merge(*parts)` (strings,
+arrays, `nil` and `false`; returns a frozen String). Opt out globally with
+`config.class_merge.enabled = false`, or per component by overriding the
+private `merge_classes`.
+
 # Compatibility Notes
 
 ## @tailwindcss/forms plugin

@@ -37,12 +37,17 @@ end
 ### Modifier Registration
 
 ```ruby
-# Good: With responsive comments for Tailwind CSS content detection
+# Good: responsive comments for Tailwind CSS content detection, and
+# mutually exclusive modifiers grouped so ClassMerge keeps only the last one
 register_modifiers(
-  # "sm:btn-primary" "md:btn-primary" "lg:btn-primary"
-  primary: "btn-primary",
-  # "sm:btn-lg" "md:btn-lg" "lg:btn-lg"
-  lg: "btn-lg"
+  color: {
+    # "sm:btn-primary" "md:btn-primary" "lg:btn-primary"
+    primary: "btn-primary"
+  },
+  size: {
+    # "sm:btn-lg" "md:btn-lg" "lg:btn-lg"
+    lg: "btn-lg"
+  }
 )
 
 # Bad: Missing responsive comments (Tailwind won't generate responsive classes)

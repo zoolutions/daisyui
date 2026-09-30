@@ -36,9 +36,9 @@ describe DaisyUI::Stack do
     context "when given multiple conditions" do
       subject(:output) { render described_class.new(:top, :end) }
 
-      it "renders them separately" do
+      it "keeps only the last conflicting modifier" do
         expected_html = html <<~HTML
-          <div class="stack stack-top stack-end"></div>
+          <div class="stack stack-end"></div>
         HTML
 
         expect(output).to eq(expected_html)

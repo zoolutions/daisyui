@@ -119,8 +119,14 @@ module DaisyUI
     }.freeze
 
     class << self
-      attr_writer :component_class
+      attr_writer :component_class, :modifier_groups
       attr_accessor :modifiers
+
+      # { group => [modifier, ...] }: modifiers in one group are alternatives
+      # (sizes, colors, ...), so ClassMerge keeps only the last one.
+      def modifier_groups
+        @modifier_groups ||= {}
+      end
 
       def component_class
         return @component_class if instance_variable_defined?(:@component_class)
@@ -138,14 +144,37 @@ module DaisyUI
       def inherited(subclass)
         super
         subclass.modifiers = (modifiers || {}).dup
+        subclass.modifier_groups = modifier_groups.transform_values(&:dup)
         # Inherit component_class if it was explicitly set
         return unless instance_variable_defined?(:@component_class)
 
         subclass.component_class = @component_class
       end
 
+      # Registers modifiers. A Hash value declares a group of alternatives:
+      #
+      #   register_modifiers(
+      #     size: { sm: "btn-sm", lg: "btn-lg" }, # btn-sm btn-lg merges to btn-lg
+      #     wide: "btn-wide"                      # ungrouped, never conflicts
+      #   )
       def register_modifiers(mods)
-        self.modifiers = (modifiers || {}).merge(mods)
+        flat = {}
+        mods.each do |key, value|
+          if value.is_a?(Hash)
+            flat.merge!(value)
+          else
+            flat[key] = value
+          end
+        end
+
+        modifier_groups.each_value { |members| members.delete_if { |member| flat.key?(member) } }
+        mods.each do |group, value|
+          (modifier_groups[group] ||= []).concat(value.keys) if value.is_a?(Hash)
+        end
+        modifier_groups.delete_if { |_group, members| members.empty? }
+
+        self.modifiers = (modifiers || {}).merge(flat)
+        ClassMerge.reset!
       end
     end
 
@@ -196,9 +225,14 @@ module DaisyUI
       options.dup.merge(id: id).compact
     end
 
-    # Simple defaults - easy to override
+    # Later classes win over earlier conflicting ones (see DaisyUI::ClassMerge),
+    # unless `DaisyUI.configure { |c| c.class_merge.enabled = false }`.
     def merge_classes(*parts)
-      result = parts.compact.join(" ")
+      result = if DaisyUI.configuration.class_merge.enabled
+        ClassMerge.merge(*parts)
+      else
+        parts.compact.join(" ")
+      end
       result.empty? ? nil : result
     end
 

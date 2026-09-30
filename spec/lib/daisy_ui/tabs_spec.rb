@@ -103,9 +103,9 @@ describe DaisyUI::Tabs do
     context "when given multiple conditions" do
       subject(:output) { render described_class.new(:box, :border) }
 
-      it "renders them separately" do
+      it "keeps only the last conflicting modifier" do
         expected_html = html <<~HTML
-          <div role="tablist" class="tabs tabs-box tabs-border"></div>
+          <div role="tablist" class="tabs tabs-border"></div>
         HTML
 
         expect(output).to eq(expected_html)
@@ -135,12 +135,11 @@ describe DaisyUI::Tabs do
           render described_class.new(:box, responsive: { viewport => %i[box border] })
         end
 
-        it "renders it separately with a responsive prefix" do
+        it "keeps only the last conflicting responsive modifier" do
           expected_html = html <<~HTML
             <div role="tablist" class="
               tabs
               tabs-box
-              #{viewport}:tabs-box
               #{viewport}:tabs-border">
             </div>
           HTML
@@ -168,12 +167,11 @@ describe DaisyUI::Tabs do
           end
         end
 
-        it "renders it separately with a responsive prefix" do
+        it "keeps only the last conflicting responsive modifier" do
           expected_html = html <<~HTML
             <div role="tablist" class="
               foo-tabs
               foo-tabs-box
-              #{viewport}:foo-tabs-box
               #{viewport}:foo-tabs-border">
             </div>
           HTML

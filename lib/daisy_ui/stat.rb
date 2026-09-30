@@ -34,20 +34,22 @@ module DaisyUI
     end
 
     register_modifiers(
-      # "sm:stats-horizontal"
-      # "@sm:stats-horizontal"
-      # "md:stats-horizontal"
-      # "@md:stats-horizontal"
-      # "lg:stats-horizontal"
-      # "@lg:stats-horizontal"
-      horizontal: "stats-horizontal",
-      # "sm:stats-vertical"
-      # "@sm:stats-vertical"
-      # "md:stats-vertical"
-      # "@md:stats-vertical"
-      # "lg:stats-vertical"
-      # "@lg:stats-vertical"
-      vertical: "stats-vertical"
+      direction: {
+        # "sm:stats-horizontal"
+        # "@sm:stats-horizontal"
+        # "md:stats-horizontal"
+        # "@md:stats-horizontal"
+        # "lg:stats-horizontal"
+        # "@lg:stats-horizontal"
+        horizontal: "stats-horizontal",
+        # "sm:stats-vertical"
+        # "@sm:stats-vertical"
+        # "md:stats-vertical"
+        # "@md:stats-vertical"
+        # "lg:stats-vertical"
+        # "@lg:stats-vertical"
+        vertical: "stats-vertical"
+      }
     )
   end
 end
