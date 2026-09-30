@@ -16,6 +16,7 @@ This is a monorepo containing:
 bundle exec rspec              # Run gem tests
 bundle exec rubocop            # Lint gem code
 bin/console                    # Interactive console
+bin/release [patch|minor|major|X.Y.Z] [-n]  # Cut a release (list / --dry-run are read-only); drives rake release
 
 # Docs development (from docs/)
 bin/dev                        # Start dev server
