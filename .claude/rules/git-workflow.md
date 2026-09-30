@@ -44,10 +44,15 @@ PRs have merged. It works out the next version (`patch` default, `minor`,
 `major`, or an explicit `X.Y.Z`; `rc`/`beta`/`alpha` versions are
 prereleases), shows the commits since the last tag, and refuses to run when a
 gem in `Gemfile.lock` or `docs/Gemfile.lock` pins `daisyui` below the new
-version (release that gem first). It then hands off to `rake release[X.Y.Z]`,
-which bumps `version.rb` + `updated_at.rb`, re-locks both lockfiles, verifies
-the build, commits, pushes `main` and creates the GitHub Release. The Release
-workflow publishes to RubyGems via trusted publishing (OIDC + Sigstore).
+version (release that gem first). It then hands off to `rake release[X.Y.Z]`
+(`rakelib/release.rake`), which bumps `version.rb`, runs the Rakefile's
+`release:prepare` hook (stamps `updated_at.rb`), bumps the `daisyui` pin in both
+lockfiles in place (no re-resolve), verifies the build, commits, pushes `main`
+and creates the GitHub Release. The Release workflow publishes to RubyGems via
+trusted publishing (OIDC + Sigstore). `bin/release`, `rakelib/release.rake` and
+the shared jobs of `release.yml` are byte-identical across the zoolutions gems
+(docs-kit, daisyui, dash, pgbus, phlex-reactive): change them in every repo or
+none.
 
 ```bash
 bin/release list        # last releases + what each bump would give
