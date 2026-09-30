@@ -24,7 +24,7 @@ gem "daisyui", path: ".."
 # per-site via DocsKit.configure (config/initializers/docs_kit.rb). Now pulled
 # from RubyGems as a released gem — the old GitHub ref existed only because the
 # sibling repo sat outside the Docker build context, which no longer applies.
-gem "docs-kit", "~> 1.0.8", require: "docs_kit"
+gem "docs-kit", "~> 1.2", ">= 1.2.1", require: "docs_kit"
 gem "method_source"
 gem "phlex-rails"
 gem "phlex-reactive"

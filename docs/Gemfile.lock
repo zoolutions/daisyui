@@ -136,9 +136,9 @@ GEM
     diff-lcs (1.6.2)
     dockerfile-rails (1.7.10)
       rails (>= 3.0.0)
-    docs-kit (1.0.8)
+    docs-kit (1.2.1)
       commonmarker (~> 2.0)
-      daisyui (>= 1.2, < 2)
+      daisyui (>= 1.2, < 3)
       nokogiri (>= 1.15, < 2)
       phlex-rails (>= 2.0, < 3)
       rails_icons (~> 1.1)
@@ -468,7 +468,7 @@ DEPENDENCIES
   daisyui!
   debug
   dockerfile-rails
-  docs-kit (~> 1.0.8)
+  docs-kit (~> 1.2, >= 1.2.1)
   dotenv
   factory_bot_rails
   faker
