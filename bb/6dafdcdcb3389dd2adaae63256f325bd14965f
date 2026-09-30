@@ -1,0 +1,9 @@
+docs/Gemfile.lock
+  ai_agent 18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "bb6dafdcdcb3389dd2adaae63256f325bd14965f",
+  "prompts": {}
+}
