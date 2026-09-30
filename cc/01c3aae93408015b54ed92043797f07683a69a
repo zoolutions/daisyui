@@ -1,0 +1,27 @@
+.claude/commands/github-review-pr.md
+  s_e1c43260265747::t_98655a666c6272 74-75
+.claude/rules/git-workflow.md
+  s_e1c43260265747::t_98655a666c6272 40-60,73
+CHANGELOG.md
+  s_e1c43260265747::t_98655a666c6272 70-71
+bin/release
+  s_e1c43260265747::t_cace60a4362132 1-134
+AGENTS.md
+  s_e1c43260265747::t_98655a666c6272 19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "cc01c3aae93408015b54ed92043797f07683a69a",
+  "prompts": {},
+  "sessions": {
+    "s_e1c43260265747": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "918dcd04-2aa0-4160-9dab-969be8989a8b",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "mhenrixon <mikael@mhenrixon.com>"
+    }
+  }
+}
