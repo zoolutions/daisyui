@@ -67,6 +67,8 @@ wins. `Button(:sm, class: "btn-lg")` renders `btn btn-lg` (1.x rendered
 
 ### Changed
 
+- Maintainers cut releases with `bin/release` (`list`, `--dry-run`, `patch`/`minor`/`major`/`X.Y.Z`), which checks the lockfiles for gems that do not accept the new version yet and then drives `rake release`.
+
 - Range component: added range-vertical modifier for vertical orientation (DaisyUI 5.6)
 - Tooltip component: added alignment modifiers (tooltip-start, tooltip-center, tooltip-end) and tooltip-content sub-component (DaisyUI 5.6)
 
