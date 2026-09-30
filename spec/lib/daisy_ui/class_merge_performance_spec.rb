@@ -20,15 +20,4 @@ RSpec.describe DaisyUI::ClassMerge, :perf do
 
     expect(elapsed).to be < 0.05
   end
-
-  it "reports cold merge timing" do
-    merger = DaisyUI::ClassMerge::Merger.new(config: DaisyUI.configuration.class_merge.merger_config)
-
-    elapsed = measure { inputs.each { |input| merger.merge(input) } }
-
-    puts format("\n  cold: %<total>.2fms for %<count>d merges (%<each>.1fµs each)",
-      total: elapsed * 1000, count: inputs.size, each: elapsed * 1_000_000 / inputs.size
-    )
-    expect(elapsed).to be_positive
-  end
 end

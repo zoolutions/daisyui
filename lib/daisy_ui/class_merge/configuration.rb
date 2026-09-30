@@ -7,61 +7,62 @@ module DaisyUI
     #
     #   DaisyUI.configure do |c|
     #     c.class_merge.enabled = true
-    #     c.class_merge.theme(text: %w[display], color: %w[brand])
-    #     c.class_merge.class_groups("brand-shadow" => ["shadow-brand"])
-    #     c.class_merge.conflicts("brand-shadow" => ["shadow"])
+    #     c.class_merge.utility("text-display", "text-hero", like: "text-lg")
+    #     c.class_merge.theme(spacing: %w[gutter])
     #   end
+    #
+    # Custom colors (`bg-brand`, `text-brand`) need no registration.
     class Configuration
-      DEFAULT_CACHE_SIZE = 500
+      THEME_KEYS = TailwindConfig::DEFAULTS[:theme].keys.freeze
 
       attr_accessor :enabled
-      attr_reader :cache_size
 
       def initialize
         @enabled = true
-        @cache_size = DEFAULT_CACHE_SIZE
         @theme = {}
         @class_groups = {}
         @conflicts = {}
       end
 
-      def cache_size=(size)
-        @cache_size = size
-        ClassMerge.reset!
+      # Registers utilities that behave like an existing one:
+      # `utility("text-display", like: "text-lg")` makes `text-display` a font
+      # size, so it replaces `text-sm` and sits next to `text-error`.
+      def utility(*names, like:)
+        group = ClassMerge.tailwind_utils.class_group_id(like) or
+          raise ArgumentError, "#{like.inspect} is not a known utility to model #{names.join(', ')} on"
+
+        class_groups(group => names.map(&:to_s))
       end
 
-      # Appends values to Tailwind theme scales, e.g. `text: %w[display]`
-      # makes `text-display` a font size and `color: %w[brand]` makes
-      # `bg-brand`, `text-brand` and `border-brand` colors.
+      # Appends values to Tailwind theme scales, which feed every utility using
+      # the scale: `spacing: %w[gutter]` covers `p-gutter`, `m-gutter`, `gap-gutter`.
       def theme(**scales)
-        scales.each do |key, values|
-          (@theme[key.to_s.tr("_", "-")] ||= []).concat(Array(values).map(&:to_s))
-        end
-        ClassMerge.reset!
+        scales = scales.transform_keys { |key| key.to_s.tr("_", "-") }
+        unknown = scales.keys - THEME_KEYS
+        raise ArgumentError, "unknown theme key #{unknown.map(&:inspect).join(', ')}; use one of #{THEME_KEYS.join(', ')}" if unknown.any?
+
+        append(@theme, scales.transform_values { |values| Array(values).map(&:to_s) })
       end
 
-      # Adds class groups: `{ "group-id" => ["class", ...] }`. Classes in the
-      # same group conflict with each other.
+      # Raw tailwind_merge class groups: `{ "group-id" => ["class", ...] }`.
+      # Classes in the same group conflict with each other.
       def class_groups(groups)
         append(@class_groups, groups)
       end
 
-      # Makes groups conflict: `{ "group-id" => ["other-group-id", ...] }`
+      # Raw tailwind_merge conflicts: `{ "group-id" => ["other-group-id", ...] }`
       # removes earlier classes of the listed groups when a class of the key
       # group appears later.
       def conflicts(conflicts)
         append(@conflicts, conflicts)
       end
 
-      # The config passed to Merger.new, including the daisyUI groups.
+      # @api private The config passed to Merger.new, including the daisyUI groups.
       def merger_config
-        daisy = DaisyGroups.build
-
         {
-          cache_size: cache_size,
           theme: @theme,
-          class_groups: daisy[:class_groups].merge(@class_groups) { |_id, existing, added| existing + added },
-          conflicting_class_groups: daisy[:conflicting_class_groups].merge(@conflicts) { |_id, existing, added| existing + added }
+          class_groups: DaisyGroups.build.merge(@class_groups) { |_id, existing, added| existing + added },
+          conflicting_class_groups: @conflicts
         }
       end
 

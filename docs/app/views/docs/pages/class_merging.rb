@@ -80,20 +80,23 @@ module Views
           DocsUI::Section("Custom utilities") do
             DocsUI::Prose() do
               p do
-                plain "Register your own theme values so the merger knows what they are. "
+                plain "Register custom utilities so the merger knows what they are. "
                 plain "Unregistered, "
                 code { "text-display" }
                 plain " reads as a color and would be dropped by a later "
                 code { "text-error" }
-                plain "."
+                plain ". Custom colors need no registration."
               end
             end
             DocsUI::Code(<<~RUBY, lexer: :ruby, filename: "config/initializers/daisy_ui.rb")
               DaisyUI.configure do |config|
-                # text-display is a font size; bg-brand, text-brand, border-brand are colors
-                config.class_merge.theme(text: %w[display], color: %w[brand])
+                # text-display and text-hero are font sizes, like text-lg
+                config.class_merge.utility("text-display", "text-hero", like: "text-lg")
 
-                # Anything else: your own groups, and which groups they override
+                # Extend a Tailwind theme scale: p-gutter, m-gutter, gap-gutter, ...
+                config.class_merge.theme(spacing: %w[gutter])
+
+                # Raw tailwind_merge groups for anything else
                 config.class_merge.class_groups("surface" => %w[surface-flat surface-raised])
                 config.class_merge.conflicts("surface" => ["shadow"])
               end
@@ -102,7 +105,8 @@ module Views
               p do
                 plain "Use "
                 code { "DaisyUI::ClassMerge.merge(*parts)" }
-                plain " directly in your own components; it accepts strings, arrays and nils."
+                plain " directly in your own components; it accepts strings, arrays, nil and false. "
+                plain "Components subclassing DaisyUI::Base get daisyUI families for their own modifiers."
               end
             end
           end

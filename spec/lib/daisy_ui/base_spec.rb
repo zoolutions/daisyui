@@ -162,6 +162,8 @@ describe DaisyUI::Base do
   end
 
   describe "class merging" do
+    let(:bare_component) { Class.new(DaisyUI::Base) { self.component_class = nil }.new }
+
     it "lets a caller class replace a modifier of the same family" do
       expect(render(DaisyUI::Button.new(:sm, class: "btn-lg"))).to eq(html(<<~HTML))
         <button class="btn btn-lg"></button>
@@ -172,9 +174,7 @@ describe DaisyUI::Base do
     end
 
     it "returns nil when there are no classes" do
-      component = Class.new(DaisyUI::Base) { self.component_class = nil }.new
-
-      expect(component.send(:merge_classes, nil, "")).to be_nil
+      expect(bare_component.send(:merge_classes, nil, "")).to be_nil
     end
 
     context "when merging is disabled" do
@@ -195,9 +195,7 @@ describe DaisyUI::Base do
       end
 
       it "returns nil when there are no classes" do
-        component = Class.new(DaisyUI::Base) { self.component_class = nil }.new
-
-        expect(component.send(:merge_classes, nil)).to be_nil
+        expect(bare_component.send(:merge_classes, nil)).to be_nil
       end
     end
   end

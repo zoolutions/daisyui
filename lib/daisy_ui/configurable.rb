@@ -26,7 +26,7 @@ module DaisyUI
 
       def remove(modifier, component: nil)
         @modifiers[component] ||= {}
-        removed = @modifiers[component].delete(modifier)
+        removed = @modifiers[component]&.delete(modifier)
         ClassMerge.reset!
         removed
       end

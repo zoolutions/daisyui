@@ -8,7 +8,6 @@ RSpec.describe DaisyUI::ClassMerge::Merger, "config" do
     config = DaisyUI::ClassMerge::TailwindConfig::DEFAULTS
 
     expect(config[:cache_size]).to eq(500)
-    expect(config[:ignore_empty_cache]).to be_truthy
     expect(config[:nonexistent]).to be_falsey
     expect(config[:class_groups]["display"].first).to eq("block")
     expect(config[:class_groups]["overflow"].first["overflow"].first).to eq("auto")

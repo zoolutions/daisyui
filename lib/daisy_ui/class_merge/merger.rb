@@ -12,7 +12,6 @@ module DaisyUI
 
       def initialize(config: {})
         @config = merge_config(config)
-        @config[:important_modifier] = @config[:important_modifier].to_s
         @class_utils = ClassGroupUtils.new(@config)
         @cache = Cache.new(@config[:cache_size])
         @postfix_lookup_class_group_ids = build_postfix_lookup_class_group_ids(@config[:postfix_lookup_class_groups])

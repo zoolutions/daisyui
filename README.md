@@ -138,22 +138,28 @@ or alignment (`start center end`). `dropdown-top dropdown-end` keeps both;
 `btn-sm btn-lg` keeps `btn-lg`. Component base classes such as `table` and
 `collapse` are never dropped.
 
-Register your own utilities so the merger knows what they are:
+Register custom utilities so the merger knows what they are. Unregistered,
+`text-display` reads as a color and a later `text-error` drops it. Custom
+colors (`bg-brand`, `text-brand`) need no registration.
 
 ```ruby
 DaisyUI.configure do |config|
-  # text-display is a font size; bg-brand, text-brand, border-brand are colors
-  config.class_merge.theme(text: %w[display], color: %w[brand])
+  # text-display and text-hero are font sizes, like text-lg
+  config.class_merge.utility("text-display", "text-hero", like: "text-lg")
 
-  # Your own groups, and which groups they override
-  config.class_merge.class_groups("surface" => %w[surface-flat surface-raised])
-  config.class_merge.conflicts("surface" => ["shadow"])
+  # Extend a Tailwind theme scale: p-gutter, m-gutter, gap-gutter, ...
+  config.class_merge.theme(spacing: %w[gutter])
 end
 ```
 
+`class_groups` and `conflicts` take raw tailwind_merge groups for anything
+else. Components subclassing `DaisyUI::Base` in your app get daisyUI families
+for their own modifiers (`widget-sm widget-lg` keeps `widget-lg`).
+
 Merge in your own components with `DaisyUI::ClassMerge.merge(*parts)` (strings,
-arrays and nils; returns a frozen String). Opt out with
-`config.class_merge.enabled = false`.
+arrays, `nil` and `false`; returns a frozen String). Opt out globally with
+`config.class_merge.enabled = false`, or per component by overriding the
+private `merge_classes`.
 
 # Compatibility Notes
 

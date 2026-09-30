@@ -106,6 +106,23 @@ RSpec.describe DaisyUI::ClassMerge::DaisyGroups do
     end
   end
 
+  context "with an app component outside the DaisyUI namespace" do
+    let(:widget) do
+      Class.new(DaisyUI::Base) do
+        self.component_class = :widget
+        register_modifiers(sm: "widget-sm", lg: "widget-lg")
+
+        def view_template = div(class: classes)
+      end
+    end
+
+    before { stub_const("Widget", widget) }
+
+    it "resolves the app component's families too" do
+      expect(render(Widget.new(:sm, class: "widget-lg"))).to eq('<div class="widget widget-lg"></div>')
+    end
+  end
+
   describe ".family_group" do
     it "returns nil for Tailwind classes" do
       expect(described_class.family_group("bg-primary")).to be_nil

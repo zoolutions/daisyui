@@ -8,6 +8,10 @@ RSpec.describe DaisyUI::ClassMerge do
       expect(described_class.merge("px-2", nil, ["py-1", [nil, "px-4"]])).to eq("py-1 px-4")
     end
 
+    it "drops false like Phlex does, so `cond && \"x\"` works" do
+      expect(described_class.merge("px-2", false && "hidden", false)).to eq("px-2")
+    end
+
     it "returns a frozen string" do
       expect(described_class.merge("px-2")).to be_frozen
     end
@@ -59,14 +63,29 @@ RSpec.describe DaisyUI::ClassMerge do
       end
     end
 
-    context "with a registered color" do
-      before { DaisyUI.configure { |c| c.class_merge.theme(color: %w[brand]) } }
+    it "treats unregistered names as colors, so custom colors need no registration" do
+      expect(described_class.merge("bg-primary bg-brand")).to eq("bg-brand")
+      expect(described_class.merge("text-brand text-sm")).to eq("text-brand text-sm")
+    end
 
-      it "treats the color as a color in every utility" do
-        expect(described_class.merge("bg-primary bg-brand")).to eq("bg-brand")
-        expect(described_class.merge("text-brand text-error")).to eq("text-error")
-        expect(described_class.merge("text-brand text-sm")).to eq("text-brand text-sm")
+    it "rejects theme keys the merger does not know" do
+      expect { config.theme(font_size: %w[display]) }
+        .to raise_error(ArgumentError, /unknown theme key "font-size".*text/m)
+    end
+
+    context "with a utility registered like an existing one" do
+      before { DaisyUI.configure { |c| c.class_merge.utility("text-display", "text-hero", like: "text-lg") } }
+
+      it "joins the sample's group" do
+        expect(described_class.merge("text-sm text-display")).to eq("text-display")
+        expect(described_class.merge("text-display text-hero")).to eq("text-hero")
+        expect(described_class.merge("text-display text-error")).to eq("text-display text-error")
       end
+    end
+
+    it "rejects a sample that is not a known utility" do
+      expect { config.utility("text-display", like: "not-a-utility") }
+        .to raise_error(ArgumentError, /not a known utility/)
     end
 
     context "with custom class groups and conflicts" do

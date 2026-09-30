@@ -146,6 +146,7 @@ module DaisyUI
 
       def register_modifiers(mods)
         self.modifiers = (modifiers || {}).merge(mods)
+        ClassMerge.reset!
       end
     end
 

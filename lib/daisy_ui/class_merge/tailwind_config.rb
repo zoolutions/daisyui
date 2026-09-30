@@ -209,7 +209,6 @@ module DaisyUI
       DEFAULTS = {
         cache_size: 500,
         prefix: nil,
-        ignore_empty_cache: true,
         theme: {
           "animate" => %w[spin ping pulse bounce],
           "aspect" => ["video"],

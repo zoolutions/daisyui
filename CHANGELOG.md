@@ -10,12 +10,13 @@ wins. `Button(:sm, class: "btn-lg")` renders `btn btn-lg` (1.x rendered
   and for daisyUI modifiers of the same component and family (color, size,
   style, direction, placement, alignment). Responsive and state variants
   (`sm:`, `hover:`) are separate slots.
-- Register custom theme values, or they may be misread. An unregistered
-  `text-display` reads as a color and is dropped by a later `text-error`:
+- Register custom font sizes and other non-color utilities, or they may be
+  misread. An unregistered `text-display` reads as a color and is dropped by a
+  later `text-error`:
 
   ```ruby
   DaisyUI.configure do |config|
-    config.class_merge.theme(text: %w[display], color: %w[brand])
+    config.class_merge.utility("text-display", like: "text-lg")
   end
   ```
 
@@ -34,8 +35,9 @@ wins. `Button(:sm, class: "btn-lg")` renders `btn btn-lg` (1.x rendered
 - `DaisyUI::ClassMerge.merge(*parts)`: a daisyUI-aware class merger with no
   runtime dependencies. The daisyUI groups are built from the components'
   `register_modifiers` data, and a spec fails when a new modifier is not
-  classified. Configure it with `config.class_merge` (`enabled`, `theme`,
-  `class_groups`, `conflicts`, `cache_size`).
+  classified. Configure it with `config.class_merge` (`enabled`, `utility`,
+  `theme`, `class_groups`, `conflicts`). App components subclassing
+  `DaisyUI::Base` get families for their own modifiers.
 
 - Aura component (DaisyUI 5.6) with style variants (dual, rainbow, holo, gold, silver, glow) and sizes
 - Megamenu component (DaisyUI 5.6) with wide, full, vertical modifiers, sizes, and active_indicator sub-component
