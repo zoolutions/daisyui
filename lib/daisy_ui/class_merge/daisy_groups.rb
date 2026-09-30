@@ -6,7 +6,7 @@ module DaisyUI
     #
     #   register_modifiers(size: { sm: "btn-sm", lg: "btn-lg" })
     #
-    # gives the group `daisy:btn-size` = ["btn-sm", "btn-lg"], so
+    # gives the group `daisy:group:btn-size` = ["btn-sm", "btn-lg"], so
     # `btn-sm btn-lg` merges to `btn-lg`. Ungrouped modifiers never conflict.
     # Tokens Tailwind already classifies (`bg-primary text-primary-content`)
     # are left to the Tailwind groups, which resolve them per utility.
@@ -18,7 +18,7 @@ module DaisyUI
     # @api private
     module DaisyGroups
       class << self
-        # Class groups for the merger: `{ "daisy:btn-size" => ["btn-xs", ...], ... }`.
+        # Class groups for the merger: `{ "daisy:group:btn-size" => ["btn-xs", ...], ... }`.
         def build(prefix: DaisyUI.configuration.prefix)
           components = self.components
           groups = {}
@@ -26,20 +26,20 @@ module DaisyUI
           gem_components(components).each do |component|
             next unless (base = component.component_class)
 
-            groups["daisy:#{base}"] = ["#{prefix}#{base}"]
+            groups["daisy:base:#{base}"] = ["#{prefix}#{base}"]
           end
 
           components.each do |component|
             component.modifier_groups.each do |group, members|
               tokens = members.flat_map { |member| component.modifiers[member].to_s.split }
-              add(groups, "daisy:#{component.component_class || component.name}-#{group}", tokens, prefix)
+              add(groups, "daisy:group:#{component.component_class || component.name}-#{group}", tokens, prefix)
             end
           end
 
           # Configured modifiers join the component's own group of that name.
           DaisyUI.configuration.modifiers.groups.each do |(component, group), classes|
             owner = component ? component.component_class || component.name : "global"
-            add(groups, "daisy:#{owner}-#{group}", classes.flat_map(&:split), prefix)
+            add(groups, "daisy:group:#{owner}-#{group}", classes.flat_map(&:split), prefix)
           end
 
           groups
