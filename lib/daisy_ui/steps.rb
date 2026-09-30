@@ -47,20 +47,22 @@ module DaisyUI
     end
 
     register_modifiers(
-      # "sm:steps-vertical"
-      # "@sm:steps-vertical"
-      # "md:steps-vertical"
-      # "@md:steps-vertical"
-      # "lg:steps-vertical"
-      # "@lg:steps-vertical"
-      vertical: "steps-vertical",
-      # "sm:steps-horizontal"
-      # "@sm:steps-horizontal"
-      # "md:steps-horizontal"
-      # "@md:steps-horizontal"
-      # "lg:steps-horizontal"
-      # "@lg:steps-horizontal"
-      horizontal: "steps-horizontal"
+      direction: {
+        # "sm:steps-vertical"
+        # "@sm:steps-vertical"
+        # "md:steps-vertical"
+        # "@md:steps-vertical"
+        # "lg:steps-vertical"
+        # "@lg:steps-vertical"
+        vertical: "steps-vertical",
+        # "sm:steps-horizontal"
+        # "@sm:steps-horizontal"
+        # "md:steps-horizontal"
+        # "@md:steps-horizontal"
+        # "lg:steps-horizontal"
+        # "@lg:steps-horizontal"
+        horizontal: "steps-horizontal"
+      }
     )
   end
 end

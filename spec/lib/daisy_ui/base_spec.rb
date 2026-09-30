@@ -164,7 +164,7 @@ describe DaisyUI::Base do
   describe "class merging" do
     let(:bare_component) { Class.new(DaisyUI::Base) { self.component_class = nil }.new }
 
-    it "lets a caller class replace a modifier of the same family" do
+    it "lets a caller class replace a modifier of the same group" do
       expect(render(DaisyUI::Button.new(:sm, class: "btn-lg"))).to eq(html(<<~HTML))
         <button class="btn btn-lg"></button>
       HTML
@@ -197,6 +197,47 @@ describe DaisyUI::Base do
       it "returns nil when there are no classes" do
         expect(bare_component.send(:merge_classes, nil)).to be_nil
       end
+    end
+  end
+
+  describe ".register_modifiers with groups" do
+    let(:component) do
+      Class.new(DaisyUI::Base) do
+        self.component_class = :thing
+
+        register_modifiers(
+          size: { sm: "thing-sm", lg: "thing-lg" },
+          active: "thing-active"
+        )
+      end
+    end
+
+    it "flattens grouped modifiers into .modifiers" do
+      expect(component.modifiers).to eq(sm: "thing-sm", lg: "thing-lg", active: "thing-active")
+    end
+
+    it "records the groups" do
+      expect(component.modifier_groups).to eq(size: %i[sm lg])
+    end
+
+    it "lets a subclass extend an inherited group without touching the parent" do
+      child = Class.new(component) { register_modifiers(size: { xl: "thing-xl" }) }
+
+      expect(child.modifier_groups).to eq(size: %i[sm lg xl])
+      expect(component.modifier_groups).to eq(size: %i[sm lg])
+    end
+
+    it "moves a re-registered modifier out of its earlier group" do
+      child = Class.new(component) { register_modifiers(lg: "thing-lg") }
+
+      expect(child.modifier_groups).to eq(size: %i[sm])
+    end
+
+    it "accepts a splatted flat hash as ungrouped modifiers" do
+      colored = Class.new(DaisyUI::Base) { register_modifiers(**DaisyUI::Base::COLOR_MODIFIERS) }
+
+      expect(colored.modifier_groups).to eq({})
+      expect(colored.modifiers[:primary]).to eq("bg-primary text-primary-content")
     end
   end
 end

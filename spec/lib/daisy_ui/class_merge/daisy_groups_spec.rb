@@ -5,7 +5,7 @@ RSpec.describe DaisyUI::ClassMerge::DaisyGroups do
     DaisyUI::ClassMerge.merge(*parts)
   end
 
-  describe "conflicts within a family" do
+  describe "conflicts within a group" do
     it "keeps the last size" do
       expect(merge("btn btn-sm btn-lg")).to eq("btn btn-lg")
     end
@@ -30,6 +30,12 @@ RSpec.describe DaisyUI::ClassMerge::DaisyGroups do
       expect(merge("dropdown-start dropdown-end")).to eq("dropdown-end")
     end
 
+    it "resolves groups that are not size or color" do
+      expect(merge("loading loading-spinner loading-dots")).to eq("loading loading-dots")
+      expect(merge("mask mask-squircle mask-heart")).to eq("mask mask-heart")
+      expect(merge("stack stack-top stack-end")).to eq("stack stack-end")
+    end
+
     it "handles multi-word component names" do
       expect(merge("file-input-xs file-input-lg")).to eq("file-input-lg")
     end
@@ -48,17 +54,22 @@ RSpec.describe DaisyUI::ClassMerge::DaisyGroups do
       expect(merge("btn-primary badge-error")).to eq("btn-primary badge-error")
     end
 
-    it "keeps modifiers of different families" do
+    it "keeps modifiers of different groups" do
       expect(merge("btn-wide btn-lg")).to eq("btn-wide btn-lg")
     end
 
-    it "keeps placement and alignment together" do
+    it "keeps both axes of two-axis placements" do
       expect(merge("toast-top toast-end")).to eq("toast-top toast-end")
       expect(merge("dropdown-top dropdown-end")).to eq("dropdown-top dropdown-end")
+      expect(merge("modal-bottom modal-start")).to eq("modal-bottom modal-start")
     end
 
-    it "keeps standalone modifiers" do
-      expect(merge("btn-square btn-circle")).to eq("btn-square btn-circle")
+    it "keeps ungrouped modifiers" do
+      expect(merge("btn-wide btn-block btn-active")).to eq("btn-wide btn-block btn-active")
+    end
+
+    it "keeps a mask shape next to a half mask" do
+      expect(merge("mask mask-star-2 mask-half-1")).to eq("mask mask-star-2 mask-half-1")
     end
   end
 
@@ -93,16 +104,30 @@ RSpec.describe DaisyUI::ClassMerge::DaisyGroups do
     end
   end
 
-  context "with a configured modifier" do
+  context "with a configured modifier in a group" do
     around do |example|
-      DaisyUI.configuration.modifiers.add(:huge, classes: "btn-xl", component: DaisyUI::Button)
+      DaisyUI.configuration.modifiers.add(:huge, classes: "btn-huge", component: DaisyUI::Button, group: :size)
       example.run
     ensure
       DaisyUI.configuration.modifiers.remove(:huge, component: DaisyUI::Button)
     end
 
-    it "includes configured modifier classes in the registry" do
-      expect(described_class.modifier_tokens["btn-xl"]).to include("DaisyUI.configuration")
+    it "joins the component's group of that name" do
+      expect(merge("btn-lg btn-huge")).to eq("btn-huge")
+      expect(merge("btn-huge btn-sm")).to eq("btn-sm")
+    end
+  end
+
+  context "with a configured modifier without a group" do
+    around do |example|
+      DaisyUI.configuration.modifiers.add(:huge, classes: "btn-huge", component: DaisyUI::Button)
+      example.run
+    ensure
+      DaisyUI.configuration.modifiers.remove(:huge, component: DaisyUI::Button)
+    end
+
+    it "never conflicts" do
+      expect(merge("btn-lg btn-huge")).to eq("btn-lg btn-huge")
     end
   end
 
@@ -110,7 +135,7 @@ RSpec.describe DaisyUI::ClassMerge::DaisyGroups do
     let(:widget) do
       Class.new(DaisyUI::Base) do
         self.component_class = :widget
-        register_modifiers(sm: "widget-sm", lg: "widget-lg")
+        register_modifiers(size: { sm: "widget-sm", lg: "widget-lg" }, round: "widget-round")
 
         def view_template = div(class: classes)
       end
@@ -118,22 +143,48 @@ RSpec.describe DaisyUI::ClassMerge::DaisyGroups do
 
     before { stub_const("Widget", widget) }
 
-    it "resolves the app component's families too" do
+    it "resolves its declared groups" do
       expect(render(Widget.new(:sm, class: "widget-lg"))).to eq('<div class="widget widget-lg"></div>')
+    end
+
+    it "keeps ungrouped modifiers" do
+      expect(render(Widget.new(:round, class: "widget-lg"))).to eq('<div class="widget widget-round widget-lg"></div>')
     end
   end
 
-  describe ".family_group" do
-    it "returns nil for Tailwind classes" do
-      expect(described_class.family_group("bg-primary")).to be_nil
+  context "with a group of Tailwind utilities" do
+    let(:swatch) do
+      Class.new(DaisyUI::Base) do
+        self.component_class = :swatch
+        register_modifiers(
+          color: {
+            primary: "bg-primary text-primary-content",
+            secondary: "bg-secondary text-secondary-content"
+          }
+        )
+      end
     end
 
-    it "returns nil for suffixes outside every family" do
-      expect(described_class.family_group("mask-star-2")).to be_nil
+    before { stub_const("Swatch", swatch) }
+
+    it "leaves the utilities to Tailwind's own groups" do
+      expect(merge("bg-primary text-secondary-content")).to eq("bg-primary text-secondary-content")
+      expect(merge("bg-primary bg-secondary")).to eq("bg-secondary")
+    end
+  end
+
+  describe ".build" do
+    subject(:groups) { described_class.build }
+
+    it "has no empty group" do
+      expect(groups.select { |_id, tokens| tokens.empty? }).to be_empty
     end
 
-    it "names the component and family" do
-      expect(described_class.family_group("btn-lg")).to eq("daisy:btn-size")
+    it "puts every token in exactly one group" do
+      owners = Hash.new { |hash, key| hash[key] = [] }
+      groups.each { |id, tokens| tokens.each { |token| owners[token] << id } }
+
+      expect(owners.select { |_token, ids| ids.size > 1 }).to be_empty
     end
   end
 end

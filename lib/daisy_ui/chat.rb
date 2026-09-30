@@ -87,21 +87,22 @@ module DaisyUI
     end
 
     register_modifiers(
-      # Placement
-      # "sm:chat-start"
-      # "@sm:chat-start"
-      # "md:chat-start"
-      # "@md:chat-start"
-      # "lg:chat-start"
-      # "@lg:chat-start"
-      start: "chat-start",
-      # "sm:chat-end"
-      # "@sm:chat-end"
-      # "md:chat-end"
-      # "@md:chat-end"
-      # "lg:chat-end"
-      # "@lg:chat-end"
-      end: "chat-end"
+      placement: {
+        # "sm:chat-start"
+        # "@sm:chat-start"
+        # "md:chat-start"
+        # "@md:chat-start"
+        # "lg:chat-start"
+        # "@lg:chat-start"
+        start: "chat-start",
+        # "sm:chat-end"
+        # "@sm:chat-end"
+        # "md:chat-end"
+        # "@md:chat-end"
+        # "lg:chat-end"
+        # "@lg:chat-end"
+        end: "chat-end"
+      }
     )
 
     private

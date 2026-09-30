@@ -54,12 +54,20 @@ Example: To get button snippet, call with `{"components": {"button": true}}`
 ### Key Patterns
 
 ```ruby
-# Modifier registration with REQUIRED responsive comments
+# Modifier registration with REQUIRED responsive comments.
+# Alternatives (sizes, colors, styles, placements) go in a named group so
+# ClassMerge keeps only the last one; everything else stays ungrouped.
 register_modifiers(
-  # "sm:btn-primary" "md:btn-primary" "lg:btn-primary"
-  primary: "btn-primary",
-  # "sm:btn-lg" "md:btn-lg" "lg:btn-lg"
-  lg: "btn-lg"
+  color: {
+    # "sm:btn-primary" "md:btn-primary" "lg:btn-primary"
+    primary: "btn-primary"
+  },
+  size: {
+    # "sm:btn-lg" "md:btn-lg" "lg:btn-lg"
+    lg: "btn-lg"
+  },
+  # "sm:btn-wide" "md:btn-wide" "lg:btn-wide"
+  wide: "btn-wide"
 )
 ```
 
@@ -69,7 +77,7 @@ register_modifiers(
 
 1. Create component file: `lib/daisy_ui/component_name.rb`
 2. Inherit from `DaisyUI::Base`
-3. Use `register_modifiers` with responsive comments
+3. Use `register_modifiers` with responsive comments, grouping mutually exclusive modifiers
 4. Create spec: `spec/lib/daisy_ui/component_name_spec.rb`
 5. Add example in docs: `bin/rails generate example_view ComponentName Category`
 

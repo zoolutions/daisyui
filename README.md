@@ -132,11 +132,11 @@ Card(class: "p-2 p-4")                # => class="card p-4"
 
 Tailwind conflicts follow [tailwind_merge](https://github.com/gjtorikian/tailwind_merge)
 (its engine is ported into the gem as `DaisyUI::ClassMerge`, with no runtime
-dependency). daisyUI modifiers conflict when they share a component and a
-family: color, size, style, direction, placement (`top middle bottom left right`)
-or alignment (`start center end`). `dropdown-top dropdown-end` keeps both;
-`btn-sm btn-lg` keeps `btn-lg`. Component base classes such as `table` and
-`collapse` are never dropped.
+dependency). daisyUI modifiers conflict when the component declares them as
+alternatives in one group: `btn-sm btn-lg` keeps `btn-lg`, while
+`dropdown-top dropdown-end` keeps both (placement and alignment are separate
+groups). Ungrouped modifiers (`btn-wide`, `btn-active`) never conflict.
+Component base classes such as `table` and `collapse` are never dropped.
 
 Register custom utilities so the merger knows what they are. Unregistered,
 `text-display` reads as a color and a later `text-error` drops it. Custom
@@ -153,8 +153,24 @@ end
 ```
 
 `class_groups` and `conflicts` take raw tailwind_merge groups for anything
-else. Components subclassing `DaisyUI::Base` in your app get daisyUI families
-for their own modifiers (`widget-sm widget-lg` keeps `widget-lg`).
+else.
+
+Your own components declare groups the same way the gem's do, by nesting
+modifiers under a group name:
+
+```ruby
+class Widget < DaisyUI::Base
+  register_modifiers(
+    size: { sm: "widget-sm", lg: "widget-lg" }, # widget-sm widget-lg -> widget-lg
+    round: "widget-round"                       # ungrouped, never conflicts
+  )
+end
+
+# Configured modifiers can join a component's group too
+DaisyUI.configure do |config|
+  config.modifiers.add(:huge, classes: "btn-huge", component: DaisyUI::Button, group: :size)
+end
+```
 
 Merge in your own components with `DaisyUI::ClassMerge.merge(*parts)` (strings,
 arrays, `nil` and `false`; returns a frozen String). Opt out globally with

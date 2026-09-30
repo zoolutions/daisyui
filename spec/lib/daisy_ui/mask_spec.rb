@@ -26,9 +26,9 @@ describe DaisyUI::Mask do
           render described_class.new(:squircle, responsive: { viewport => %i[heart circle] })
         end
 
-        it "renders it separately with a responsive prefix" do
+        it "keeps only the last conflicting responsive modifier" do
           expected_html = html <<~HTML
-            <div class="mask mask-squircle #{viewport}:mask-heart #{viewport}:mask-circle"></div>
+            <div class="mask mask-squircle #{viewport}:mask-circle"></div>
           HTML
 
           expect(output).to eq(expected_html)
@@ -53,7 +53,7 @@ describe DaisyUI::Mask do
 
     it "is expected to match the formatted HTML" do
       expected_html = html <<~HTML
-        <div class="mask mask-squircle mask-hexagon"></div>
+        <div class="mask mask-hexagon"></div>
       HTML
 
       expect(output).to eq(expected_html)

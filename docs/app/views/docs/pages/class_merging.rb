@@ -58,9 +58,9 @@ module Views
             DocsUI::Prose() do
               p do
                 plain "Tailwind utilities follow tailwind-merge's rules. daisyUI modifiers "
-                plain "conflict when they share a component and a family: color, size, "
-                plain "style, direction, placement (top/middle/bottom/left/right) or "
-                plain "alignment (start/center/end). Variants such as "
+                plain "conflict when the component declares them as alternatives in one "
+                plain "group (sizes, colors, styles, placements, ...); ungrouped modifiers "
+                plain "never conflict. Variants such as "
                 code { "sm:" }
                 plain " or "
                 code { "hover:" }
@@ -106,7 +106,8 @@ module Views
                 plain "Use "
                 code { "DaisyUI::ClassMerge.merge(*parts)" }
                 plain " directly in your own components; it accepts strings, arrays, nil and false. "
-                plain "Components subclassing DaisyUI::Base get daisyUI families for their own modifiers."
+                plain "Your own DaisyUI::Base components declare groups the same way: "
+                plain "register_modifiers(size: { sm: \"widget-sm\", lg: \"widget-lg\" })."
               end
             end
           end
