@@ -1,0 +1,50 @@
+spec/lib/daisy_ui/base_spec.rb
+  s_e1c43260265747::t_c616d0cba05b46 165-166,177,198
+CHANGELOG.md
+  s_e1c43260265747::t_c616d0cba05b46 13-15,19,38-40
+spec/support/standalone_modifiers.rb
+  s_e1c43260265747::t_d8c53d09af9bec 1-54
+spec/lib/daisy_ui/class_merge/daisy_groups_registry_coverage_spec.rb
+  s_e1c43260265747::t_d8c53d09af9bec 5,9,15,22,28,34
+lib/daisy_ui/class_merge/configuration.rb
+  s_e1c43260265747::t_d9dd7af656f538 32,42
+  s_e1c43260265747::t_3f1b80781bbc18 10-11,13-14,16,27-30,33-34,37-38,40-41,43-44,47-48,53,60,64-65
+  s_e1c43260265747::t_c77d3314a0a73d 31
+lib/daisy_ui/base.rb
+  s_e1c43260265747::t_d8c53d09af9bec 149
+lib/daisy_ui/class_merge.rb
+  s_e1c43260265747::t_3f1b80781bbc18 13-15,24-25,27
+  s_e1c43260265747::t_c77d3314a0a73d 36-40
+docs/app/views/docs/pages/class_merging.rb
+  s_e1c43260265747::t_c616d0cba05b46 83,88,93-94,96-99,108-109
+spec/lib/daisy_ui/class_merge/daisy_groups_spec.rb
+  s_e1c43260265747::t_3896b4c2fe0355 110-111,118-119
+  s_e1c43260265747::t_d9dd7af656f538 116
+  s_e1c43260265747::t_a90cb77d689dd9 109,112-115,117,120-125
+lib/daisy_ui/class_merge/daisy_groups.rb
+  s_e1c43260265747::t_c77d3314a0a73d 17-18,36,38,47,53,67,70-72,76,88-90,93
+  s_e1c43260265747::t_d8c53d09af9bec 13-16,41-43,96-99
+spec/lib/daisy_ui/class_merge_spec.rb
+  s_e1c43260265747::t_60a988ef3c2e18 87
+  s_e1c43260265747::t_a90cb77d689dd9 11-14,66-77,79-82,86,88
+lib/daisy_ui/configurable.rb
+  s_e1c43260265747::t_c616d0cba05b46 29
+README.md
+  s_e1c43260265747::t_c616d0cba05b46 141-143,147-148,150-151,155-158,160-162
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "95f4f7b8b81e846371a4598f0be044714fc156f0",
+  "prompts": {},
+  "sessions": {
+    "s_e1c43260265747": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "918dcd04-2aa0-4160-9dab-969be8989a8b",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "mhenrixon <mikael@mhenrixon.com>"
+    }
+  }
+}
