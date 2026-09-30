@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "monitor"
+
 module DaisyUI
   # Merges CSS class lists so that later classes win over earlier conflicting
   # ones, for Tailwind utilities and daisyUI modifiers alike:
@@ -12,7 +14,9 @@ module DaisyUI
   module ClassMerge
     TAILWIND_MERGE_VERSION = "1.5.6"
 
-    @mutex = Mutex.new
+    # Reentrant, so a reset! triggered while the merger is being built (e.g. a
+    # component file configuring DaisyUI as it loads) cannot deadlock.
+    @monitor = Monitor.new
 
     class << self
       # Accepts strings, arrays and nils. Returns a frozen String, "" when empty.
@@ -21,14 +25,14 @@ module DaisyUI
       end
 
       def merger
-        @merger || @mutex.synchronize do
+        @merger || @monitor.synchronize do
           @merger ||= Merger.new(config: DaisyUI.configuration.class_merge.merger_config)
         end
       end
 
       # Drops the memoized merger so the next merge picks up configuration changes.
       def reset!
-        @mutex.synchronize { @merger = nil }
+        @monitor.synchronize { @merger = nil }
       end
     end
   end

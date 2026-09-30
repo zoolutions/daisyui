@@ -33,15 +33,20 @@ RSpec.describe DaisyUI::ClassMerge::Cache do
 
     it "stays consistent when shared across threads" do
       cache = described_class.new(50)
+      mismatches = Queue.new
       threads = Array.new(8) do |t|
         Thread.new do
-          1_000.times { |i| cache.getset("#{t}-#{i % 100}") { "#{t}-#{i % 100}" } }
+          1_000.times do |i|
+            key = "#{t}-#{i % 100}"
+            value = cache.getset(key) { key }
+            mismatches << [key, value] unless value == key
+          end
         end
       end
       threads.each(&:join)
 
       expect(cache.size).to eq(50)
-      expect(cache.getset("7-99") { "missing" }).to eq("7-99")
+      expect(Array.new(mismatches.size) { mismatches.pop }).to be_empty
     end
   end
 end
