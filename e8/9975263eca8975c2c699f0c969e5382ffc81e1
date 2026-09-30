@@ -1,0 +1,21 @@
+docs/Gemfile
+  s_e1c43260265747::t_ac894ff5937f54 27
+docs/Gemfile.lock
+  ai_agent 139,141,471
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "e89975263eca8975c2c699f0c969e5382ffc81e1",
+  "prompts": {},
+  "sessions": {
+    "s_e1c43260265747": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "918dcd04-2aa0-4160-9dab-969be8989a8b",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "mhenrixon <mikael@mhenrixon.com>"
+    }
+  }
+}
