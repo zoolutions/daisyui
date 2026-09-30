@@ -196,9 +196,14 @@ module DaisyUI
       options.dup.merge(id: id).compact
     end
 
-    # Simple defaults - easy to override
+    # Later classes win over earlier conflicting ones (see DaisyUI::ClassMerge),
+    # unless `DaisyUI.configure { |c| c.class_merge.enabled = false }`.
     def merge_classes(*parts)
-      result = parts.compact.join(" ")
+      result = if DaisyUI.configuration.class_merge.enabled
+        ClassMerge.merge(*parts)
+      else
+        parts.compact.join(" ")
+      end
       result.empty? ? nil : result
     end
 

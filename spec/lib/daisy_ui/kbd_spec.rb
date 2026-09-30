@@ -37,9 +37,9 @@ describe DaisyUI::Kbd do
     context "when given multiple conditions" do
       subject(:output) { render described_class.new(:lg, :xs) }
 
-      it "renders them separately" do
+      it "keeps only the last conflicting modifier" do
         expected_html = html <<~HTML
-          <kbd class="kbd kbd-lg kbd-xs"></kbd>
+          <kbd class="kbd kbd-xs"></kbd>
         HTML
 
         expect(output).to eq(expected_html)

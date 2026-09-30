@@ -119,6 +119,42 @@ module.exports = {
 };
 ```
 
+## Class merging
+
+Components merge their classes so the last conflicting class wins, for Tailwind
+utilities and daisyUI modifiers alike:
+
+```ruby
+Button(:sm, class: "btn-lg")          # => class="btn btn-lg"
+Badge(:primary, class: "badge-error") # => class="badge badge-error"
+Card(class: "p-2 p-4")                # => class="card p-4"
+```
+
+Tailwind conflicts follow [tailwind_merge](https://github.com/gjtorikian/tailwind_merge)
+(its engine is ported into the gem as `DaisyUI::ClassMerge`, with no runtime
+dependency). daisyUI modifiers conflict when they share a component and a
+family: color, size, style, direction, placement (`top middle bottom left right`)
+or alignment (`start center end`). `dropdown-top dropdown-end` keeps both;
+`btn-sm btn-lg` keeps `btn-lg`. Component base classes such as `table` and
+`collapse` are never dropped.
+
+Register your own utilities so the merger knows what they are:
+
+```ruby
+DaisyUI.configure do |config|
+  # text-display is a font size; bg-brand, text-brand, border-brand are colors
+  config.class_merge.theme(text: %w[display], color: %w[brand])
+
+  # Your own groups, and which groups they override
+  config.class_merge.class_groups("surface" => %w[surface-flat surface-raised])
+  config.class_merge.conflicts("surface" => ["shadow"])
+end
+```
+
+Merge in your own components with `DaisyUI::ClassMerge.merge(*parts)` (strings,
+arrays and nils; returns a frozen String). Opt out with
+`config.class_merge.enabled = false`.
+
 # Compatibility Notes
 
 ## @tailwindcss/forms plugin

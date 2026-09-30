@@ -5,6 +5,7 @@ module DaisyUI
     def configure
       self.configuration ||= Configuration.new
       yield(configuration) if block_given?
+      ClassMerge.reset!
       configuration
     end
 
@@ -20,23 +21,40 @@ module DaisyUI
       def add(modifier, classes:, component: nil)
         @modifiers[component] ||= {}
         @modifiers[component][modifier] = classes
+        ClassMerge.reset!
       end
 
       def remove(modifier, component: nil)
         @modifiers[component] ||= {}
-        @modifiers[component]&.delete(modifier)
+        removed = @modifiers[component].delete(modifier)
+        ClassMerge.reset!
+        removed
       end
 
       def for(component: nil)
         @modifiers[component] || {}
       end
+
+      # Every class string registered, for any component.
+      def all
+        @modifiers.values.flat_map(&:values)
+      end
     end
 
     class Configuration
-      attr_accessor :prefix
+      attr_reader :prefix
 
       def initialize
         @prefix = nil
+      end
+
+      def prefix=(prefix)
+        @prefix = prefix
+        ClassMerge.reset!
+      end
+
+      def class_merge
+        @class_merge ||= ClassMerge::Configuration.new
       end
 
       def modifiers

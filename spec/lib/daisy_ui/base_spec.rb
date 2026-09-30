@@ -160,4 +160,45 @@ describe DaisyUI::Base do
       end
     end
   end
+
+  describe "class merging" do
+    it "lets a caller class replace a modifier of the same family" do
+      expect(render(DaisyUI::Button.new(:sm, class: "btn-lg"))).to eq(html(<<~HTML))
+        <button class="btn btn-lg"></button>
+      HTML
+      expect(render(DaisyUI::Badge.new(:primary, class: "badge-error"))).to eq(html(<<~HTML))
+        <span class="badge badge-error"></span>
+      HTML
+    end
+
+    it "returns nil when there are no classes" do
+      component = Class.new(DaisyUI::Base) { self.component_class = nil }.new
+
+      expect(component.send(:merge_classes, nil, "")).to be_nil
+    end
+
+    context "when merging is disabled" do
+      around do |example|
+        DaisyUI.configure { |config| config.class_merge.enabled = false }
+        example.run
+      ensure
+        DaisyUI.configure { |config| config.class_merge.enabled = true }
+      end
+
+      it "joins classes as given" do
+        expect(render(DaisyUI::Button.new(:sm, class: "btn-lg"))).to eq(html(<<~HTML))
+          <button class="btn btn-sm btn-lg"></button>
+        HTML
+        expect(render(DaisyUI::Badge.new(:primary, class: "badge-error"))).to eq(html(<<~HTML))
+          <span class="badge badge-primary badge-error"></span>
+        HTML
+      end
+
+      it "returns nil when there are no classes" do
+        component = Class.new(DaisyUI::Base) { self.component_class = nil }.new
+
+        expect(component.send(:merge_classes, nil)).to be_nil
+      end
+    end
+  end
 end

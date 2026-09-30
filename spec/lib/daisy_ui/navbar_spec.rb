@@ -26,9 +26,9 @@ describe DaisyUI::Navbar do
           render described_class.new(:neutral, responsive: { viewport => %i[primary info] })
         end
 
-        it "renders it separately with a responsive prefix" do
+        it "keeps only the last conflicting responsive modifier" do
           expected_html = html <<~HTML
-            <nav class="navbar bg-neutral text-neutral-content #{viewport}:bg-primary #{viewport}:text-primary-content #{viewport}:bg-info #{viewport}:text-info-content"></nav>
+            <nav class="navbar bg-neutral text-neutral-content #{viewport}:bg-info #{viewport}:text-info-content"></nav>
           HTML
 
           expect(output).to eq(expected_html)
@@ -74,9 +74,9 @@ describe DaisyUI::Navbar do
     context "when given multiple conditions" do
       subject(:output) { render described_class.new(:primary, :secondary) }
 
-      it "renders them separately" do
+      it "keeps only the last conflicting modifier" do
         expected_html = html <<~HTML
-          <nav class="navbar bg-primary text-primary-content bg-secondary text-secondary-content"></nav>
+          <nav class="navbar bg-secondary text-secondary-content"></nav>
         HTML
 
         expect(output).to eq(expected_html)

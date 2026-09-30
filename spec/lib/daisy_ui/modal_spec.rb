@@ -59,9 +59,9 @@ describe DaisyUI::Modal do
           render described_class.new(:open, id: "test_modal", responsive: { viewport => %i[top middle] })
         end
 
-        it "renders it separately with a responsive prefix" do
+        it "keeps only the last conflicting responsive modifier" do
           expected_html = html <<~HTML
-            <dialog id="test_modal" class="modal modal-open #{viewport}:modal-top #{viewport}:modal-middle"></dialog>
+            <dialog id="test_modal" class="modal modal-open #{viewport}:modal-middle"></dialog>
           HTML
 
           expect(output).to eq(expected_html)

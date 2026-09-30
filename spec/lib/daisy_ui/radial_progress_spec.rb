@@ -26,9 +26,9 @@ describe DaisyUI::RadialProgress do
           render described_class.new(:neutral, value: 50, responsive: { viewport => %i[primary info] })
         end
 
-        it "renders it separately with a responsive prefix" do
+        it "keeps only the last conflicting responsive modifier" do
           expected_html = html <<~HTML
-            <div role="progressbar" class="radial-progress bg-neutral text-neutral-content border-neutral #{viewport}:bg-primary #{viewport}:text-primary-content #{viewport}:border-primary #{viewport}:bg-info #{viewport}:text-info-content #{viewport}:border-info" style="--value: 50;"></div>
+            <div role="progressbar" class="radial-progress bg-neutral text-neutral-content border-neutral #{viewport}:bg-info #{viewport}:text-info-content #{viewport}:border-info" style="--value: 50;"></div>
           HTML
 
           expect(output).to eq(expected_html)

@@ -196,3 +196,12 @@ Style/TrailingCommaInArrayLiteral:
 
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: no_comma
+
+# Ported tailwind_merge suite: file names mirror upstream's test files.
+RSpec/DescribeMethod:
+  Exclude:
+    - spec/lib/daisy_ui/class_merge/tailwind/**/*
+
+RSpec/SpecFilePathFormat:
+  Exclude:
+    - spec/lib/daisy_ui/class_merge/tailwind/**/*

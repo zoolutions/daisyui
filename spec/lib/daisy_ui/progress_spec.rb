@@ -40,9 +40,9 @@ describe DaisyUI::Progress do
     context "when given multiple conditions" do
       subject(:output) { render described_class.new(:primary, :neutral) }
 
-      it "renders them separately" do
+      it "keeps only the last conflicting modifier" do
         expected_html = html <<~HTML
-          <progress class="progress progress-primary progress-neutral"></progress>
+          <progress class="progress progress-neutral"></progress>
         HTML
 
         expect(output).to eq(expected_html)

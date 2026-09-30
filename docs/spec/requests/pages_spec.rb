@@ -28,6 +28,16 @@ RSpec.describe "Pages", type: :request do
       expect(response.body).to include("Installation")
     end
 
+    it "renders the class merging guide with live merge results" do
+      get doc_path("class-merging"), headers: headers
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Class merging")
+      expect(response.body).to include(">btn btn-sm btn-lg<")
+      expect(response.body).to include(">btn btn-lg<")
+      expect(response.body).to include("dropdown dropdown-top dropdown-end")
+    end
+
     it "404s for an unknown slug" do
       get doc_path("nope"), headers: headers
 

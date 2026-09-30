@@ -135,12 +135,11 @@ describe DaisyUI::Menu do
           render described_class.new(:xs, responsive: { viewport => %i[horizontal vertical] })
         end
 
-        it "renders it separately with a responsive prefix" do
+        it "keeps only the last conflicting responsive modifier" do
           expected_html = html <<~HTML
             <ul class="
               menu#{' '}
               menu-xs#{' '}
-              #{viewport}:menu-horizontal#{' '}
               #{viewport}:menu-vertical">
             </ul>
           HTML
@@ -168,12 +167,11 @@ describe DaisyUI::Menu do
           end
         end
 
-        it "renders it separately with a responsive prefix" do
+        it "keeps only the last conflicting responsive modifier" do
           expected_html = html <<~HTML
             <ul class="
               foo-menu#{' '}
               foo-menu-xs#{' '}
-              #{viewport}:foo-menu-horizontal#{' '}
               #{viewport}:foo-menu-vertical">
             </ul>
           HTML

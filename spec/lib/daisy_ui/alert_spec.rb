@@ -67,9 +67,9 @@ describe DaisyUI::Alert do
           render described_class.new(:neutral, responsive: { viewport => %i[primary info] })
         end
 
-        it "renders it separately with a responsive prefix" do
+        it "keeps only the last conflicting responsive modifier" do
           expected_html = html <<~HTML
-            <div role="alert" class="alert alert-neutral #{viewport}:alert-primary #{viewport}:alert-info"></div>
+            <div role="alert" class="alert alert-neutral #{viewport}:alert-info"></div>
           HTML
 
           expect(output).to eq(expected_html)
@@ -103,7 +103,7 @@ describe DaisyUI::Alert do
 
     it "is expected to match the formatted HTML" do
       expected_html = html <<~HTML
-        <div role="alert" class="alert alert-neutral alert-secondary" data-my="alert">Alert</div>
+        <div role="alert" class="alert alert-secondary" data-my="alert">Alert</div>
       HTML
 
       expect(output).to eq(expected_html)
