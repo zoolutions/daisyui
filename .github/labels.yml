@@ -127,6 +127,7 @@ paths:
   "LICENSE-tailwind_merge.txt": class-merge
   "spec/lib/daisy_ui/*_spec.rb": components
   "spec/lib/daisy_ui/class_merge/**/*": class-merge
+  "spec/lib/daisy_ui/class_merge_*_spec.rb": class-merge
   "spec/lib/daisy_ui/class_merge_spec.rb": class-merge
   ".github/**/*": devops
   "bin/release": devops
