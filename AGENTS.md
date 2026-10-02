@@ -165,6 +165,16 @@ All jobs run in parallel:
 - `docs-lint`: RuboCop, Biome, Stylelint on docs
 - `docs-test`: Playwright browser tests on docs
 
+## Labels
+
+Every pull request carries exactly one `type` label and at least one `area`
+label from `.github/labels.yml` — never a `status` label. `/plan` labels the
+issue, `/lfg` copies the issue's labels onto the PR (or infers them:
+`bin/labels infer $(git diff --name-only origin/main...HEAD)`). Labels change in
+the manifest and reach GitHub with `bin/labels sync`, never through the UI.
+Rules: `.github/LABELS.md`. `bin/labels` + `.github/LABELS.md` are the shared
+labels kit (canonical copy in docs-kit): never edit them in place.
+
 ## Screenshots on PRs and issues (always)
 
 `gh` ≥ 2.99 uploads images and videos itself. A change to a gem component's markup/classes, or to

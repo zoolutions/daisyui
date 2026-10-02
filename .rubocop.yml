@@ -17,6 +17,9 @@ AllCops:
 
 Layout/ArgumentAlignment:
   EnforcedStyle: with_fixed_indentation
+  # bin/labels is the zoolutions labels kit, byte-identical across repos; see docs-kit LABELS_KIT.md
+  Exclude:
+    - bin/labels
 
 Layout/ArrayAlignment:
   EnforcedStyle: with_fixed_indentation
@@ -75,9 +78,15 @@ Layout/MultilineArrayBraceLayout:
 
 Layout/MultilineMethodCallBraceLayout:
   EnforcedStyle: new_line
+  # bin/labels is the zoolutions labels kit, byte-identical across repos; see docs-kit LABELS_KIT.md
+  Exclude:
+    - bin/labels
 
 Layout/MultilineMethodCallIndentation:
   EnforcedStyle: indented
+  # bin/labels is the zoolutions labels kit, byte-identical across repos; see docs-kit LABELS_KIT.md
+  Exclude:
+    - bin/labels
 
 Layout/ParameterAlignment:
   EnforcedStyle: with_fixed_indentation
