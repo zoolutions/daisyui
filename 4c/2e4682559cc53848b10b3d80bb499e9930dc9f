@@ -1,0 +1,22 @@
+lib/daisy_ui/button.rb
+  s_41cfcbd0a1c196::t_5358180da46880 9-10
+  s_41cfcbd0a1c196::t_19dd1e3b07eaf4 34-43
+spec/lib/daisy_ui/button_spec.rb
+  ai_agent 119-203
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "4c2e4682559cc53848b10b3d80bb499e9930dc9f",
+  "prompts": {},
+  "sessions": {
+    "s_41cfcbd0a1c196": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "0588b1fc-14a6-4f92-9a4b-365631308461",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "mhenrixon <mikael@mhenrixon.com>"
+    }
+  }
+}
