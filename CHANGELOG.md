@@ -75,6 +75,9 @@ wins. `Button(:sm, class: "btn-lg")` renders `btn btn-lg` (1.x rendered
 ### Fixed
 
 - Popover tooltips no longer clip arrows that extend beyond the tooltip card.
+- Button renders the `disabled` attribute on `button`/`input` elements when given
+  `:disabled` or `disabled: true`, so a disabled submit button no longer submits
+  its form from the keyboard (#52).
 
 ## [0.1.0] - 2024-08-02
 
