@@ -6,6 +6,8 @@ module DaisyUI
   class Button < Base
     self.component_class = :btn
 
+    FORM_CONTROLS = %i[button input].freeze
+
     def initialize(*, as: :button, modal: nil, **)
       super(*, as:, **)
       @modal = modal
@@ -28,6 +30,16 @@ module DaisyUI
     private
 
     attr_reader :modal
+
+    # `disabled` is consumed as a modifier (btn-disabled), which only blocks
+    # pointer events. Form controls also need the attribute so keyboard
+    # activation and implicit form submission are blocked too.
+    def attributes
+      attrs = super
+      return attrs unless FORM_CONTROLS.include?(as.to_sym) && modifiers.include?(:disabled)
+
+      attrs.merge(disabled: true)
+    end
 
     register_modifiers(
       style: {

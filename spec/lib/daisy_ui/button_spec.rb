@@ -22,7 +22,6 @@ describe DaisyUI::Button do
       dash: "btn-dash",
       soft: "btn-soft",
       active: "btn-active",
-      disabled: "btn-disabled",
       lg: "btn-lg",
       md: "btn-md",
       sm: "btn-sm",
@@ -114,6 +113,94 @@ describe DaisyUI::Button do
       HTML
 
       expect(output).to eq(expected_html)
+    end
+  end
+
+  describe "disabled" do
+    shared_examples "a disabled form control" do |expected|
+      it "renders btn-disabled and the disabled attribute" do
+        expect(output).to eq(html(expected))
+      end
+    end
+
+    context "when given disabled: true" do
+      subject(:output) { render described_class.new(disabled: true) }
+
+      it_behaves_like "a disabled form control", <<~HTML
+        <button class="btn btn-disabled" disabled></button>
+      HTML
+    end
+
+    context "when given the :disabled modifier" do
+      subject(:output) { render described_class.new(:disabled) }
+
+      it_behaves_like "a disabled form control", <<~HTML
+        <button class="btn btn-disabled" disabled></button>
+      HTML
+    end
+
+    context "when rendered as a submit input" do
+      subject(:output) { render described_class.new(as: :input, type: "submit", disabled: true) }
+
+      it_behaves_like "a disabled form control", <<~HTML
+        <input class="btn btn-disabled" type="submit" disabled>
+      HTML
+    end
+
+    context "when rendered as a link" do
+      subject(:output) { render described_class.new(as: :a, href: "#", disabled: true) }
+
+      it "renders btn-disabled without the disabled attribute" do
+        expected_html = html <<~HTML
+          <a class="btn btn-disabled" href="#"></a>
+        HTML
+
+        expect(output).to eq(expected_html)
+      end
+    end
+
+    context "when given disabled: false" do
+      subject(:output) { render described_class.new(disabled: false) }
+
+      it "renders neither the class nor the attribute" do
+        expected_html = html <<~HTML
+          <button class="btn"></button>
+        HTML
+
+        expect(output).to eq(expected_html)
+      end
+    end
+
+    context "when disabled only at a breakpoint" do
+      subject(:output) { render described_class.new(responsive: { sm: :disabled }) }
+
+      it "renders the responsive class without the disabled attribute" do
+        expected_html = html <<~HTML
+          <button class="btn sm:btn-disabled"></button>
+        HTML
+
+        expect(output).to eq(expected_html)
+      end
+    end
+
+    context "when given other attributes" do
+      subject(:output) do
+        render described_class.new(
+          :disabled, type: "submit", tabindex: "-1", aria: { disabled: "true" }, data: { action: "form#submit" }
+        )
+      end
+
+      it_behaves_like "a disabled form control", <<~HTML
+        <button class="btn btn-disabled" type="submit" tabindex="-1" aria-disabled="true" data-action="form#submit" disabled></button>
+      HTML
+    end
+
+    context "when combined with :modal" do
+      subject(:output) { render described_class.new(:disabled, modal: "my_modal") }
+
+      it_behaves_like "a disabled form control", <<~HTML
+        <button class="btn btn-disabled" onclick="my_modal.showModal()" disabled></button>
+      HTML
     end
   end
 
