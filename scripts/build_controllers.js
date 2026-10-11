@@ -16,7 +16,7 @@
 // gates on `rake build:js_check`. Build with that bun: 1.4.0 prepends a require
 // shim to a module with a dynamic import(), which the dropdown controller has.
 
-import { rm } from "node:fs/promises"
+import { readdir, rm } from "node:fs/promises"
 import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 
@@ -27,9 +27,10 @@ const srcDir = join(root, "app/javascript/daisy_ui/controllers")
 const ENTRIES = ["daisy_dropdown_controller", "daisy_tooltip_controller"]
 const EXTERNAL = ["@hotwired/stimulus", "@floating-ui/dom"]
 
-for (const name of ENTRIES) {
-  await rm(join(srcDir, `${name}.min.js`), { force: true })
-  await rm(join(srcDir, `${name}.min.js.map`), { force: true })
+// Remove every previous output, so a removed or renamed controller leaves no
+// orphan .min.js behind (the engine precompiles whatever .min.js exists).
+for (const file of await readdir(srcDir)) {
+  if (/\.min\.js(\.map)?$/.test(file)) await rm(join(srcDir, file))
 }
 
 const result = await Bun.build({

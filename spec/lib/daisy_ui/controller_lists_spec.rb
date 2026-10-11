@@ -18,6 +18,12 @@ RSpec.describe "Stimulus controller lists" do # rubocop:disable RSpec/DescribeCl
     expect(built).to eq(sources)
   end
 
+  it "ships a minified build for every controller source and nothing else" do
+    minified = Dir[File.join(root, "app/javascript/daisy_ui/controllers/*.min.js")].map { |f| File.basename(f, ".min.js") }
+
+    expect(minified.sort).to eq(sources)
+  end
+
   it "pins every controller source" do
     expect(pinned).to eq(sources)
   end
