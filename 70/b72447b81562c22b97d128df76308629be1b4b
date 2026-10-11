@@ -1,0 +1,26 @@
+package.json
+  s_8c050a16f0fbc1::t_9a3b4325870e84 4
+scripts/build_controllers.js
+  s_8c050a16f0fbc1::t_bc6b8be97749c7 32-33,35-37
+  s_8c050a16f0fbc1::t_9a3b4325870e84 15
+  s_8c050a16f0fbc1::t_7cfd06832f218e 40-57
+  s_8c050a16f0fbc1::t_9dc68f7085e2cc 58
+CHANGELOG.md
+  s_8c050a16f0fbc1::t_9a3b4325870e84 103-104
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "70b72447b81562c22b97d128df76308629be1b4b",
+  "prompts": {},
+  "sessions": {
+    "s_8c050a16f0fbc1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9026e661-b7fc-42f4-8445-5c91e0927ed2",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "mhenrixon <mikael@mhenrixon.com>"
+    }
+  }
+}
