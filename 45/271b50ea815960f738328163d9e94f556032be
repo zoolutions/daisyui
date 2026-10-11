@@ -1,0 +1,29 @@
+Rakefile
+  s_8c050a16f0fbc1::t_96312919054730 33,35-36
+  s_8c050a16f0fbc1::t_6078c12fed792e 34,37-41
+  s_8c050a16f0fbc1::t_9db899b201f825 3
+  s_8c050a16f0fbc1::t_7d345e00ad6c84 17-19
+spec/lib/daisy_ui/controller_lists_spec.rb
+  s_8c050a16f0fbc1::t_7d345e00ad6c84 1-24
+lib/daisy_ui/engine.rb
+  s_8c050a16f0fbc1::t_46e9ed78a6d0ad 22-24
+  s_8c050a16f0fbc1::t_2e7c9b80e86dbf 30-32
+docs/Dockerfile
+  s_8c050a16f0fbc1::t_96000b3330b764 38-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "45271b50ea815960f738328163d9e94f556032be",
+  "prompts": {},
+  "sessions": {
+    "s_8c050a16f0fbc1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9026e661-b7fc-42f4-8445-5c91e0927ed2",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "mhenrixon <mikael@mhenrixon.com>"
+    }
+  }
+}
