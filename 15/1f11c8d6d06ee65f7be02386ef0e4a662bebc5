@@ -1,0 +1,21 @@
+spec/lib/daisy_ui/controller_lists_spec.rb
+  s_8c050a16f0fbc1::t_08539d9cbc3337 21-26
+scripts/build_controllers.js
+  s_8c050a16f0fbc1::t_08539d9cbc3337 19,30-33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "151f11c8d6d06ee65f7be02386ef0e4a662bebc5",
+  "prompts": {},
+  "sessions": {
+    "s_8c050a16f0fbc1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9026e661-b7fc-42f4-8445-5c91e0927ed2",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "mhenrixon <mikael@mhenrixon.com>"
+    }
+  }
+}
