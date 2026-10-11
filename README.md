@@ -302,6 +302,10 @@ import { lazyLoadControllersFrom } from "@hotwired/stimulus-loading"
 lazyLoadControllersFrom("daisy_ui/controllers", application)
 ```
 
+The pin resolves to a minified build with a linked sourcemap (devtools shows the
+readable source) and is not preloaded: a page fetches the controller the first
+time one of its elements appears.
+
 Then opt in per call site:
 
 ```ruby
@@ -375,7 +379,7 @@ end
 Register the gem controllers once with
 `lazyLoadControllersFrom("daisy_ui/controllers", application)`, as shown in the
 dropdown controller section above. Importmap-rails applications receive the
-controller pin from the gem automatically. Bundler applications can import
+controller pin (minified, not preloaded) from the gem automatically. Bundler applications can import
 `app/javascript/daisy_ui/controllers/daisy_tooltip_controller.js` and register
 it as `daisy-tooltip`.
 
@@ -447,6 +451,11 @@ Which produces:
 # Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bundle exec rspec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+
+After editing a Stimulus controller in `app/javascript/daisy_ui/controllers/`,
+rebuild its minified twin with `bundle exec rake build:js` (needs the bun in
+`.bun-version`) and commit the `.min.js` and `.min.js.map`. CI runs
+`bundle exec rake build:js_check` and fails when they are stale.
 
 # Contributing
 

@@ -20,6 +20,14 @@ jobs:
           bundler-cache: true
       - name: Run RuboCop
         run: bundle exec rubocop lib spec
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: ".bun-version"
+      - name: Minified controllers are in sync (drift guard)
+        # The committed *.min.js/*.min.js.map must match a fresh build. The bun
+        # minifier is deterministic for ONE bun version, the one in .bun-version,
+        # so a changed byte means a source edit without `rake build:js`.
+        run: bundle exec rake build:js_check
 
   gem-test:
     runs-on: ubuntu-26.04

@@ -1,0 +1,2 @@
+*.min.js linguist-generated=true -diff
+*.min.js.map linguist-generated=true -diff
