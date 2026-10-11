@@ -35,6 +35,9 @@ RUN curl -fsSL https://bun.sh/install | bash -s -- "bun-v${BUN_VERSION}"
 # Copy the gem source first (path: ".." dependency from docs/Gemfile)
 COPY --link lib/ /gem/lib/
 COPY --link exe/ /gem/exe/
+# The Stimulus controllers and the importmap that pins them.
+COPY --link app/ /gem/app/
+COPY --link config/ /gem/config/
 COPY --link daisyui.gemspec /gem/daisyui.gemspec
 COPY --link Gemfile /gem/Gemfile
 

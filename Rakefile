@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "English"
 require "rspec/core/rake_task"
 
 RSpec::Core::RakeTask.new(:spec) do |t|
@@ -9,6 +10,37 @@ end
 require "rubocop/rake_task"
 
 RuboCop::RakeTask.new
+
+# Minified Stimulus controllers (scripts/build_controllers.js). The output is
+# deterministic for the bun in .bun-version, so it is committed and shipped.
+namespace :build do
+  # `git status`, not `git diff`: a .min.js deleted from the index comes back
+  # from the rebuild as an untracked file, which only status reports. Quoted so
+  # git, not the shell, expands the pathspec.
+  min_glob = "app/javascript/daisy_ui/controllers/*.min.js*"
+
+  desc "Minify the Stimulus controllers via bun"
+  task :js do
+    wanted = File.read(".bun-version").strip
+    found = `bun --version 2>/dev/null`.strip
+    abort "bun #{wanted} is required (found #{found.empty? ? 'none' : found}): https://bun.sh" unless found == wanted
+
+    sh "bun run scripts/build_controllers.js"
+  end
+
+  desc "Verify the committed minified controllers match a fresh build (CI drift guard)"
+  task js_check: :js do
+    status = `git status --porcelain -- '#{min_glob}'`
+    abort "git status failed" unless $CHILD_STATUS.success?
+    # Second column: the working tree against the index (a staged rebuild is fine).
+    drift = status.lines.reject { |line| line[1] == " " }.join
+    next if drift.empty?
+
+    warn drift
+    warn "\e[31mMinified controllers are stale — run `bundle exec rake build:js` and commit the result.\e[0m"
+    abort "Committed .min.js/.min.js.map do not match a fresh build."
+  end
+end
 
 desc "Build gem and verify contents"
 task :build do
