@@ -188,7 +188,8 @@ DaisyUI.configure do |config|
   config.unknown_modifiers = :raise # raises DaisyUI::UnknownModifierError
   # Or :warn (Kernel#warn), :ignore, or a callable such as
   # ->(error) { Appsignal.report_error(error) }. :warn and a callable fire once
-  # per component and modifier.
+  # per component (or sub-component part, e.g. Chat#bubble) and modifier; the
+  # memory of what was reported resets after 1,000 distinct keys.
 end
 ```
 

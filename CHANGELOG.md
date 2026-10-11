@@ -18,8 +18,10 @@ end
   register the modifier, or set `:warn`/`:ignore`.
 - `:raise` raises `DaisyUI::UnknownModifierError` (an `ArgumentError`) naming
   the component, the modifier and the closest registered ones.
-- `:warn` and a callable fire once per component and modifier (thread-safe; the
-  memory of what was reported is capped). Use a callable to send it to an
+- `:warn` and a callable fire once per component (or part, so `Chat` and
+  `Chat#bubble` count separately) and modifier. Thread-safe; the memory of what
+  was reported resets after 1,000 distinct keys, so a modifier may be reported
+  again after that. Use a callable to send it to an
   error tracker:
   `config.unknown_modifiers = ->(error) { Appsignal.report_error(error) }`.
 - Known means the component's `register_modifiers`, `config.modifiers.add`, and
