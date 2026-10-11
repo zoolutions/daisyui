@@ -1,0 +1,39 @@
+lib/daisy_ui/base.rb
+  s_8c050a16f0fbc1::t_35ed546bb5e798 292,297-302
+  s_8c050a16f0fbc1::t_52187c81435de1 305-307,309-323
+README.md
+  s_8c050a16f0fbc1::t_0dfcc39aaf2d72 189-191,195-200
+lib/daisy_ui/steps.rb
+  s_8c050a16f0fbc1::t_3ffbb630e08dcb 30
+lib/daisy_ui/indicator.rb
+  s_8c050a16f0fbc1::t_3ffbb630e08dcb 22
+lib/daisy_ui/configurable.rb
+  s_8c050a16f0fbc1::t_d7f5c76b92252d 115-126
+  s_8c050a16f0fbc1::t_7312b14e3e7e96 56,63
+  s_8c050a16f0fbc1::t_42181f91b25a21 83-84,88-92,97
+lib/daisy_ui/unknown_modifier_error.rb
+  s_8c050a16f0fbc1::t_3c40ac4108bac8 9,11-12,15,22-24
+CHANGELOG.md
+  s_8c050a16f0fbc1::t_f6a908666f7c4d 21-23,28-30
+  ai_agent 107-108
+lib/daisy_ui/chat.rb
+  s_8c050a16f0fbc1::t_3ffbb630e08dcb 111
+spec/lib/daisy_ui/configurable/configuration_unknown_modifiers_spec.rb
+  ai_agent 1-110
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "35f3103ae7c3fc887e3f888664c7fe6fba31fc9a",
+  "prompts": {},
+  "sessions": {
+    "s_8c050a16f0fbc1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9026e661-b7fc-42f4-8445-5c91e0927ed2",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "mhenrixon <mikael@mhenrixon.com>"
+    }
+  }
+}
