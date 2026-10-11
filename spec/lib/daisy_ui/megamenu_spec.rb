@@ -161,7 +161,7 @@ describe DaisyUI::Megamenu do
       end
     end
 
-    context "when there\x27s no custom modifier", :ignore_unknown_modifiers do
+    context "when there's no custom modifier", :ignore_unknown_modifiers do
       subject(:output) do
         render described_class.new(:my_modifier)
       end

@@ -171,4 +171,19 @@ RSpec.describe DaisyUI::UnknownModifierError do
       expect(reported.first.modifier).to eq(:primray)
     end
   end
+
+  context "when a tab or submenu is given :open without the part that uses it" do
+    before { DaisyUI.configuration.unknown_modifiers = :raise }
+
+    it "accepts :open and :closed on a tab without content" do
+      expect(DaisyUI::Tabs.new.call { |tabs| tabs.tab(:open, label: "A") })
+        .to include(%(class="tab"))
+      expect { DaisyUI::Tabs.new.call { |tabs| tabs.tab(:closed, label: "A") } }.not_to raise_error
+    end
+
+    it "accepts :open on a non-collapsible submenu" do
+      expect { DaisyUI::Menu.new.call { |menu| menu.submenu(:open) { |sub| sub.title { "T" } } } }
+        .not_to raise_error
+    end
+  end
 end

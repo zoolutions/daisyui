@@ -13,8 +13,11 @@ end
 
 - The default is `:raise` under Rails in development and test, and `:warn`
   everywhere else (production, plain Ruby). A Rails app's test suite can go red
-  after upgrading if it passes a modifier a component never had: fix the call,
+  after upgrading if it passes a modifier a component never had, e.g.
+  `Toggle(:checked)` or `Radio(:checked)` (use `checked: true`): fix the call,
   register the modifier, or set `:warn`/`:ignore`.
+- Modifiers added with `config.modifiers.add(component: X)` apply to `X` only,
+  not its subclasses, so a subclass given one raises (it never got the class).
 - `:raise` raises `DaisyUI::UnknownModifierError` (an `ArgumentError`) naming
   the component, the modifier and the closest registered ones.
 - `:warn` and a callable fire once per component and modifier. Use a callable
