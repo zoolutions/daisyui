@@ -1,5 +1,37 @@
 ## [Unreleased]
 
+### Unknown modifiers are reported (#54)
+
+A positional or responsive modifier a component does not know used to render
+nothing, silently. `config.unknown_modifiers` now decides what happens:
+
+```ruby
+DaisyUI.configure do |config|
+  config.unknown_modifiers = :raise # :raise | :warn | :ignore | ->(error) { ... }
+end
+```
+
+- The default is `:raise` under Rails in development and test, and `:warn`
+  everywhere else (production, plain Ruby). A Rails app's test suite can go red
+  after upgrading if it passes a modifier a component never had, e.g.
+  `Toggle(:checked)` or `Radio(:checked)` (use `checked: true`): fix the call,
+  register the modifier, or set `:warn`/`:ignore`.
+- `:raise` raises `DaisyUI::UnknownModifierError` (an `ArgumentError`) naming
+  the component, the modifier and the closest registered ones.
+- `:warn` and a callable fire once per component (or part, so `Chat` and
+  `Chat#bubble` count separately) and modifier. Thread-safe; the memory of what
+  was reported resets after 1,000 distinct keys, so a modifier may be reported
+  again after that. Use a callable to send it to an
+  error tracker:
+  `config.unknown_modifiers = ->(error) { Appsignal.report_error(error) }`.
+- Known means the component's `register_modifiers`, `config.modifiers.add`, and
+  the new `register_flags` for positional symbols a component handles itself
+  without a class (Dropdown's `:popover`, Modal's `:tap_outside_to_close`, ...).
+  Flags are not valid in `responsive:`.
+- `Chat#bubble`, `Steps#step` and `Indicator#item` check their modifiers too
+  (`DaisyUI::Chat#bubble has no modifier :primray`).
+- Keyword booleans are not validated: unknown keywords stay HTML attributes.
+
 ### Upgrading to 2.0
 
 Components now merge their classes: when two classes conflict, the later one
@@ -74,6 +106,8 @@ wins. `Button(:sm, class: "btn-lg")` renders `btn btn-lg` (1.x rendered
 
 ### Fixed
 
+- Modifiers added with `config.modifiers.add(component: X)` now apply to
+  subclasses of `X` too; the closest class wins.
 - Popover tooltips no longer clip arrows that extend beyond the tooltip card.
 - Button renders the `disabled` attribute on `button`/`input` elements when given
   `:disabled` or `disabled: true`, so a disabled submit button no longer submits

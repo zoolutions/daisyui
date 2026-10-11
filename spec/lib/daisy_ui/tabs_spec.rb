@@ -94,9 +94,9 @@ describe DaisyUI::Tabs do
     end
 
     context "when condition doesn't exist" do
-      it "raises an error" do
+      it "raises UnknownModifierError" do
         expect { render described_class.new(:foo) }
-          .not_to raise_error
+          .to raise_error(DaisyUI::UnknownModifierError, /:foo/)
       end
     end
 

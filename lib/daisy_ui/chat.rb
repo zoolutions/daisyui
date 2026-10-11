@@ -108,6 +108,7 @@ module DaisyUI
     private
 
     def build_bubble_classes(modifiers, options)
+      report_unknown_modifiers(modifiers, BUBBLE_MODIFIERS.keys, part: :bubble)
       modifier_classes = modifiers.filter_map { |mod| apply_prefix(BUBBLE_MODIFIERS[mod]) }
       merge_classes(apply_prefix("chat-bubble"), *modifier_classes, options.delete(:class))
     end

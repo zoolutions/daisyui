@@ -4,6 +4,7 @@ module DaisyUI
   # @private
   class CollapsibleSubMenu < Base
     self.component_class = nil
+    register_flags :collapsible, :open
 
     def initialize(*, **)
       super

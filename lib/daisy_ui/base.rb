@@ -119,8 +119,18 @@ module DaisyUI
     }.freeze
 
     class << self
-      attr_writer :component_class, :modifier_groups
+      attr_writer :component_class, :modifier_groups, :flags
       attr_accessor :modifiers
+
+      # Positional symbols a component handles itself (e.g. Dropdown's
+      # :popover): accepted as modifiers, but they emit no class.
+      def flags
+        @flags ||= []
+      end
+
+      def register_flags(*names)
+        self.flags = flags | names
+      end
 
       # { group => [modifier, ...] }: modifiers in one group are alternatives
       # (sizes, colors, ...), so ClassMerge keeps only the last one.
@@ -145,6 +155,7 @@ module DaisyUI
         super
         subclass.modifiers = (modifiers || {}).dup
         subclass.modifier_groups = modifier_groups.transform_values(&:dup)
+        subclass.flags = flags.dup
         # Inherit component_class if it was explicitly set
         return unless instance_variable_defined?(:@component_class)
 
@@ -188,6 +199,7 @@ module DaisyUI
       # Store all keyword arguments (class, data, aria, etc.)
       # This will be processed by `classes` and `attributes` methods
       @options = options
+      validate_modifiers
       super()
     end
 
@@ -277,9 +289,39 @@ module DaisyUI
       {
         skeleton: "skeleton",
         **(self.class.modifiers || {}),
-        **DaisyUI.configuration.modifiers.for(component: self.class),
+        **configured_modifiers,
         **DaisyUI.configuration.modifiers.for(component: nil)
       }
+    end
+
+    # Modifiers added with `config.modifiers.add(component:)` for this class or
+    # any DaisyUI ancestor; the closest class wins.
+    def configured_modifiers
+      self.class.ancestors.take_while { |klass| klass != Base }.reverse.reduce({}) do |result, klass|
+        result.merge(DaisyUI.configuration.modifiers.for(component: klass))
+      end
+    end
+
+    # Reports positional modifiers that are neither in modifier_map nor a
+    # registered flag, and responsive ones not in modifier_map (a flag has no
+    # class to prefix). See Configuration#unknown_modifiers.
+    def validate_modifiers
+      responsive = (options[:responsive]&.values || []).flat_map { |mods| Array(mods) }
+      return if modifiers.empty? && responsive.empty?
+
+      map_keys = modifier_map.keys
+      report_unknown_modifiers(modifiers, map_keys | self.class.flags)
+      report_unknown_modifiers(responsive, map_keys)
+    end
+
+    # For sub-component methods with their own modifiers, e.g. Chat#bubble:
+    # `report_unknown_modifiers(modifiers, BUBBLE_MODIFIERS.keys, part: :bubble)`.
+    def report_unknown_modifiers(requested, known, part: nil)
+      requested.each do |modifier|
+        next if !modifier.is_a?(Symbol) || known.include?(modifier)
+
+        DaisyUI.configuration.report_unknown_modifier(component: self.class, modifier:, known:, part:)
+      end
     end
 
     def extract_boolean_modifiers(options)

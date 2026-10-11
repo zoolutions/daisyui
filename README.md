@@ -177,6 +177,38 @@ arrays, `nil` and `false`; returns a frozen String). Opt out globally with
 `config.class_merge.enabled = false`, or per component by overriding the
 private `merge_classes`.
 
+## Unknown modifiers
+
+A positional or responsive modifier the component does not know
+(`Toggle(:primray)`) is reported instead of silently rendering nothing:
+
+```ruby
+DaisyUI.configure do |config|
+  # Default: :raise under Rails in development/test, :warn everywhere else.
+  config.unknown_modifiers = :raise # raises DaisyUI::UnknownModifierError
+  # Or :warn (Kernel#warn), :ignore, or a callable such as
+  # ->(error) { Appsignal.report_error(error) }. :warn and a callable fire once
+  # per component (or sub-component part, e.g. Chat#bubble) and modifier; the
+  # memory of what was reported resets after 1,000 distinct keys.
+end
+```
+
+Known modifiers are the component's `register_modifiers`, `config.modifiers.add`
+(for the component or any DaisyUI ancestor), and `register_flags`: positional
+symbols your component handles itself without emitting a class. Flags are not
+valid in `responsive:`, since they have no class to prefix. Sub-component
+methods with their own modifiers (`Chat#bubble`, `Steps#step`,
+`Indicator#item`) are checked too.
+
+```ruby
+class Widget < DaisyUI::Base
+  register_flags :collapsed # Widget(:collapsed) is valid; read it via `modifiers.include?(:collapsed)`
+end
+```
+
+Keyword arguments are not validated: `Toggle(primray: true)` renders a
+`primray` attribute, because unknown keywords are HTML attributes.
+
 # Compatibility Notes
 
 ## @tailwindcss/forms plugin

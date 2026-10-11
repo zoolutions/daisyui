@@ -43,9 +43,9 @@ describe DaisyUI::Aura do
     end
 
     context "when condition doesn't exist" do
-      it "does not raise an error" do
+      it "raises UnknownModifierError" do
         expect { render described_class.new(:foo) }
-          .not_to raise_error
+          .to raise_error(DaisyUI::UnknownModifierError, /:foo/)
       end
     end
 
@@ -164,7 +164,7 @@ describe DaisyUI::Aura do
       end
     end
 
-    context "when there's no custom modifier" do
+    context "when there's no custom modifier", :ignore_unknown_modifiers do
       subject(:output) do
         render described_class.new(:my_modifier)
       end

@@ -4,6 +4,7 @@ module DaisyUI
   # @private
   class TabWithoutContent < Base
     self.component_class = :tab
+    register_flags :open, :closed
 
     def initialize(*, label: nil, **)
       super(*, **)

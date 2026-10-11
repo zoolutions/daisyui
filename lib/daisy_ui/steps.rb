@@ -27,6 +27,7 @@ module DaisyUI
     private
 
     def build_step_classes(step_modifiers, options)
+      report_unknown_modifiers(step_modifiers, step_modifier_map.keys, part: :step)
       base = apply_prefix("step")
       mod_classes = step_modifiers.filter_map { |m| apply_prefix(step_modifier_map[m]) }
       custom = options.delete(:class)

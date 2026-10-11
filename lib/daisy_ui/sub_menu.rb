@@ -3,6 +3,8 @@
 module DaisyUI
   # @private
   class SubMenu < Base
+    register_flags :open
+
     def initialize(*, **)
       super
       @items = []
