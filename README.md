@@ -186,15 +186,18 @@ A positional or responsive modifier the component does not know
 DaisyUI.configure do |config|
   # Default: :raise under Rails in development/test, :warn everywhere else.
   config.unknown_modifiers = :raise # raises DaisyUI::UnknownModifierError
-  config.unknown_modifiers = :warn  # Kernel#warn, once per component and modifier
-  config.unknown_modifiers = :ignore
-  config.unknown_modifiers = ->(error) { Appsignal.report_error(error) } # once per component and modifier
+  # Or :warn (Kernel#warn), :ignore, or a callable such as
+  # ->(error) { Appsignal.report_error(error) }. :warn and a callable fire once
+  # per component and modifier.
 end
 ```
 
-Known modifiers are the component's `register_modifiers`, `config.modifiers.add`,
-and `register_flags`: positional symbols your component handles itself without
-emitting a class.
+Known modifiers are the component's `register_modifiers`, `config.modifiers.add`
+(for the component or any DaisyUI ancestor), and `register_flags`: positional
+symbols your component handles itself without emitting a class. Flags are not
+valid in `responsive:`, since they have no class to prefix. Sub-component
+methods with their own modifiers (`Chat#bubble`, `Steps#step`,
+`Indicator#item`) are checked too.
 
 ```ruby
 class Widget < DaisyUI::Base

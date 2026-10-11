@@ -289,23 +289,38 @@ module DaisyUI
       {
         skeleton: "skeleton",
         **(self.class.modifiers || {}),
-        **DaisyUI.configuration.modifiers.for(component: self.class),
+        **configured_modifiers,
         **DaisyUI.configuration.modifiers.for(component: nil)
       }
     end
 
-    # Reports positional and responsive modifiers that are neither in
-    # modifier_map nor a registered flag (see Configuration#unknown_modifiers).
-    def validate_modifiers
-      requested = modifiers + (options[:responsive]&.values || []).flat_map { |mods| Array(mods) }
-      requested = requested.select { |mod| mod.is_a?(Symbol) }
-      return if requested.empty?
+    # Modifiers added with `config.modifiers.add(component:)` for this class or
+    # any DaisyUI ancestor; the closest class wins.
+    def configured_modifiers
+      self.class.ancestors.take_while { |klass| klass != Base }.reverse.reduce({}) do |result, klass|
+        result.merge(DaisyUI.configuration.modifiers.for(component: klass))
+      end
+    end
 
-      known = modifier_map.keys | self.class.flags
-      (requested - known).uniq.each do |modifier|
-        DaisyUI.configuration.report_unknown_modifier(
-          UnknownModifierError.new(component: self.class, modifier:, known:)
-        )
+    # Reports positional modifiers that are neither in modifier_map nor a
+    # registered flag, and responsive ones not in modifier_map (a flag has no
+    # class to prefix). See Configuration#unknown_modifiers.
+    def validate_modifiers
+      responsive = (options[:responsive]&.values || []).flat_map { |mods| Array(mods) }
+      return if modifiers.empty? && responsive.empty?
+
+      map_keys = modifier_map.keys
+      report_unknown_modifiers(modifiers, map_keys | self.class.flags)
+      report_unknown_modifiers(responsive, map_keys)
+    end
+
+    # For sub-component methods with their own modifiers, e.g. Chat#bubble:
+    # `report_unknown_modifiers(modifiers, BUBBLE_MODIFIERS.keys, part: :bubble)`.
+    def report_unknown_modifiers(requested, known, part: nil)
+      requested.each do |modifier|
+        next if !modifier.is_a?(Symbol) || known.include?(modifier)
+
+        DaisyUI.configuration.report_unknown_modifier(component: self.class, modifier:, known:, part:)
       end
     end
 

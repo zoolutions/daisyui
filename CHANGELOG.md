@@ -16,16 +16,18 @@ end
   after upgrading if it passes a modifier a component never had, e.g.
   `Toggle(:checked)` or `Radio(:checked)` (use `checked: true`): fix the call,
   register the modifier, or set `:warn`/`:ignore`.
-- Modifiers added with `config.modifiers.add(component: X)` apply to `X` only,
-  not its subclasses, so a subclass given one raises (it never got the class).
 - `:raise` raises `DaisyUI::UnknownModifierError` (an `ArgumentError`) naming
   the component, the modifier and the closest registered ones.
-- `:warn` and a callable fire once per component and modifier. Use a callable
-  to send it to an error tracker:
+- `:warn` and a callable fire once per component and modifier (thread-safe; the
+  memory of what was reported is capped). Use a callable to send it to an
+  error tracker:
   `config.unknown_modifiers = ->(error) { Appsignal.report_error(error) }`.
 - Known means the component's `register_modifiers`, `config.modifiers.add`, and
   the new `register_flags` for positional symbols a component handles itself
   without a class (Dropdown's `:popover`, Modal's `:tap_outside_to_close`, ...).
+  Flags are not valid in `responsive:`.
+- `Chat#bubble`, `Steps#step` and `Indicator#item` check their modifiers too
+  (`DaisyUI::Chat#bubble has no modifier :primray`).
 - Keyword booleans are not validated: unknown keywords stay HTML attributes.
 
 ### Upgrading to 2.0
@@ -102,6 +104,8 @@ wins. `Button(:sm, class: "btn-lg")` renders `btn btn-lg` (1.x rendered
 
 ### Fixed
 
+- Modifiers added with `config.modifiers.add(component: X)` now apply to
+  subclasses of `X` too; the closest class wins.
 - Popover tooltips no longer clip arrows that extend beyond the tooltip card.
 - Button renders the `disabled` attribute on `button`/`input` elements when given
   `:disabled` or `disabled: true`, so a disabled submit button no longer submits

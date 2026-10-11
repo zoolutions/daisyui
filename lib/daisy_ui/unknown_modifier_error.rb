@@ -6,18 +6,22 @@ module DaisyUI
   # Raised (or warned, or reported) when a component is given a positional
   # modifier it does not know. See `DaisyUI.configuration.unknown_modifiers`.
   class UnknownModifierError < ArgumentError
-    attr_reader :component, :modifier
+    attr_reader :component, :modifier, :part
 
-    def initialize(component:, modifier:, known:)
+    # `part` names the sub-component method (e.g. :bubble for Chat#bubble).
+    def initialize(component:, modifier:, known:, part: nil)
       @component = component
       @modifier = modifier
+      @part = part
       super(build_message(known))
     end
 
     private
 
     def build_message(known)
-      message = "#{component.name || component.inspect} has no modifier #{modifier.inspect}"
+      name = component.name || component.inspect
+      name = "#{name}##{part}" if part
+      message = "#{name} has no modifier #{modifier.inspect}"
       suggestions = DidYouMean::SpellChecker.new(dictionary: known.map(&:to_s)).correct(modifier.to_s)
       return message if suggestions.empty?
 

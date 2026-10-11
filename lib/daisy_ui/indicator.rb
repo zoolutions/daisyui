@@ -19,6 +19,7 @@ module DaisyUI
     private
 
     def build_item_classes(item_modifiers, options)
+      report_unknown_modifiers(item_modifiers, modifier_map.keys, part: :item)
       # Start with base class
       base = apply_prefix("indicator-item")
       # Add modifier classes from position modifiers
