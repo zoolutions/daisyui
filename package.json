@@ -1,7 +1,7 @@
 {
   "private": true,
   "engines": {
-    "bun": ">=1.4.0"
+    "bun": "1.4.2"
   },
   "scripts": {
     "build:js": "bun run scripts/build_controllers.js"

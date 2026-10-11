@@ -12,7 +12,7 @@
 // Stimulus) and @floating-ui/dom (the dropdown's optional, host-pinned fallback).
 //
 // The output is DETERMINISTIC for the bun pinned in .bun-version, so the
-// .min.js/.min.js.map are committed (hosts and releases need no bun) and CI
+// .min.js/.min.js.map are committed (package.json engines pins the same bun) (hosts and releases need no bun) and CI
 // gates on `rake build:js_check`. Build with that bun: 1.4.0 prepends a require
 // shim to a module with a dynamic import(), which the dropdown controller has.
 
@@ -29,24 +29,33 @@ const EXTERNAL = ["@hotwired/stimulus", "@floating-ui/dom"]
 
 // Remove every previous output, so a removed or renamed controller leaves no
 // orphan .min.js behind (the engine precompiles whatever .min.js exists).
+// They are kept in memory and put back if the build fails.
+const previous = new Map()
 for (const file of await readdir(srcDir)) {
-  if (/\.min\.js(\.map)?$/.test(file)) await rm(join(srcDir, file))
+  if (!/\.min\.js(\.map)?$/.test(file)) continue
+  previous.set(file, await Bun.file(join(srcDir, file)).bytes())
+  await rm(join(srcDir, file))
 }
 
-const result = await Bun.build({
-  entrypoints: ENTRIES.map((name) => join(srcDir, `${name}.js`)),
-  outdir: srcDir,
-  root: srcDir,
-  target: "browser",
-  format: "esm",
-  minify: true,
-  sourcemap: "linked",
-  naming: "[dir]/[name].min.[ext]",
-  external: EXTERNAL,
-})
-
-if (!result.success) {
-  for (const log of result.logs) console.error(log)
+// Bun.build throws on a build error (it returns success: false only with
+// throw: false), so both paths restore the previous outputs.
+let result
+try {
+  result = await Bun.build({
+    entrypoints: ENTRIES.map((name) => join(srcDir, `${name}.js`)),
+    outdir: srcDir,
+    root: srcDir,
+    target: "browser",
+    format: "esm",
+    minify: true,
+    sourcemap: "linked",
+    naming: "[dir]/[name].min.[ext]",
+    external: EXTERNAL,
+  })
+  if (!result.success) throw new AggregateError(result.logs, "build failed")
+} catch (error) {
+  for (const log of error.errors ?? [error]) console.error(log)
+  for (const [file, bytes] of previous) await Bun.write(join(srcDir, file), bytes)
   process.exit(1)
 }
 

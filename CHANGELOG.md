@@ -100,7 +100,8 @@ wins. `Button(:sm, class: "btn-lg")` renders `btn btn-lg` (1.x rendered
 ### Changed
 
 - The gem ships minified Stimulus controllers with linked sourcemaps, and the
-  importmap pins them without preloading, so a page that never uses one never
+  importmap pins them without preloading, so with the lazy registration the
+  README shows (`lazyLoadControllersFrom`) a page that never uses one never
   fetches it. `daisy_dropdown_controller` 6.1 KB → 2.8 KB (2.4 → 1.3 KB gzipped),
   `daisy_tooltip_controller` 8.8 KB → 5.2 KB (2.4 → 1.8 KB gzipped). The
   `daisy_ui/controllers/*` specifiers and the bundler import paths are unchanged.
