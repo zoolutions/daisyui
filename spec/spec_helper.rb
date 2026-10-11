@@ -11,6 +11,9 @@ Dir["./spec/support/**/*.rb"].each do |f|
   require f
 end
 
+# Every component call in the suite must use modifiers the component knows.
+DaisyUI.configuration.unknown_modifiers = :raise
+
 # Helper to render Phlex components for testing
 module ComponentHelpers
   def render(component, &)
@@ -35,6 +38,13 @@ end
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   config.include ComponentHelpers
+  # Examples that exercise how an unknown modifier renders when ignored.
+  config.around(:each, :ignore_unknown_modifiers) do |example|
+    DaisyUI.configuration.unknown_modifiers = :ignore
+    example.run
+  ensure
+    DaisyUI.configuration.unknown_modifiers = :raise
+  end
   # Timing-sensitive specs run only on request: `bundle exec rspec --tag perf`
   config.filter_run_excluding :perf
   # rspec-expectations config goes here. You can use an alternate

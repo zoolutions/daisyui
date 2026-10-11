@@ -177,6 +177,34 @@ arrays, `nil` and `false`; returns a frozen String). Opt out globally with
 `config.class_merge.enabled = false`, or per component by overriding the
 private `merge_classes`.
 
+## Unknown modifiers
+
+A positional or responsive modifier the component does not know
+(`Toggle(:primray)`) is reported instead of silently rendering nothing:
+
+```ruby
+DaisyUI.configure do |config|
+  # Default: :raise under Rails in development/test, :warn everywhere else.
+  config.unknown_modifiers = :raise # raises DaisyUI::UnknownModifierError
+  config.unknown_modifiers = :warn  # Kernel#warn, once per component and modifier
+  config.unknown_modifiers = :ignore
+  config.unknown_modifiers = ->(error) { Appsignal.report_error(error) } # once per component and modifier
+end
+```
+
+Known modifiers are the component's `register_modifiers`, `config.modifiers.add`,
+and `register_flags`: positional symbols your component handles itself without
+emitting a class.
+
+```ruby
+class Widget < DaisyUI::Base
+  register_flags :collapsed # Widget(:collapsed) is valid; read it via `modifiers.include?(:collapsed)`
+end
+```
+
+Keyword arguments are not validated: `Toggle(primray: true)` renders a
+`primray` attribute, because unknown keywords are HTML attributes.
+
 # Compatibility Notes
 
 ## @tailwindcss/forms plugin

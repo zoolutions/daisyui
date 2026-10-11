@@ -3,6 +3,7 @@
 module DaisyUI
   class Modal < Base
     self.component_class = :modal
+    register_flags :tap_outside_to_close
 
     def initialize(*, id:, **)
       super

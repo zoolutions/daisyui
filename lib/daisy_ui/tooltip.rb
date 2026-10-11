@@ -5,6 +5,7 @@ require "securerandom"
 module DaisyUI
   class Tooltip < Base
     self.component_class = :tooltip
+    register_flags :popover
 
     PLACEMENTS = %i[top bottom left right].freeze
     DEFAULT_STIMULUS_IDENTIFIER = "daisy-tooltip"

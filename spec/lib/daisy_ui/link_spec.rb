@@ -38,7 +38,7 @@ describe DaisyUI::Link do
       end
     end
 
-    context "when given stale card modifiers" do
+    context "when given stale card modifiers", :ignore_unknown_modifiers do
       %i[bordered normal compact side glass image_full].each do |stale_modifier|
         context "when given :#{stale_modifier}" do
           subject(:output) { render described_class.new(stale_modifier) }

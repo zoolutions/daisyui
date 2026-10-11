@@ -14,7 +14,6 @@ describe DaisyUI::Skeleton do
       Class.new(Phlex::HTML) do
         def view_template(&)
           render DaisyUI::Skeleton.new(
-            :neutral,
             as: :section,
             data: {
               my: :skeleton

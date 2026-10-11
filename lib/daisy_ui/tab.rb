@@ -36,5 +36,11 @@ module DaisyUI
         div role: :tabpanel, class: content_classes, **options, &block
       end
     end
+
+    private
+
+    # Tab only dispatches: TabWithContent or TabWithoutContent validates the
+    # modifiers when it is built.
+    def validate_modifiers; end
   end
 end

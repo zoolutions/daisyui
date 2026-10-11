@@ -5,6 +5,7 @@ require "securerandom"
 module DaisyUI
   class Dropdown < Base
     self.component_class = :dropdown
+    register_flags :popover, :tap_to_close
 
     # Placement modifiers that, in :popover mode, must live on the popover
     # element itself (DaisyUI's `position-area` rule is on `.dropdown`).

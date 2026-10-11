@@ -3,6 +3,7 @@
 module DaisyUI
   class Checkbox < Base
     self.component_class = :checkbox
+    register_flags :checked, :disabled
 
     def view_template(&)
       input(

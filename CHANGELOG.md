@@ -1,5 +1,30 @@
 ## [Unreleased]
 
+### Unknown modifiers are reported (#54)
+
+A positional or responsive modifier a component does not know used to render
+nothing, silently. `config.unknown_modifiers` now decides what happens:
+
+```ruby
+DaisyUI.configure do |config|
+  config.unknown_modifiers = :raise # :raise | :warn | :ignore | ->(error) { ... }
+end
+```
+
+- The default is `:raise` under Rails in development and test, and `:warn`
+  everywhere else (production, plain Ruby). A Rails app's test suite can go red
+  after upgrading if it passes a modifier a component never had: fix the call,
+  register the modifier, or set `:warn`/`:ignore`.
+- `:raise` raises `DaisyUI::UnknownModifierError` (an `ArgumentError`) naming
+  the component, the modifier and the closest registered ones.
+- `:warn` and a callable fire once per component and modifier. Use a callable
+  to send it to an error tracker:
+  `config.unknown_modifiers = ->(error) { Appsignal.report_error(error) }`.
+- Known means the component's `register_modifiers`, `config.modifiers.add`, and
+  the new `register_flags` for positional symbols a component handles itself
+  without a class (Dropdown's `:popover`, Modal's `:tap_outside_to_close`, ...).
+- Keyword booleans are not validated: unknown keywords stay HTML attributes.
+
 ### Upgrading to 2.0
 
 Components now merge their classes: when two classes conflict, the later one
