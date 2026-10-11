@@ -1,0 +1,51 @@
+docs/spec/requests/importmap_spec.rb
+  s_8c050a16f0fbc1::t_8873d61cb1d8ff 1-14,16-50,52,54,56-59
+  s_8c050a16f0fbc1::t_ac2f0430fa7f3d 15
+  s_8c050a16f0fbc1::t_db7adc59ea496a 51,53
+  s_8c050a16f0fbc1::t_73502395bed02f 55
+CHANGELOG.md
+  s_8c050a16f0fbc1::t_7e2963271ffcfe 102-106
+AGENTS.md
+  s_8c050a16f0fbc1::t_7e2963271ffcfe 19-20
+README.md
+  s_8c050a16f0fbc1::t_7e2963271ffcfe 305-308,382,455-458
+spec/lib/daisy_ui/minified_controllers_spec.rb
+  s_8c050a16f0fbc1::t_31f9b7715bf986 16
+  s_8c050a16f0fbc1::t_cbd56a777700df 1-9,11-13,18-20,22-24,28-48
+  s_8c050a16f0fbc1::t_8dddfb373b8174 10,14-15,17,21,26-27
+  s_8c050a16f0fbc1::t_d09990e647e0b4 25
+.bun-version
+  s_8c050a16f0fbc1::t_667cd45a53d95c 1
+.gitattributes
+  s_8c050a16f0fbc1::t_667cd45a53d95c 1-2
+lib/daisy_ui/engine.rb
+  s_8c050a16f0fbc1::t_6f29ee37dc6c1a 7-10,12,14-16,22-25,28-35
+config/importmap.rb
+  s_8c050a16f0fbc1::t_35b9e621c75289 10-21
+scripts/build_controllers.js
+  s_8c050a16f0fbc1::t_d719b5e4e9b240 1-54
+Rakefile
+  s_8c050a16f0fbc1::t_cd0d931e7e32a9 13-39
+.github/workflows/main.yml
+  s_8c050a16f0fbc1::t_812a9341716eaf 23-30
+package.json
+  s_8c050a16f0fbc1::t_667cd45a53d95c 1-9
+spec/lib/daisy_ui/importmap_config_spec.rb
+  s_8c050a16f0fbc1::t_2fde54aa24aa9d 1-20
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "f33e703af979db70a1d6accd942d59a1277a25ee",
+  "prompts": {},
+  "sessions": {
+    "s_8c050a16f0fbc1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9026e661-b7fc-42f4-8445-5c91e0927ed2",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "mhenrixon <mikael@mhenrixon.com>"
+    }
+  }
+}
