@@ -1,0 +1,79 @@
+CHANGELOG.md
+  s_8c050a16f0fbc1::t_d81aa6acb37e9b 3-27
+lib/daisy_ui/dropdown.rb
+  s_8c050a16f0fbc1::t_86ba67c4df4b92 8
+spec/lib/daisy_ui/link_spec.rb
+  s_8c050a16f0fbc1::t_f607658946e1dd 41
+lib/daisy_ui/tab.rb
+  s_8c050a16f0fbc1::t_0ee25f3a28ee98 39-44
+spec/lib/daisy_ui/card_spec.rb
+  s_8c050a16f0fbc1::t_f607658946e1dd 57,59,178
+spec/lib/daisy_ui/otp_spec.rb
+  s_8c050a16f0fbc1::t_f607658946e1dd 56,58
+README.md
+  s_8c050a16f0fbc1::t_9d9135ac9d73cf 180-207
+spec/lib/daisy_ui/unknown_modifier_error_spec.rb
+  s_8c050a16f0fbc1::t_4a1f2c5fbb1c48 1-2,4-53,55-67,69-72,74-103,105-169,171-174
+  s_8c050a16f0fbc1::t_72a19a376309f8 54,68,73,104,170
+  s_8c050a16f0fbc1::t_f6415e2f66dde3 3
+spec/lib/daisy_ui/drawer_spec.rb
+  s_8c050a16f0fbc1::t_f607658946e1dd 27,29
+lib/daisy_ui/configurable.rb
+  s_8c050a16f0fbc1::t_645dc6ed2cb9d1 88
+  s_8c050a16f0fbc1::t_74639d2e3d4bae 75-76
+  s_8c050a16f0fbc1::t_56268f82453e22 55-56,61-74,77-87,89-93
+  s_8c050a16f0fbc1::t_39d8033bb0c633 108-115
+spec/spec_helper.rb
+  s_8c050a16f0fbc1::t_960b5b26450914 41-47
+  s_8c050a16f0fbc1::t_84708f1ac46c85 14-16
+lib/daisy_ui/collapsible_sub_menu.rb
+  s_8c050a16f0fbc1::t_86ba67c4df4b92 7
+lib/daisy_ui/base.rb
+  s_8c050a16f0fbc1::t_cc37eb8472a2b6 158
+  s_8c050a16f0fbc1::t_6317749f3660ed 122,125-133
+  s_8c050a16f0fbc1::t_203dea7c5ed2c4 297-311
+  s_8c050a16f0fbc1::t_32be518fa6acaf 202
+spec/lib/daisy_ui/button_spec.rb
+  s_8c050a16f0fbc1::t_f607658946e1dd 58,60
+lib/daisy_ui/tooltip.rb
+  s_8c050a16f0fbc1::t_86ba67c4df4b92 8
+lib/daisy_ui/tab_with_content.rb
+  s_8c050a16f0fbc1::t_86ba67c4df4b92 7
+spec/lib/daisy_ui/aura_spec.rb
+  s_8c050a16f0fbc1::t_f607658946e1dd 46,48,167
+lib/daisy_ui/unknown_modifier_error.rb
+  s_8c050a16f0fbc1::t_d99812dc3388b2 1-27
+spec/lib/daisy_ui/megamenu_spec.rb
+  s_8c050a16f0fbc1::t_f607658946e1dd 43,45,164
+spec/lib/daisy_ui/menu_spec.rb
+  s_8c050a16f0fbc1::t_f607658946e1dd 55,57
+spec/lib/daisy_ui/navbar_spec.rb
+  s_8c050a16f0fbc1::t_f607658946e1dd 68,70
+lib/daisy_ui/checkbox.rb
+  s_8c050a16f0fbc1::t_f86a8a5343805d 6
+lib/daisy_ui/modal.rb
+  s_8c050a16f0fbc1::t_86ba67c4df4b92 6
+spec/lib/daisy_ui/table_spec.rb
+  s_8c050a16f0fbc1::t_f607658946e1dd 32,34,153
+spec/lib/daisy_ui/tabs_spec.rb
+  s_8c050a16f0fbc1::t_f607658946e1dd 97,99
+docs/spec/requests/component_pages_spec.rb
+  s_8c050a16f0fbc1::t_ed73be6863900a 1-11,13-27
+  s_8c050a16f0fbc1::t_f3efd336f33a8f 12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "82f4b98f787e8ba7c5f88834c8146ec6ce0e67d5",
+  "prompts": {},
+  "sessions": {
+    "s_8c050a16f0fbc1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "9026e661-b7fc-42f4-8445-5c91e0927ed2",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "mhenrixon <mikael@mhenrixon.com>"
+    }
+  }
+}
