@@ -19,18 +19,17 @@ module DaisyUI
   # the host app for no benefit.
   class Engine < ::Rails::Engine
     JAVASCRIPT_PATH = root.join("app/javascript")
-    # The files config/importmap.rb pins, and their sourcemaps.
-    MINIFIED_ASSETS = %w[daisy_dropdown_controller daisy_tooltip_controller].flat_map do |name|
-      ["daisy_ui/controllers/#{name}.min.js", "daisy_ui/controllers/#{name}.min.js.map"]
-    end.freeze
+    # The minified controllers config/importmap.rb pins, and their sourcemaps.
+    MINIFIED_ASSETS = Dir[JAVASCRIPT_PATH.join("daisy_ui/controllers/*.min.js{,.map}").to_s]
+      .map { |path| Pathname.new(path).relative_path_from(JAVASCRIPT_PATH).to_s }.sort.freeze
 
     initializer "daisy_ui.assets" do |app|
       next unless app.config.respond_to?(:assets)
 
       app.config.assets.paths << JAVASCRIPT_PATH.to_s
-      # Sprockets compiles only what is listed. Propshaft has no precompile
-      # list (it compiles every file in paths), and its OrderedOptions answers
-      # respond_to? for any name, so check the value.
+      # Sprockets compiles only what is listed; Propshaft compiles every file in
+      # paths. The list is nil unless Sprockets or another engine created it,
+      # and OrderedOptions answers respond_to? for any name, so check the value.
       precompile = app.config.assets.precompile
       precompile.concat(MINIFIED_ASSETS) if precompile.is_a?(Array)
     end
