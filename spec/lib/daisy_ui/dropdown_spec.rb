@@ -543,7 +543,7 @@ describe DaisyUI::Dropdown do
       end
 
       expect(custom).to match(/<ul[^>]*role="listbox"/)
-      expect(custom).not_to match(/role="menu"/)
+      expect(custom).not_to include('role="menu"')
     end
 
     it "auto-generates a popover id when none is supplied" do
@@ -554,7 +554,7 @@ describe DaisyUI::Dropdown do
 
       expect(generated).to match(/popovertarget="dropdown_[0-9a-f]{16}"/)
       expect(generated).to match(/id="dropdown_[0-9a-f]{16}"/)
-      expect(generated).to match(/popover="auto"/)
+      expect(generated).to include('popover="auto"')
     end
 
     it "supports content (non-menu panel) with the same wiring" do
@@ -600,7 +600,7 @@ describe DaisyUI::Dropdown do
         end
 
         expect(enhanced).to include('data-controller="vendor-dropdown"')
-        expect(enhanced).to match(/data-vendor-dropdown-target="trigger"/)
+        expect(enhanced).to include('data-vendor-dropdown-target="trigger"')
         expect(enhanced).not_to include("daisy-dropdown")
       end
 
