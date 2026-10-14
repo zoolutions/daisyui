@@ -46,8 +46,8 @@ module DaisyUI
       ].freeze
       THEME_KEYS.each do |key|
         const_set("THEME_#{key.upcase.tr('-', '_')}", lambda { |config|
-                                                        config[:theme].fetch(key, nil)
-                                                      }
+          config[:theme].fetch(key, nil)
+        }
         )
       end
 
