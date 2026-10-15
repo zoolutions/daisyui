@@ -102,6 +102,7 @@ RSpec.describe DaisyUI::Configurable::Configuration, "#unknown_modifiers" do
     end
 
     it "reports each modifier once across threads" do
+      # rubocop:disable-next ThreadSafety/NewThread -- reporting from 8 threads at once is the point
       Array.new(8) { Thread.new { 50.times { DaisyUI::Toggle.new(:primray) } } }.each(&:join)
 
       expect(reported.size).to eq(1)
