@@ -9,10 +9,12 @@ ractor:
 probes:
   gem_name: daisyui
 main_only:
-  - name: DaisyUI::Calendar.@__registered_elements__
+  - ancestor: Phlex::SGML::Elements
+    ivars: ["@__registered_elements__"]
     reason: >-
-      Phlex's own class state: register_element records Calendar's custom
-      elements here in the class body, on the main Ractor, and Phlex never
+      Phlex's own class state: register_element (Phlex::SGML::Elements) records
+      a component's custom elements here in the class body, on the main Ractor
+      (DaisyUI::Calendar's calendar_date and calendar_month), and Phlex never
       reads a component's copy (tag() reads only its own StandardElements and
       VoidElements). Rendering in a non-main Ractor waits on Phlex anyway
       (yippee-fun/phlex#1055).
