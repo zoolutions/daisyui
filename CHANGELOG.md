@@ -1,25 +1,37 @@
-## [Unreleased]
+## [2.1.0]
 
-### `DaisyUI.finalize!`: class merging in any Ractor (#58)
+### DaisyUI finalizes itself at boot: class merging in any Ractor (#58)
 
-`DaisyUI.finalize!` freezes the configuration and every component's
-registries so a non-main Ractor can read them. `DaisyUI::ClassMerge.merge`
+At boot DaisyUI now freezes its configuration and every component's
+registries, so a non-main Ractor can read them. `DaisyUI::ClassMerge.merge`
 then works in any Ractor; each Ractor builds its own merger and LRU.
 
-- The Rails engine calls it in `after_initialize`. Without Rails, call it at
-  the end of boot, after `DaisyUI.configure`.
-- Afterwards `DaisyUI.configure` still works: it changes a copy and finalizes
-  that. Writing to `DaisyUI.configuration` directly (e.g.
-  `DaisyUI.configuration.unknown_modifiers = :ignore` in a spec of a booted
-  Rails app) now raises `FrozenError`: use `DaisyUI.configure` instead.
-- A callable `unknown_modifiers` that captures local state keeps the
-  configuration main-Ractor only (it is not made shareable, and nothing
-  raises).
+- Automatic: `DaisyUI.configure` finalizes at its end, and the Rails engine
+  finalizes again in `after_initialize`, with no app code. A Rails-less app
+  that never calls `configure` calls `DaisyUI.finalize!` at the end of boot.
+- **The configuration is frozen after `DaisyUI.configure` (and, in a Rails
+  app, after boot).** Writing to `DaisyUI.configuration` directly now raises
+  `FrozenError`, e.g. `DaisyUI.configuration.unknown_modifiers = :ignore` in a
+  spec: use `DaisyUI.configure { |config| config.unknown_modifiers = :ignore }`.
+  `DaisyUI.configure` can be called again at any time: it yields a writable
+  copy and publishes it once that is finalized, so no reader ever meets a
+  half-changed configuration.
+- Finalizing never raises. A configured value that cannot be made shareable
+  is kept as it is, unfrozen, and the configuration is then readable on the
+  main Ractor only: a callable `unknown_modifiers` or a raw `class_merge`
+  validator that closes over app state (such as
+  `->(error) { Appsignal.report_error(error) }` in an initializer), or an
+  object that holds a logger.
+- A component that loads after boot (lazy loading in development) or
+  registers modifiers after it is not finalized until the next `configure`
+  or `finalize!`; until then a non-main Ractor cannot build its merger.
 - Thread safety: the Tailwind class groups behind `ClassMerge` were built
   with an unguarded `||=` (8 threads built them 8 times); they are now built
   once per Ractor.
 - Rendering components inside a Ractor waits on Phlex
   ([yippee-fun/phlex#1055](https://github.com/yippee-fun/phlex/pull/1055)).
+
+## [2.0.2] and earlier
 
 ### Unknown modifiers are reported (#54)
 
