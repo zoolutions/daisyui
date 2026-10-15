@@ -18,8 +18,9 @@ module DaisyUI
     # @api private
     module DaisyGroups
       class << self
-        # Class groups for the merger: `{ "daisy:group:btn-size" => ["btn-xs", ...], ... }`.
-        def build(prefix: DaisyUI.configuration.prefix)
+        # Class groups for the merger: `{ "daisy:group:btn-size" => ["btn-xs", ...], ... }`,
+        # from one configuration's prefix and modifiers.
+        def build(configuration = DaisyUI.configuration, prefix: configuration.prefix)
           components = self.components
           groups = {}
 
@@ -37,7 +38,7 @@ module DaisyUI
           end
 
           # Configured modifiers join the component's own group of that name.
-          DaisyUI.configuration.modifiers.groups.each do |(component, group), classes|
+          configuration.modifiers.groups.each do |(component, group), classes|
             owner = component ? component.component_class || component.name : "global"
             add(groups, "daisy:group:#{owner}-#{group}", classes.flat_map(&:split), prefix)
           end

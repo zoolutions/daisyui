@@ -51,7 +51,7 @@ module DaisyUI
       private
 
       def build_merger(configuration)
-        [configuration, Merger.new(config: configuration.class_merge.merger_config)]
+        [configuration, Merger.new(config: configuration.class_merge.merger_config(configuration))]
       end
     end
   end

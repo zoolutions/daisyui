@@ -71,11 +71,12 @@ module DaisyUI
         append(@conflicts, conflicts)
       end
 
-      # @api private The config passed to Merger.new, including the daisyUI groups.
-      def merger_config
+      # @api private The config passed to Merger.new, including the daisyUI
+      # groups of +configuration+ (the DaisyUI configuration holding this one).
+      def merger_config(configuration = DaisyUI.configuration)
         {
           theme: @theme,
-          class_groups: DaisyGroups.build.merge(@class_groups) { |_id, existing, added| existing + added },
+          class_groups: DaisyGroups.build(configuration).merge(@class_groups) { |_id, existing, added| existing + added },
           conflicting_class_groups: @conflicts
         }
       end
