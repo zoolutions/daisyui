@@ -39,6 +39,7 @@ module DaisyUI
         }
       }
     ].freeze
+    Shareable.make(TOOLS) # the Hashes inside too
 
     EXCLUDED_CONSTANTS = %i[Base Configurable Configuration Modifiers VERSION UPDATED_AT McpServer].freeze
 
