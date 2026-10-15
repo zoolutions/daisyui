@@ -209,6 +209,29 @@ end
 Keyword arguments are not validated: `Toggle(primray: true)` renders a
 `primray` attribute, because unknown keywords are HTML attributes.
 
+## Threads, fibers and Ractors
+
+Components and `DaisyUI::ClassMerge` are safe to share between threads (Puma)
+and fibers (Falcon). For Ractors, `DaisyUI.finalize!` freezes the configuration
+and every component's registries, so `DaisyUI::ClassMerge.merge` runs in any
+Ractor, each Ractor with a merger of its own. The Rails engine calls it once
+the app has booted. Without Rails, call it at the end of boot:
+
+```ruby
+DaisyUI.configure do |config|
+  config.prefix = "tw-"
+end
+DaisyUI.finalize!
+```
+
+After `finalize!`, change settings through `DaisyUI.configure`, which works on
+a copy and finalizes that again. Writing to `DaisyUI.configuration` directly
+raises `FrozenError`. A callable `unknown_modifiers` keeps the configuration
+readable on the main Ractor only, unless it is shareable: a lambda that
+captures no local variables and is defined inside a module, or
+`Ractor.shareable_lambda` on Ruby 4.0. Rendering components inside a Ractor
+waits on Phlex ([yippee-fun/phlex#1055](https://github.com/yippee-fun/phlex/pull/1055)).
+
 # Compatibility Notes
 
 ## @tailwindcss/forms plugin

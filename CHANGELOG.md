@@ -1,5 +1,26 @@
 ## [Unreleased]
 
+### `DaisyUI.finalize!`: class merging in any Ractor (#58)
+
+`DaisyUI.finalize!` freezes the configuration and every component's
+registries so a non-main Ractor can read them. `DaisyUI::ClassMerge.merge`
+then works in any Ractor; each Ractor builds its own merger and LRU.
+
+- The Rails engine calls it in `after_initialize`. Without Rails, call it at
+  the end of boot, after `DaisyUI.configure`.
+- Afterwards `DaisyUI.configure` still works: it changes a copy and finalizes
+  that. Writing to `DaisyUI.configuration` directly (e.g.
+  `DaisyUI.configuration.unknown_modifiers = :ignore` in a spec of a booted
+  Rails app) now raises `FrozenError`: use `DaisyUI.configure` instead.
+- A callable `unknown_modifiers` that captures local state keeps the
+  configuration main-Ractor only (it is not made shareable, and nothing
+  raises).
+- Thread safety: the Tailwind class groups behind `ClassMerge` were built
+  with an unguarded `||=` (8 threads built them 8 times); they are now built
+  once per Ractor.
+- Rendering components inside a Ractor waits on Phlex
+  ([yippee-fun/phlex#1055](https://github.com/yippee-fun/phlex/pull/1055)).
+
 ### Unknown modifiers are reported (#54)
 
 A positional or responsive modifier a component does not know used to render
