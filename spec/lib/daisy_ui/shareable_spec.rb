@@ -18,7 +18,8 @@ RSpec.describe DaisyUI::Shareable do
       expect(Ractor.shareable?(described_class.make(validator))).to be(true)
     end
 
-    context "without Ractor (JRuby, TruffleRuby)" do
+    # Simulated on CRuby: this file itself needs Ractor.shareable?.
+    context "without Ractor, as on JRuby and TruffleRuby (simulated)" do
       before { allow(described_class).to receive(:ractor?).and_return(false) }
 
       it "still deep-freezes Hashes, Arrays and Strings" do
@@ -69,7 +70,8 @@ RSpec.describe DaisyUI::Shareable do
       expect(io.string).to include("still logging")
     end
 
-    context "without Ractor (JRuby, TruffleRuby)" do
+    # Simulated on CRuby: this file itself needs Ractor.shareable?.
+    context "without Ractor, as on JRuby and TruffleRuby (simulated)" do
       before { allow(described_class).to receive(:ractor?).and_return(false) }
 
       it "deep-freezes Hashes, Arrays and Strings and leaves a Proc alone" do

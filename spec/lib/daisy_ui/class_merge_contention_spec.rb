@@ -25,5 +25,13 @@ RSpec.describe DaisyUI::ClassMerge do
     let(:subject_call) { -> { described_class.tailwind_utils } }
 
     it_behaves_like "thread-safe under contention", threads: 8, iterations: 5, consistent: :identical
+
+    # Proves the setup above reaches the build, so the race is really run.
+    it "builds the class groups exactly once across the threads" do
+      # rubocop:disable-next ThreadSafety/NewThread -- starts threads on purpose, to contend on the build
+      Array.new(8) { Thread.new { described_class.tailwind_utils } }.each(&:join)
+
+      expect(DaisyUI::ClassMerge::ClassGroupUtils).to have_received(:new).once
+    end
   end
 end

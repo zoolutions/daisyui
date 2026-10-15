@@ -42,7 +42,16 @@ RSpec.describe DaisyUI::Store do
   end
 
   describe ".fetch under contention" do
-    let(:subject_call) { -> { described_class.fetch(:daisy_ui_store_spec) { Thread.pass && Object.new } } }
+    # Thread.pass hands the GVL over mid-build, so an unguarded fetch builds a
+    # distinct object per thread.
+    let(:subject_call) do
+      lambda do
+        described_class.fetch(:daisy_ui_store_spec) do
+          Thread.pass
+          Object.new
+        end
+      end
+    end
 
     it_behaves_like "thread-safe under contention", threads: 8, iterations: 20, consistent: :identical
   end
