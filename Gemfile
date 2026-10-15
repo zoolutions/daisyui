@@ -5,7 +5,7 @@ gemspec
 
 group :development do
   gem "async", require: false # runs conformance-kit's fiber example (locked for Ruby 3.2)
-  gem "conformance-kit", "~> 0.3", require: false # concurrency conformance gates (zoolutions/phlex-reactive#363)
+  gem "conformance-kit", "~> 0.4", require: false # concurrency conformance gates (zoolutions/phlex-reactive#363)
   gem "debug"
   gem "gem-release"
   gem "rake"
