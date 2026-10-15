@@ -34,6 +34,13 @@ module DaisyUI
       precompile.concat(MINIFIED_ASSETS) if precompile.is_a?(Array)
     end
 
+    # Once the app has booted, freeze the configuration and component
+    # registries so a non-main Ractor can merge classes. DaisyUI.configure in
+    # an initializer already finalized; this also covers an app that never
+    # calls it and the components loaded during boot (eager loading).
+    # DaisyUI.configure keeps working afterwards, on a copy.
+    config.after_initialize { DaisyUI.finalize! }
+
     initializer "daisy_ui.importmap", before: "importmap" do |app|
       next unless app.config.respond_to?(:importmap)
 

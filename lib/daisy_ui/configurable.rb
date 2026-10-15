@@ -2,21 +2,64 @@
 
 module DaisyUI
   module Configurable
+    # Created when DaisyUI extends this module, at load, so `configuration` is
+    # a plain read with no check-then-set race.
+    def self.extended(base)
+      base.instance_variable_set(:@configuration, Configuration.new)
+    end
+
+    # Yields a writable copy of the configuration, then finalizes the copy
+    # (see finalize!) and publishes it. Calling configure again keeps
+    # working, no reader (another thread, a non-main Ractor) meets a
+    # half-changed or writable configuration, and a block that raises
+    # publishes nothing. Calls are serialized, so each starts from what the
+    # previous one published.
     def configure
-      self.configuration ||= Configuration.new
-      yield(configuration) if block_given?
-      ClassMerge.reset!
-      configuration
+      configure_lock.synchronize do
+        draft = configuration.dup
+        yield(draft) if block_given?
+        @configuration = draft.finalize!
+        ClassMerge.reset!
+        finalize!
+        configuration
+      end
     end
 
     def configuration
-      @configuration ||= Configuration.new
+      @configuration
+    end
+
+    # Freezes what a non-main Ractor reads (this configuration and every
+    # component's registries) so DaisyUI::ClassMerge.merge runs in any Ractor.
+    # configure calls it, and the Rails engine calls it once the app has
+    # booted; an app with neither calls it at the end of boot. Afterwards
+    # change settings only through configure: writing to the frozen
+    # configuration raises. A configured value that cannot be made shareable
+    # is kept as it is (see Shareable.share), never raised on.
+    def finalize!
+      ClassMerge::DaisyGroups.components.each(&:finalize!)
+      configuration.finalize!
+      ClassMerge.tailwind_utils
+      self
     end
 
     class Modifiers
       def initialize
         @modifiers = {}
         @groups = {}
+      end
+
+      def initialize_copy(source)
+        super
+        @modifiers = @modifiers.transform_values(&:dup)
+        @groups = @groups.dup
+      end
+
+      # @api private Called by DaisyUI.finalize!.
+      def finalize!
+        Shareable.share(@modifiers)
+        Shareable.share(@groups)
+        freeze
       end
 
       # `group:` makes the modifier an alternative to the component's other
@@ -59,8 +102,24 @@ module DaisyUI
 
       def initialize
         @prefix = nil
-        @reported_unknown_modifiers = Set.new
-        @reported_unknown_modifiers_lock = Mutex.new
+      end
+
+      def initialize_copy(source)
+        super
+        @class_merge = @class_merge&.dup
+        @modifiers = @modifiers&.dup
+      end
+
+      # @api private Called by DaisyUI.configure and DaisyUI.finalize!. A
+      # callable unknown_modifiers that cannot be made shareable (a lambda
+      # that closes over app state, an object holding a logger) is kept: the
+      # configuration is then frozen but readable on the main Ractor only.
+      def finalize!
+        class_merge.finalize!
+        modifiers.finalize!
+        Shareable.share(@prefix)
+        Shareable.share(@unknown_modifiers)
+        freeze
       end
 
       # What a component does with a positional modifier it does not know:
@@ -94,7 +153,7 @@ module DaisyUI
 
       # @api private
       def reset_reported_unknown_modifiers!
-        @reported_unknown_modifiers_lock.synchronize { @reported_unknown_modifiers.clear }
+        reported_unknown_modifiers.clear
       end
 
       def prefix=(prefix)
@@ -112,16 +171,14 @@ module DaisyUI
 
       private
 
-      # Remembers up to REPORTED_UNKNOWN_MODIFIERS_LIMIT keys, then starts over,
-      # so modifiers built from user input cannot grow it without bound.
       def first_report?(key)
-        @reported_unknown_modifiers_lock.synchronize do
-          return false if @reported_unknown_modifiers.include?(key)
+        reported_unknown_modifiers.first?(key)
+      end
 
-          @reported_unknown_modifiers.clear if @reported_unknown_modifiers.size >= REPORTED_UNKNOWN_MODIFIERS_LIMIT
-          @reported_unknown_modifiers.add(key)
-          true
-        end
+      # What was already reported lives per Ractor, outside the configuration,
+      # which stays shareable.
+      def reported_unknown_modifiers
+        Store.fetch(:daisy_ui_reported_unknown_modifiers) { ReportLog.new(REPORTED_UNKNOWN_MODIFIERS_LIMIT) }
       end
 
       def default_unknown_modifiers
@@ -129,6 +186,14 @@ module DaisyUI
 
         %w[development test].include?(::Rails.env.to_s) ? :raise : :warn
       end
+    end
+
+    private
+
+    # Reentrant, and one per Ractor (DaisyUI::Store) so it is never shared;
+    # configure writes DaisyUI's ivar, so only the main Ractor gets that far.
+    def configure_lock
+      Store.fetch(:daisy_ui_configure_lock) { Monitor.new }
     end
   end
 end

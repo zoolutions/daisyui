@@ -35,7 +35,7 @@ RSpec.describe DaisyUI::ClassMerge::Cache do
       cache = described_class.new(50)
       mismatches = Queue.new
       threads = Array.new(8) do |t|
-        Thread.new do
+        Thread.new do # rubocop:disable ThreadSafety/NewThread -- sharing the LRU across threads is the point
           1_000.times do |i|
             key = "#{t}-#{i % 100}"
             value = cache.getset(key) { key }

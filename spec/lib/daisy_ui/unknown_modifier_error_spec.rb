@@ -6,12 +6,12 @@ RSpec.describe DaisyUI::UnknownModifierError do
     DaisyUI.configuration.reset_reported_unknown_modifiers!
     example.run
   ensure
-    DaisyUI.configuration.unknown_modifiers = original
+    DaisyUI.configure { |config| config.unknown_modifiers = original }
     DaisyUI.configuration.reset_reported_unknown_modifiers!
   end
 
   describe "the default" do
-    before { DaisyUI.configuration.unknown_modifiers = nil }
+    before { DaisyUI.configure { |config| config.unknown_modifiers = nil } }
 
     context "without Rails" do
       before { hide_const("Rails") }
@@ -42,13 +42,13 @@ RSpec.describe DaisyUI::UnknownModifierError do
 
   describe "setting an invalid mode" do
     it "raises ArgumentError" do
-      expect { DaisyUI.configuration.unknown_modifiers = :explode }
+      expect { DaisyUI.configure { |config| config.unknown_modifiers = :explode } }
         .to raise_error(ArgumentError, /:raise, :warn, :ignore or a callable/)
     end
   end
 
   context "when set to :raise" do
-    before { DaisyUI.configuration.unknown_modifiers = :raise }
+    before { DaisyUI.configure { |config| config.unknown_modifiers = :raise } }
 
     it "raises UnknownModifierError naming the component, the modifier and a suggestion" do
       expect { DaisyUI::Toggle.new(:primray) }.to raise_error(described_class) do |error|
@@ -106,8 +106,10 @@ RSpec.describe DaisyUI::UnknownModifierError do
 
     context "with a modifier added through the configuration" do
       after do
-        DaisyUI.configuration.modifiers.remove(:huge, component: DaisyUI::Toggle)
-        DaisyUI.configuration.modifiers.remove(:shiny)
+        DaisyUI.configure do |config|
+          config.modifiers.remove(:huge, component: DaisyUI::Toggle)
+          config.modifiers.remove(:shiny)
+        end
       end
 
       it "accepts component and global modifiers" do
@@ -127,7 +129,7 @@ RSpec.describe DaisyUI::UnknownModifierError do
   end
 
   context "when set to :warn" do
-    before { DaisyUI.configuration.unknown_modifiers = :warn }
+    before { DaisyUI.configure { |config| config.unknown_modifiers = :warn } }
 
     it "renders without the unknown modifier and warns once per component and modifier" do
       html = nil
@@ -148,7 +150,7 @@ RSpec.describe DaisyUI::UnknownModifierError do
   end
 
   context "when set to :ignore" do
-    before { DaisyUI.configuration.unknown_modifiers = :ignore }
+    before { DaisyUI.configure { |config| config.unknown_modifiers = :ignore } }
 
     it "renders as before, silently" do
       html = nil
@@ -160,7 +162,7 @@ RSpec.describe DaisyUI::UnknownModifierError do
   context "when set to a callable" do
     it "passes the error to it, once per component and modifier" do
       reported = []
-      DaisyUI.configuration.unknown_modifiers = ->(error) { reported << error }
+      DaisyUI.configure { |config| config.unknown_modifiers = ->(error) { reported << error } }
 
       html = DaisyUI::Toggle.new(:primray).call
       DaisyUI::Toggle.new(:primray)
@@ -173,7 +175,7 @@ RSpec.describe DaisyUI::UnknownModifierError do
   end
 
   context "when a tab or submenu is given :open without the part that uses it" do
-    before { DaisyUI.configuration.unknown_modifiers = :raise }
+    before { DaisyUI.configure { |config| config.unknown_modifiers = :raise } }
 
     it "accepts :open and :closed on a tab without content" do
       expect(DaisyUI::Tabs.new.call { |tabs| tabs.tab(:open, label: "A") })

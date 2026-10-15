@@ -18,8 +18,9 @@ module DaisyUI
     # @api private
     module DaisyGroups
       class << self
-        # Class groups for the merger: `{ "daisy:group:btn-size" => ["btn-xs", ...], ... }`.
-        def build(prefix: DaisyUI.configuration.prefix)
+        # Class groups for the merger: `{ "daisy:group:btn-size" => ["btn-xs", ...], ... }`,
+        # from one configuration's prefix and modifiers.
+        def build(configuration = DaisyUI.configuration, prefix: configuration.prefix)
           components = self.components
           groups = {}
 
@@ -37,7 +38,7 @@ module DaisyUI
           end
 
           # Configured modifiers join the component's own group of that name.
-          DaisyUI.configuration.modifiers.groups.each do |(component, group), classes|
+          configuration.modifiers.groups.each do |(component, group), classes|
             owner = component ? component.component_class || component.name : "global"
             add(groups, "daisy:group:#{owner}-#{group}", classes.flat_map(&:split), prefix)
           end
@@ -51,9 +52,11 @@ module DaisyUI
 
         # Every named DaisyUI::Base subclass: the gem's components (eager
         # loaded) and any app component loaded so far. An app component that
-        # loads later resets the merger through `register_modifiers`.
+        # loads later resets the merger through `register_modifiers`. Only the
+        # main Ractor can eager-load; DaisyUI.finalize! did it there before
+        # any other Ractor builds a merger.
         def components
-          Zeitwerk::Loader.eager_load_namespace(DaisyUI)
+          Zeitwerk::Loader.eager_load_namespace(DaisyUI) if Store.main_ractor?
           descendants(DaisyUI::Base).select(&:name)
         end
 

@@ -20,7 +20,7 @@ RSpec.describe DaisyUI::ClassMerge::Merger, "thread safety" do
 
     mismatches = Queue.new
     threads = Array.new(16) do |t|
-      Thread.new do
+      Thread.new do # rubocop:disable ThreadSafety/NewThread -- sharing the merger across threads is the point
         2000.times do |i|
           merger.merge("m-#{t}-#{i} p-#{i}")
           key = (t + i) % warm_inputs.size

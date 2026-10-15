@@ -5,6 +5,30 @@ RSpec.describe DaisyUI::ClassMerge::DaisyGroups do
     DaisyUI::ClassMerge.merge(*parts)
   end
 
+  # One snapshot: a merger built for a configuration never mixes in the
+  # settings of another one published meanwhile.
+  describe ".build for a given configuration" do
+    let(:configuration) do
+      DaisyUI.configuration.dup.tap do |config|
+        config.prefix = "tw-"
+        config.modifiers.add(:huge, classes: "btn-huge", component: DaisyUI::Button, group: :size)
+      end
+    end
+
+    it "reads its prefix and modifiers, not the published configuration's" do
+      groups = described_class.build(configuration)
+
+      expect(groups["daisy:base:btn"]).to eq(["tw-btn"])
+      expect(groups["daisy:group:btn-size"]).to include("tw-btn-huge")
+    end
+
+    it "feeds the merger config built for it" do
+      groups = configuration.class_merge.merger_config(configuration)[:class_groups]
+
+      expect(groups["daisy:base:btn"]).to eq(["tw-btn"])
+    end
+  end
+
   describe "conflicts within a group" do
     it "keeps the last size" do
       expect(merge("btn btn-sm btn-lg")).to eq("btn btn-lg")
@@ -106,10 +130,10 @@ RSpec.describe DaisyUI::ClassMerge::DaisyGroups do
 
   context "with a configured modifier in a group" do
     around do |example|
-      DaisyUI.configuration.modifiers.add(:huge, classes: "btn-huge", component: DaisyUI::Button, group: :size)
+      DaisyUI.configure { |config| config.modifiers.add(:huge, classes: "btn-huge", component: DaisyUI::Button, group: :size) }
       example.run
     ensure
-      DaisyUI.configuration.modifiers.remove(:huge, component: DaisyUI::Button)
+      DaisyUI.configure { |config| config.modifiers.remove(:huge, component: DaisyUI::Button) }
     end
 
     it "joins the component's group of that name" do
@@ -120,10 +144,10 @@ RSpec.describe DaisyUI::ClassMerge::DaisyGroups do
 
   context "with a configured modifier without a group" do
     around do |example|
-      DaisyUI.configuration.modifiers.add(:huge, classes: "btn-huge", component: DaisyUI::Button)
+      DaisyUI.configure { |config| config.modifiers.add(:huge, classes: "btn-huge", component: DaisyUI::Button) }
       example.run
     ensure
-      DaisyUI.configuration.modifiers.remove(:huge, component: DaisyUI::Button)
+      DaisyUI.configure { |config| config.modifiers.remove(:huge, component: DaisyUI::Button) }
     end
 
     it "never conflicts" do
