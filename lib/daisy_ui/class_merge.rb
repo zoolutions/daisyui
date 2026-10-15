@@ -25,10 +25,16 @@ module DaisyUI
         merger.merge(parts.flatten.select(&:itself).join(" "))
       end
 
+      # Each Ractor's merger remembers the configuration it was built from
+      # and is rebuilt once DaisyUI.configure publishes another, also in a
+      # Ractor where reset! never ran.
       def merger
-        Store.fetch(:daisy_ui_class_merger) do
-          Merger.new(config: DaisyUI.configuration.class_merge.merger_config)
-        end
+        configuration = DaisyUI.configuration
+        built_for, merger = Store.fetch(:daisy_ui_class_merger) { build_merger(configuration) }
+        return merger if built_for.equal?(configuration)
+
+        Store.delete(:daisy_ui_class_merger)
+        Store.fetch(:daisy_ui_class_merger) { build_merger(configuration) }.last
       end
 
       # @api private The stock Tailwind class groups, for classifying tokens.
@@ -40,6 +46,12 @@ module DaisyUI
       # configuration changes.
       def reset!
         Store.delete(:daisy_ui_class_merger)
+      end
+
+      private
+
+      def build_merger(configuration)
+        [configuration, Merger.new(config: configuration.class_merge.merger_config)]
       end
     end
   end

@@ -78,6 +78,36 @@ RSpec.describe DaisyUI, ".configure", :finalizes do
     expect(current.prefix).to be_nil
   end
 
+  describe "a merger built before it" do
+    it "is rebuilt from the published configuration where reset! never ran, as in another Ractor" do
+      stale = DaisyUI::ClassMerge.merger
+      allow(DaisyUI::ClassMerge).to receive(:reset!)
+
+      described_class.configure { |config| config.class_merge.theme(text: %w[display]) }
+
+      expect(DaisyUI::ClassMerge.merger).not_to be(stale)
+      expect(DaisyUI::ClassMerge.merge("text-display text-error")).to eq("text-display text-error")
+    end
+
+    it "is rebuilt in a non-main Ractor that already merged", :ractor do
+      skip "needs Ruby 4.0+ (Ractor::Port, Ractor#value)" unless defined?(Ractor::Port) && Ractor.method_defined?(:value)
+
+      described_class.configure
+      merged = Ractor::Port.new
+      ractor = Ractor.new(merged) do |port|
+        before = DaisyUI::ClassMerge.merge("text-display text-error")
+        port << :merged
+        Ractor.receive
+        [before, DaisyUI::ClassMerge.merge("text-display text-error")]
+      end
+      merged.receive # the Ractor has built its merger
+      described_class.configure { |config| config.class_merge.theme(text: %w[display]) }
+      ractor.send(:reconfigured)
+
+      expect(ractor.value).to eq(["text-error", "text-display text-error"])
+    end
+  end
+
   # Finalizing never raises: what cannot be made shareable is kept as it is,
   # and the configuration holding it is then readable on the main Ractor only.
   describe "with a value that cannot be made shareable" do
