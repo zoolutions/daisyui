@@ -64,6 +64,20 @@ RSpec.describe DaisyUI, ".configure", :finalizes do
     end
   end
 
+  it "changes nothing when the block raises, the first time too" do
+    current = described_class.configuration
+
+    expect do
+      described_class.configure do |config|
+        config.prefix = "tw-"
+        config.unknown_modifiers = :explode
+      end
+    end.to raise_error(ArgumentError)
+
+    expect(described_class.configuration).to be(current)
+    expect(current.prefix).to be_nil
+  end
+
   # Finalizing never raises: what cannot be made shareable is kept as it is,
   # and the configuration holding it is then readable on the main Ractor only.
   describe "with a value that cannot be made shareable" do

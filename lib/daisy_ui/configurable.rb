@@ -8,13 +8,13 @@ module DaisyUI
       base.instance_variable_set(:@configuration, Configuration.new)
     end
 
-    # Yields the configuration, then finalizes it (see finalize!) and
-    # publishes it. Once one is finalized, configure yields a writable copy
-    # and publishes it only when it is finalized too, so calling configure
-    # again keeps working and no reader (another thread, a non-main Ractor)
-    # meets a writable configuration.
+    # Yields a writable copy of the configuration, then finalizes the copy
+    # (see finalize!) and publishes it. Calling configure again keeps
+    # working, no reader (another thread, a non-main Ractor) meets a
+    # half-changed or writable configuration, and a block that raises
+    # publishes nothing.
     def configure
-      draft = configuration.frozen? ? configuration.dup : configuration
+      draft = configuration.dup
       yield(draft) if block_given?
       @configuration = draft.finalize!
       ClassMerge.reset!
