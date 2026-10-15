@@ -1,0 +1,22 @@
+spec/lib/daisy_ui/finalize_spec.rb
+  s_4786a62cd35147::t_2911c46340f88d 92-100
+lib/daisy_ui/shareable.rb
+  s_4786a62cd35147::t_0f80a558bc327d 23-27
+  s_4786a62cd35147::t_b77dd88753664e 9-10,15-22,28-34,41-45
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "94eb032d8773dfaf803b8d38039e6f419585ea7a",
+  "prompts": {},
+  "sessions": {
+    "s_4786a62cd35147": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d1e58604-bb1b-456c-ace0-8fe7f151dae8",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "mhenrixon <mikael@mhenrixon.com>"
+    }
+  }
+}
