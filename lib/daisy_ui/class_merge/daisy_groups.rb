@@ -51,9 +51,11 @@ module DaisyUI
 
         # Every named DaisyUI::Base subclass: the gem's components (eager
         # loaded) and any app component loaded so far. An app component that
-        # loads later resets the merger through `register_modifiers`.
+        # loads later resets the merger through `register_modifiers`. Only the
+        # main Ractor can eager-load; DaisyUI.finalize! did it there before
+        # any other Ractor builds a merger.
         def components
-          Zeitwerk::Loader.eager_load_namespace(DaisyUI)
+          Zeitwerk::Loader.eager_load_namespace(DaisyUI) if Store.main_ractor?
           descendants(DaisyUI::Base).select(&:name)
         end
 
