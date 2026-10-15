@@ -10,7 +10,7 @@ GEM
   specs:
     ast (2.4.3)
     attr_extras (7.1.0)
-    conformance-kit (0.1.0)
+    conformance-kit (0.3.0)
     date (3.5.1)
     debug (1.11.1)
       irb (~> 1.10)
@@ -107,7 +107,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  conformance-kit (~> 0.1)
+  conformance-kit (~> 0.3)
   daisyui!
   debug
   gem-release
