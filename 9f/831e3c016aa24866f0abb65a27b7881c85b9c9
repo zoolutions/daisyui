@@ -1,0 +1,23 @@
+spec/lib/daisy_ui/class_merge_contention_spec.rb
+  s_4786a62cd35147::t_60400b6743bfde 1-29
+spec/lib/daisy_ui/store_spec.rb
+  s_4786a62cd35147::t_b2d61cc485a352 1-84
+lib/daisy_ui/store.rb
+  s_4786a62cd35147::t_9f8d163e67a06a 1-71
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "9f831e3c016aa24866f0abb65a27b7881c85b9c9",
+  "prompts": {},
+  "sessions": {
+    "s_4786a62cd35147": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d1e58604-bb1b-456c-ace0-8fe7f151dae8",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "mhenrixon <mikael@mhenrixon.com>"
+    }
+  }
+}
