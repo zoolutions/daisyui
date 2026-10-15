@@ -8,21 +8,6 @@ module DaisyUI
     module TailwindConfig
       include Validators
 
-      class << self
-        private
-
-        # Recursively freezes nested Hash/Array structures so shared config
-        # constants can't be mutated in place. Keys are strings/symbols and are
-        # already immutable, so only values need walking.
-        def deep_freeze(object)
-          case object
-          when Hash then object.each_value { |value| deep_freeze(value) }
-          when Array then object.each { |value| deep_freeze(value) }
-          end
-          object.freeze
-        end
-      end
-
       THEME_KEYS = %w[
         color
         font
@@ -2465,7 +2450,12 @@ module DaisyUI
           "selection"
         ]
       }.freeze
-      deep_freeze(DEFAULTS)
+
+      # Every constant above, DEFAULTS deeply, is made Ractor-shareable so a
+      # non-main Ractor can build its own merger from them: the scale and theme
+      # lambdas are capture-free (THEME_* only reads its frozen key) and their
+      # self is this module.
+      constants(false).each { |name| Shareable.make(const_get(name)) }
 
       # Extends DEFAULTS with incoming_config without mutating either.
       # Theme scales are appended. Unlike upstream, `class_groups` and

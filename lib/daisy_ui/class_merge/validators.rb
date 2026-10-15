@@ -197,6 +197,10 @@ module DaisyUI
       IS_LABEL_SHADOW = lambda { |label|
         label == "shadow"
       }
+
+      # Ractor-shareable, so a non-main Ractor can read them: every validator
+      # is a capture-free lambda whose self is this module.
+      constants(false).each { |name| Shareable.make(const_get(name)) }
     end
   end
 end
