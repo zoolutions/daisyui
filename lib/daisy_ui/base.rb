@@ -200,7 +200,7 @@ module DaisyUI
       # @api private Called by DaisyUI.finalize! for every component: derives
       # component_class and freezes the registries for non-main Ractors.
       def finalize!
-        [component_class, modifiers, modifier_groups, flags].each { |registry| Shareable.make(registry) }
+        [component_class, modifiers, modifier_groups, flags].each { |registry| Shareable.share(registry) }
         self
       end
     end

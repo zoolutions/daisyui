@@ -61,13 +61,14 @@ RSpec.describe DaisyUI, ".finalize!", :finalizes do
   end
 
   it "lets a finalized component register more modifiers" do
-    widget = Class.new(DaisyUI::Base) { register_modifiers(size: { sm: "widget-sm" }) }
+    # Tokens of its own: the class outlives stub_const in DaisyUI::Base.subclasses.
+    widget = Class.new(DaisyUI::Base) { register_modifiers(size: { sm: "finalized-sm" }) }
     stub_const("FinalizedWidget", widget)
     described_class.finalize!
 
-    widget.register_modifiers(size: { lg: "widget-lg" }, wide: "widget-wide")
+    widget.register_modifiers(size: { lg: "finalized-lg" }, wide: "finalized-wide")
 
-    expect(widget.modifiers).to eq(sm: "widget-sm", lg: "widget-lg", wide: "widget-wide")
+    expect(widget.modifiers).to eq(sm: "finalized-sm", lg: "finalized-lg", wide: "finalized-wide")
     expect(widget.modifier_groups).to eq(size: %i[sm lg])
   end
 
@@ -87,5 +88,14 @@ RSpec.describe DaisyUI, ".finalize!", :finalizes do
       expect(described_class.configuration).to be_frozen
       expect(Ractor.shareable?(described_class.configuration)).to be(false)
     end
+  end
+
+  it "does not stop finalize! for a class_merge validator that cannot be shareable" do
+    brands = %w[ocean forest]
+    described_class.configuration.class_merge.class_groups("brand" => [{ "brand" => [->(value) { brands.include?(value) }] }])
+
+    expect { described_class.finalize! }.not_to raise_error
+    expect(described_class.configuration).to be_frozen
+    expect(DaisyUI::ClassMerge.merge("brand-ocean brand-forest")).to eq("brand-forest")
   end
 end

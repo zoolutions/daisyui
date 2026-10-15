@@ -31,9 +31,10 @@ module DaisyUI
         @conflicts = @conflicts.transform_values(&:dup)
       end
 
-      # @api private Called by DaisyUI.finalize!.
+      # @api private Called by DaisyUI.finalize!. A raw class group's
+      # validator that closes over app state is kept as it is.
       def finalize!
-        [@theme, @class_groups, @conflicts].each { |settings| Shareable.make(settings) }
+        [@theme, @class_groups, @conflicts].each { |settings| Shareable.share(settings) }
         freeze
       end
 

@@ -49,8 +49,8 @@ module DaisyUI
 
       # @api private Called by DaisyUI.finalize!.
       def finalize!
-        Shareable.make(@modifiers)
-        Shareable.make(@groups)
+        Shareable.share(@modifiers)
+        Shareable.share(@groups)
         freeze
       end
 
@@ -102,15 +102,15 @@ module DaisyUI
         @modifiers = @modifiers&.dup
       end
 
-      # @api private Called by DaisyUI.finalize!. A callable unknown_modifiers
-      # that cannot be made shareable (it closes over unshareable state) is
-      # kept: the configuration is then frozen but readable on the main
-      # Ractor only.
+      # @api private Called by DaisyUI.configure and DaisyUI.finalize!. A
+      # callable unknown_modifiers that cannot be made shareable (a lambda
+      # that closes over app state, an object holding a logger) is kept: the
+      # configuration is then frozen but readable on the main Ractor only.
       def finalize!
         class_merge.finalize!
         modifiers.finalize!
-        Shareable.make(@prefix)
-        share(@unknown_modifiers)
+        Shareable.share(@prefix)
+        Shareable.share(@unknown_modifiers)
         freeze
       end
 
@@ -171,12 +171,6 @@ module DaisyUI
       # which stays shareable.
       def reported_unknown_modifiers
         Store.fetch(:daisy_ui_reported_unknown_modifiers) { ReportLog.new(REPORTED_UNKNOWN_MODIFIERS_LIMIT) }
-      end
-
-      def share(callable)
-        Shareable.make(callable) if callable.is_a?(Proc)
-      rescue ::Ractor::IsolationError, ArgumentError
-        nil
       end
 
       def default_unknown_modifiers
