@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "monitor"
-
 module DaisyUI
   # Merges CSS class lists so that later classes win over earlier conflicting
   # ones, for Tailwind utilities and daisyUI modifiers alike:
@@ -16,10 +14,10 @@ module DaisyUI
   module ClassMerge
     TAILWIND_MERGE_VERSION = "1.5.6"
 
-    # Reentrant, so a reset! triggered while the merger is being built (e.g. a
-    # component file configuring DaisyUI as it loads) cannot deadlock.
-    @monitor = Monitor.new
-
+    # The merger (with its LRU) and the Tailwind class groups live in
+    # DaisyUI::Store: one per Ractor, built on first use under the store's
+    # reentrant lock, so a reset! triggered while the merger is being built
+    # (e.g. a component file configuring DaisyUI as it loads) cannot deadlock.
     class << self
       # Accepts strings, nested arrays, nil and false (dropped, as Phlex does
       # for `class:`). Returns a frozen String, "" when empty.
@@ -28,19 +26,20 @@ module DaisyUI
       end
 
       def merger
-        @merger || @monitor.synchronize do
-          @merger ||= Merger.new(config: DaisyUI.configuration.class_merge.merger_config)
+        Store.fetch(:daisy_ui_class_merger) do
+          Merger.new(config: DaisyUI.configuration.class_merge.merger_config)
         end
       end
 
       # @api private The stock Tailwind class groups, for classifying tokens.
       def tailwind_utils
-        @tailwind_utils ||= ClassGroupUtils.new(TailwindConfig::DEFAULTS)
+        Store.fetch(:daisy_ui_tailwind_utils) { ClassGroupUtils.new(TailwindConfig::DEFAULTS) }
       end
 
-      # Drops the memoized merger so the next merge picks up configuration changes.
+      # Drops the current Ractor's merger so its next merge picks up
+      # configuration changes.
       def reset!
-        @monitor.synchronize { @merger = nil }
+        Store.delete(:daisy_ui_class_merger)
       end
     end
   end
