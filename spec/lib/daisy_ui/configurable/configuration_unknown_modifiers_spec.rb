@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe DaisyUI::Configurable::Configuration, "#unknown_modifiers" do
+# Writes to the configuration directly, so it runs against a writable copy.
+RSpec.describe DaisyUI::Configurable::Configuration, "#unknown_modifiers", :finalizes do
   let(:config) { DaisyUI.configuration }
 
   around do |example|

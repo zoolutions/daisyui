@@ -31,17 +31,12 @@ RSpec.describe DaisyUI::ClassMerge do
     end
   end
 
-  describe "configuration" do
+  # Each example gets a writable copy of the configuration with the default
+  # class_merge settings; the suite's own comes back afterwards.
+  describe "configuration", :finalizes do
     let(:config) { DaisyUI.configuration.class_merge }
 
-    around do |example|
-      original = DaisyUI.configuration.instance_variable_get(:@class_merge)
-      DaisyUI.configuration.instance_variable_set(:@class_merge, nil)
-      example.run
-    ensure
-      DaisyUI.configuration.instance_variable_set(:@class_merge, original)
-      described_class.reset!
-    end
+    before { DaisyUI.configuration.instance_variable_set(:@class_merge, nil) }
 
     it "is enabled by default" do
       expect(config.enabled).to be(true)

@@ -106,10 +106,10 @@ RSpec.describe DaisyUI::ClassMerge::DaisyGroups do
 
   context "with a configured modifier in a group" do
     around do |example|
-      DaisyUI.configuration.modifiers.add(:huge, classes: "btn-huge", component: DaisyUI::Button, group: :size)
+      DaisyUI.configure { |config| config.modifiers.add(:huge, classes: "btn-huge", component: DaisyUI::Button, group: :size) }
       example.run
     ensure
-      DaisyUI.configuration.modifiers.remove(:huge, component: DaisyUI::Button)
+      DaisyUI.configure { |config| config.modifiers.remove(:huge, component: DaisyUI::Button) }
     end
 
     it "joins the component's group of that name" do
@@ -120,10 +120,10 @@ RSpec.describe DaisyUI::ClassMerge::DaisyGroups do
 
   context "with a configured modifier without a group" do
     around do |example|
-      DaisyUI.configuration.modifiers.add(:huge, classes: "btn-huge", component: DaisyUI::Button)
+      DaisyUI.configure { |config| config.modifiers.add(:huge, classes: "btn-huge", component: DaisyUI::Button) }
       example.run
     ensure
-      DaisyUI.configuration.modifiers.remove(:huge, component: DaisyUI::Button)
+      DaisyUI.configure { |config| config.modifiers.remove(:huge, component: DaisyUI::Button) }
     end
 
     it "never conflicts" do

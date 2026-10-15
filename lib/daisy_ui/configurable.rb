@@ -8,14 +8,17 @@ module DaisyUI
       base.instance_variable_set(:@configuration, Configuration.new)
     end
 
-    # Yields the configuration. After finalize! it yields a writable copy,
-    # swaps it in and finalizes it, so configure never meets a frozen object.
+    # Yields the configuration, then finalizes it (see finalize!) and
+    # publishes it. Once one is finalized, configure yields a writable copy
+    # and publishes it only when it is finalized too, so calling configure
+    # again keeps working and no reader (another thread, a non-main Ractor)
+    # meets a writable configuration.
     def configure
-      finalized = configuration.frozen?
-      @configuration = configuration.dup if finalized
-      yield(configuration) if block_given?
+      draft = configuration.frozen? ? configuration.dup : configuration
+      yield(draft) if block_given?
+      @configuration = draft.finalize!
       ClassMerge.reset!
-      finalize! if finalized
+      finalize!
       configuration
     end
 
@@ -25,9 +28,11 @@ module DaisyUI
 
     # Freezes what a non-main Ractor reads (this configuration and every
     # component's registries) so DaisyUI::ClassMerge.merge runs in any Ractor.
-    # The Rails engine calls it once the app has booted; without Rails, call
-    # it at the end of boot, after configure. Afterwards change settings only
-    # through configure: writing to the frozen configuration raises.
+    # configure calls it, and the Rails engine calls it once the app has
+    # booted; an app with neither calls it at the end of boot. Afterwards
+    # change settings only through configure: writing to the frozen
+    # configuration raises. A configured value that cannot be made shareable
+    # is kept as it is (see Shareable.share), never raised on.
     def finalize!
       ClassMerge::DaisyGroups.components.each(&:finalize!)
       configuration.finalize!

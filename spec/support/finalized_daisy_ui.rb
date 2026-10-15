@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
-# DaisyUI.finalize! freezes the configuration it finds. Examples tagged
-# :finalizes run against a copy of the suite's configuration and get the
-# suite's own, still writable one back afterwards. Component registries stay
-# frozen once finalized; every writer replaces them instead of mutating them.
+# The suite's configuration is finalized (spec_helper configures DaisyUI, as
+# an app does at boot), so it is frozen. Examples tagged :finalizes run
+# against a writable copy of it, which they may write to directly or
+# finalize, and get the suite's own back afterwards. Component registries
+# stay frozen once finalized; every writer replaces them instead of mutating
+# them.
 RSpec.configure do |config|
   config.around(:each, :finalizes) do |example|
     suite_configuration = DaisyUI.configuration

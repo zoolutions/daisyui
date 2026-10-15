@@ -167,7 +167,7 @@ All jobs run in parallel:
 - `gem-test`: Gem specs on Ruby 3.2, 3.3, 3.4, 4.0
 - `docs-lint`: RuboCop, Biome, Stylelint on docs
 - `docs-test`: Playwright browser tests on docs
-- `conformance` (its own workflow): conformance-kit's `conformance-kit check` on Ruby 4.0: the `:ractor` specs and `conformance-audit --strict`. Ractor-readable state is frozen by `DaisyUI.finalize!`; per-Ractor caches go through `DaisyUI::Store`
+- `conformance` (its own workflow): conformance-kit's `conformance-kit check` on Ruby 4.0: the `:ractor` specs and `conformance-audit --strict`. Ractor-readable state is frozen by `DaisyUI.finalize!`, which `DaisyUI.configure` runs, so the suite's configuration is frozen: specs change settings through `DaisyUI.configure` (or tag `:finalizes` for a writable copy); per-Ractor caches go through `DaisyUI::Store`
 
 ## Labels
 

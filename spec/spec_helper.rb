@@ -13,7 +13,9 @@ Dir["./spec/support/**/*.rb"].each do |f|
 end
 
 # Every component call in the suite must use modifiers the component knows.
-DaisyUI.configuration.unknown_modifiers = :raise
+# configure finalizes DaisyUI, as it does an app at boot: change settings
+# through DaisyUI.configure, since the configuration is frozen.
+DaisyUI.configure { |config| config.unknown_modifiers = :raise }
 
 # Helper to render Phlex components for testing
 module ComponentHelpers
@@ -41,10 +43,10 @@ RSpec.configure do |config|
   config.include ComponentHelpers
   # Examples that exercise how an unknown modifier renders when ignored.
   config.around(:each, :ignore_unknown_modifiers) do |example|
-    DaisyUI.configuration.unknown_modifiers = :ignore
+    DaisyUI.configure { |config| config.unknown_modifiers = :ignore }
     example.run
   ensure
-    DaisyUI.configuration.unknown_modifiers = :raise
+    DaisyUI.configure { |config| config.unknown_modifiers = :raise }
   end
   # Timing-sensitive specs run only on request: `bundle exec rspec --tag perf`
   config.filter_run_excluding :perf
