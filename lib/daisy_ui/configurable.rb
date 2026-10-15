@@ -12,14 +12,17 @@ module DaisyUI
     # (see finalize!) and publishes it. Calling configure again keeps
     # working, no reader (another thread, a non-main Ractor) meets a
     # half-changed or writable configuration, and a block that raises
-    # publishes nothing.
+    # publishes nothing. Calls are serialized, so each starts from what the
+    # previous one published.
     def configure
-      draft = configuration.dup
-      yield(draft) if block_given?
-      @configuration = draft.finalize!
-      ClassMerge.reset!
-      finalize!
-      configuration
+      configure_lock.synchronize do
+        draft = configuration.dup
+        yield(draft) if block_given?
+        @configuration = draft.finalize!
+        ClassMerge.reset!
+        finalize!
+        configuration
+      end
     end
 
     def configuration
@@ -183,6 +186,14 @@ module DaisyUI
 
         %w[development test].include?(::Rails.env.to_s) ? :raise : :warn
       end
+    end
+
+    private
+
+    # Reentrant, and one per Ractor (DaisyUI::Store) so it is never shared;
+    # configure writes DaisyUI's ivar, so only the main Ractor gets that far.
+    def configure_lock
+      Store.fetch(:daisy_ui_configure_lock) { Monitor.new }
     end
   end
 end

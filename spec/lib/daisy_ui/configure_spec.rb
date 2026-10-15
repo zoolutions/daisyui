@@ -64,6 +64,31 @@ RSpec.describe DaisyUI, ".configure", :finalizes do
     end
   end
 
+  # The second call blocks on configure's lock, so it starts from what the
+  # first one published. Unguarded, it copies the same configuration and the
+  # last one to publish drops the other's setting.
+  it "serializes concurrent calls, so neither drops the other's settings" do
+    copied = Queue.new
+    second = nil
+    # rubocop:disable-next ThreadSafety/NewThread -- two threads configure at once on purpose
+    first = Thread.new do
+      described_class.configure do |config|
+        config.prefix = "tw-"
+        second = Thread.new do
+          described_class.configure do |other|
+            other.unknown_modifiers = :ignore
+            copied << :second
+          end
+        end
+        Thread.pass until copied.size.positive? || second.status == "sleep"
+      end
+    end
+    first.join
+    second.join
+
+    expect(described_class.configuration).to have_attributes(prefix: "tw-", unknown_modifiers: :ignore)
+  end
+
   it "changes nothing when the block raises, the first time too" do
     current = described_class.configuration
 
