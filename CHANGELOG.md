@@ -27,8 +27,8 @@ then works in any Ractor; each Ractor builds its own merger and LRU.
 - Component registries (`register_modifiers`, `register_flags`,
   `self.component_class =`) are frozen as they are written, so a component
   that loads after boot (lazy loading in development) is readable from any
-  Ractor too. Writers replace them, as before; mutating one in place now
-  raises `FrozenError`.
+  Ractor too. Writers now replace them instead of mutating them, and
+  mutating one in place raises `FrozenError`.
 - Thread safety: the Tailwind class groups behind `ClassMerge` were built
   with an unguarded `||=` (8 threads built them 8 times); they are now built
   once per Ractor.
