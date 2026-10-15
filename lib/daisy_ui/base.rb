@@ -121,12 +121,29 @@ module DaisyUI
     # Component registries: written by the class body (register_modifiers,
     # register_flags, `self.component_class =`) and by `inherited`, on the main
     # Ractor while the class loads; rendering only reads them. Every writer
-    # assigns a new value instead of mutating the old one, so DaisyUI.finalize!
-    # can freeze them for non-main Ractors and a later register_* still works.
+    # assigns a new value instead of mutating the old one and freezes it as it
+    # writes (Shareable.share), so a non-main Ractor can read the registries of
+    # a component that loaded after boot too, and a later register_* still
+    # works.
     class << self
-      # rubocop:disable ThreadSafety/ClassAndModuleAttributes, ThreadSafety/ClassInstanceVariable -- see above
-      attr_writer :component_class, :modifier_groups, :flags
-      attr_accessor :modifiers
+      # rubocop:disable ThreadSafety/ClassInstanceVariable -- see above
+      attr_reader :modifiers
+
+      def modifiers=(modifiers)
+        @modifiers = Shareable.share(modifiers)
+      end
+
+      def modifier_groups=(groups)
+        @modifier_groups = Shareable.share(groups)
+      end
+
+      def flags=(flags)
+        @flags = Shareable.share(flags)
+      end
+
+      def component_class=(component_class)
+        @component_class = Shareable.share(component_class)
+      end
 
       # Positional symbols a component handles itself (e.g. Dropdown's
       # :popover): accepted as modifiers, but they emit no class.
@@ -144,19 +161,21 @@ module DaisyUI
         @modifier_groups || {}
       end
 
-      # Derived from the class name on first use, the same value every time;
-      # DaisyUI.finalize! derives it at boot, so a non-main Ractor only reads it.
+      # Derived from the class name on first use, the same value every time.
+      # Remembered on the main Ractor only (DaisyUI.finalize! derives it at
+      # boot); a non-main Ractor cannot set a class ivar, so it derives it.
       def component_class
         return @component_class if instance_variable_defined?(:@component_class)
 
-        @component_class = begin
+        derived = begin
           # Convert "DaisyUI::Button" -> "button"
           class_name = name.split("::").last # demodulize
           class_name.gsub(/([A-Z]+)([A-Z][a-z])/, '\1_\2')
             .gsub(/([a-z\d])([A-Z])/, '\1_\2')
             .tr("_", "-")
-            .downcase
+            .downcase.freeze
         end
+        Store.main_ractor? ? (@component_class = derived) : derived
       end
 
       def inherited(subclass)
@@ -169,7 +188,7 @@ module DaisyUI
 
         subclass.component_class = @component_class
       end
-      # rubocop:enable ThreadSafety/ClassAndModuleAttributes, ThreadSafety/ClassInstanceVariable
+      # rubocop:enable ThreadSafety/ClassInstanceVariable
 
       # Registers modifiers. A Hash value declares a group of alternatives:
       #
@@ -198,7 +217,8 @@ module DaisyUI
       end
 
       # @api private Called by DaisyUI.finalize! for every component: derives
-      # component_class and freezes the registries for non-main Ractors.
+      # component_class on the main Ractor and makes sure every registry is
+      # frozen for non-main Ractors.
       def finalize!
         [component_class, modifiers, modifier_groups, flags].each { |registry| Shareable.share(registry) }
         self

@@ -108,6 +108,25 @@ RSpec.describe DaisyUI, ".configure", :finalizes do
     end
   end
 
+  describe "a component that loads after it" do
+    # Tokens of its own: the class outlives stub_const in DaisyUI::Base.subclasses.
+    before do
+      described_class.configure
+      stub_const("LateWidget", Class.new(DaisyUI::Base) { register_modifiers(size: { sm: "late-sm", lg: "late-lg" }) })
+    end
+
+    it "has shareable registries without another finalize" do
+      expect([LateWidget.component_class, LateWidget.modifiers, LateWidget.modifier_groups, LateWidget.flags])
+        .to all(satisfy { |registry| Ractor.shareable?(registry) })
+    end
+
+    describe "then DaisyUI::ClassMerge.merge in a non-main Ractor" do
+      let(:subject_call) { ->(classes) { DaisyUI::ClassMerge.merge(classes) } }
+
+      it_behaves_like "runs inside a non-main Ractor", inputs: ["late-sm late-lg btn-sm btn-lg"]
+    end
+  end
+
   # Finalizing never raises: what cannot be made shareable is kept as it is,
   # and the configuration holding it is then readable on the main Ractor only.
   describe "with a value that cannot be made shareable" do
