@@ -97,7 +97,7 @@ RSpec.describe DaisyUI::Configurable::Configuration, "#unknown_modifiers" do
       limit = described_class::REPORTED_UNKNOWN_MODIFIERS_LIMIT
       (limit + 1).times { |i| DaisyUI::Toggle.new(:"bogus_#{i}") }
 
-      expect(config.instance_variable_get(:@reported_unknown_modifiers).size).to be <= limit
+      expect(config.send(:reported_unknown_modifiers).size).to be <= limit
       expect(reported.size).to eq(limit + 1)
     end
 

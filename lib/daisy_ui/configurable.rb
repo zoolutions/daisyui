@@ -2,21 +2,56 @@
 
 module DaisyUI
   module Configurable
+    # Created when DaisyUI extends this module, at load, so `configuration` is
+    # a plain read with no check-then-set race.
+    def self.extended(base)
+      base.instance_variable_set(:@configuration, Configuration.new)
+    end
+
+    # Yields the configuration. After finalize! it yields a writable copy,
+    # swaps it in and finalizes it, so configure never meets a frozen object.
     def configure
-      self.configuration ||= Configuration.new
+      finalized = configuration.frozen?
+      @configuration = configuration.dup if finalized
       yield(configuration) if block_given?
       ClassMerge.reset!
+      finalize! if finalized
       configuration
     end
 
     def configuration
-      @configuration ||= Configuration.new
+      @configuration
+    end
+
+    # Freezes what a non-main Ractor reads (this configuration and every
+    # component's registries) so DaisyUI::ClassMerge.merge runs in any Ractor.
+    # The Rails engine calls it once the app has booted; without Rails, call
+    # it at the end of boot, after configure. Afterwards change settings only
+    # through configure: writing to the frozen configuration raises.
+    def finalize!
+      ClassMerge::DaisyGroups.components.each(&:finalize!)
+      configuration.finalize!
+      ClassMerge.tailwind_utils
+      self
     end
 
     class Modifiers
       def initialize
         @modifiers = {}
         @groups = {}
+      end
+
+      def initialize_copy(source)
+        super
+        @modifiers = @modifiers.transform_values(&:dup)
+        @groups = @groups.dup
+      end
+
+      # @api private Called by DaisyUI.finalize!.
+      def finalize!
+        Shareable.make(@modifiers)
+        Shareable.make(@groups)
+        freeze
       end
 
       # `group:` makes the modifier an alternative to the component's other
@@ -59,8 +94,24 @@ module DaisyUI
 
       def initialize
         @prefix = nil
-        @reported_unknown_modifiers = Set.new
-        @reported_unknown_modifiers_lock = Mutex.new
+      end
+
+      def initialize_copy(source)
+        super
+        @class_merge = @class_merge&.dup
+        @modifiers = @modifiers&.dup
+      end
+
+      # @api private Called by DaisyUI.finalize!. A callable unknown_modifiers
+      # that cannot be made shareable (it closes over unshareable state) is
+      # kept: the configuration is then frozen but readable on the main
+      # Ractor only.
+      def finalize!
+        class_merge.finalize!
+        modifiers.finalize!
+        Shareable.make(@prefix)
+        share(@unknown_modifiers)
+        freeze
       end
 
       # What a component does with a positional modifier it does not know:
@@ -94,7 +145,7 @@ module DaisyUI
 
       # @api private
       def reset_reported_unknown_modifiers!
-        @reported_unknown_modifiers_lock.synchronize { @reported_unknown_modifiers.clear }
+        reported_unknown_modifiers.clear
       end
 
       def prefix=(prefix)
@@ -112,16 +163,20 @@ module DaisyUI
 
       private
 
-      # Remembers up to REPORTED_UNKNOWN_MODIFIERS_LIMIT keys, then starts over,
-      # so modifiers built from user input cannot grow it without bound.
       def first_report?(key)
-        @reported_unknown_modifiers_lock.synchronize do
-          return false if @reported_unknown_modifiers.include?(key)
+        reported_unknown_modifiers.first?(key)
+      end
 
-          @reported_unknown_modifiers.clear if @reported_unknown_modifiers.size >= REPORTED_UNKNOWN_MODIFIERS_LIMIT
-          @reported_unknown_modifiers.add(key)
-          true
-        end
+      # What was already reported lives per Ractor, outside the configuration,
+      # which stays shareable.
+      def reported_unknown_modifiers
+        Store.fetch(:daisy_ui_reported_unknown_modifiers) { ReportLog.new(REPORTED_UNKNOWN_MODIFIERS_LIMIT) }
+      end
+
+      def share(callable)
+        Shareable.make(callable) if callable.is_a?(Proc)
+      rescue ::Ractor::IsolationError, ArgumentError
+        nil
       end
 
       def default_unknown_modifiers

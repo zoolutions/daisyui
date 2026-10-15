@@ -24,6 +24,19 @@ module DaisyUI
         @conflicts = {}
       end
 
+      def initialize_copy(source)
+        super
+        @theme = @theme.transform_values(&:dup)
+        @class_groups = @class_groups.transform_values(&:dup)
+        @conflicts = @conflicts.transform_values(&:dup)
+      end
+
+      # @api private Called by DaisyUI.finalize!.
+      def finalize!
+        [@theme, @class_groups, @conflicts].each { |settings| Shareable.make(settings) }
+        freeze
+      end
+
       # Registers utilities that behave like an existing one:
       # `utility("text-display", like: "text-lg")` makes `text-display` a font
       # size, so it replaces `text-sm` and sits next to `text-error`.
