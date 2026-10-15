@@ -214,16 +214,18 @@ Keyword arguments are not validated: `Toggle(primray: true)` renders a
 Components and `DaisyUI::ClassMerge` are safe to share between threads (Puma)
 and fibers (Falcon). For Ractors, DaisyUI finalizes itself at boot: it freezes
 the configuration and every component's registries, so
-`DaisyUI::ClassMerge.merge` runs in any Ractor, each Ractor with a merger of
-its own. `DaisyUI.configure` finalizes at its end and the Rails engine
+`DaisyUI::ClassMerge.merge` runs in any Ractor (as long as the configuration
+is shareable, see below), each Ractor with a merger of its own.
+`DaisyUI.configure` finalizes at its end and the Rails engine
 finalizes again once the app has booted, so there is nothing to call. A
 Rails-less app that never calls `configure` calls `DaisyUI.finalize!` at the
 end of boot.
 
 After that the configuration is frozen: writing to `DaisyUI.configuration`
 directly raises `FrozenError`. `DaisyUI.configure` keeps working at any time:
-it yields a writable copy and publishes it once that is finalized. A test that
-changes a setting goes through it too:
+it yields a writable copy and publishes it once that is finalized, and a
+Ractor that already built its merger rebuilds it from the new configuration.
+A test that changes a setting goes through it too:
 
 ```ruby
 around do |example|
@@ -241,9 +243,9 @@ over app state (`->(error) { Appsignal.report_error(error) }` in an
 initializer), or an object that holds a logger. A lambda is shareable when it
 captures no local variables and is defined inside a module, or made with
 `Ractor.shareable_lambda` on Ruby 4.0. A component that loads after boot (lazy
-loading in development) or registers modifiers after it is finalized by the
-next `configure` or `finalize!`; until then a non-main Ractor cannot build its
-merger. Rendering components inside a Ractor waits on Phlex
+loading in development) freezes its registries as it writes them, so any
+Ractor can read it; a Ractor that already built its merger picks up its groups
+after the next `configure`. Rendering components inside a Ractor waits on Phlex
 ([yippee-fun/phlex#1055](https://github.com/yippee-fun/phlex/pull/1055)).
 
 # Compatibility Notes

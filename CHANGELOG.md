@@ -15,16 +15,20 @@ then works in any Ractor; each Ractor builds its own merger and LRU.
   spec: use `DaisyUI.configure { |config| config.unknown_modifiers = :ignore }`.
   `DaisyUI.configure` can be called again at any time: it yields a writable
   copy and publishes it once that is finalized, so no reader ever meets a
-  half-changed configuration.
+  half-changed configuration, and a block that raises changes nothing. A
+  Ractor that already built its merger rebuilds it from the new
+  configuration.
 - Finalizing never raises. A configured value that cannot be made shareable
   is kept as it is, unfrozen, and the configuration is then readable on the
   main Ractor only: a callable `unknown_modifiers` or a raw `class_merge`
   validator that closes over app state (such as
   `->(error) { Appsignal.report_error(error) }` in an initializer), or an
   object that holds a logger.
-- A component that loads after boot (lazy loading in development) or
-  registers modifiers after it is not finalized until the next `configure`
-  or `finalize!`; until then a non-main Ractor cannot build its merger.
+- Component registries (`register_modifiers`, `register_flags`,
+  `self.component_class =`) are frozen as they are written, so a component
+  that loads after boot (lazy loading in development) is readable from any
+  Ractor too. Writers replace them, as before; mutating one in place now
+  raises `FrozenError`.
 - Thread safety: the Tailwind class groups behind `ClassMerge` were built
   with an unguarded `||=` (8 threads built them 8 times); they are now built
   once per Ractor.
