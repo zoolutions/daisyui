@@ -1,4 +1,6 @@
-## [2.1.0]
+## [Unreleased]
+
+## [2.1.0] - 2026-10-15
 
 ### DaisyUI finalizes itself at boot: class merging in any Ractor (#58)
 
@@ -35,7 +37,7 @@ then works in any Ractor; each Ractor builds its own merger and LRU.
 - Rendering components inside a Ractor waits on Phlex
   ([yippee-fun/phlex#1055](https://github.com/yippee-fun/phlex/pull/1055)).
 
-## [2.0.2] and earlier
+## [2.0.2] - 2026-10-11
 
 ### Unknown modifiers are reported (#54)
 
@@ -68,6 +70,30 @@ end
 - `Chat#bubble`, `Steps#step` and `Indicator#item` check their modifiers too
   (`DaisyUI::Chat#bubble has no modifier :primray`).
 - Keyword booleans are not validated: unknown keywords stay HTML attributes.
+
+### Changed
+
+- The gem ships minified Stimulus controllers with linked sourcemaps, and the
+  importmap pins them without preloading, so with the lazy registration the
+  README shows (`lazyLoadControllersFrom`) a page that never uses one never
+  fetches it. `daisy_dropdown_controller` 6.1 KB → 2.8 KB (2.4 → 1.3 KB gzipped),
+  `daisy_tooltip_controller` 8.8 KB → 5.2 KB (2.4 → 1.8 KB gzipped). The
+  `daisy_ui/controllers/*` specifiers and the bundler import paths are unchanged.
+
+### Fixed
+
+- Modifiers added with `config.modifiers.add(component: X)` now apply to
+  subclasses of `X` too; the closest class wins.
+
+## [2.0.1] - 2026-10-09
+
+### Fixed
+
+- Button renders the `disabled` attribute on `button`/`input` elements when given
+  `:disabled` or `disabled: true`, so a disabled submit button no longer submits
+  its form from the keyboard (#52).
+
+## [2.0.0] - 2026-09-30
 
 ### Upgrading to 2.0
 
@@ -110,6 +136,35 @@ wins. `Button(:sm, class: "btn-lg")` renders `btn btn-lg` (1.x rendered
   app components subclassing `DaisyUI::Base` can do the same.
   `config.modifiers.add` takes `group:` to join one.
 
+### Changed
+
+- Maintainers cut releases with `bin/release` (`list`, `--dry-run`, `patch`/`minor`/`major`/`X.Y.Z`), which checks the lockfiles for gems that do not accept the new version yet and then drives `rake release`.
+
+## [1.3.1] - 2026-08-31
+
+### Fixed
+
+- Popover tooltips no longer clip arrows that extend beyond the tooltip card.
+
+## [1.3.0] - 2026-08-30
+
+### Added
+
+- `Tooltip` `:popover` modifier for collision-aware tooltips. It renders real
+  tooltip content in the browser top layer, opens on hover or focus, flips and
+  shifts within the visual viewport, follows scroll/resize while open, and
+  exposes `role="tooltip"`/`aria-describedby` semantics. The bundled
+  `daisy-tooltip` Stimulus controller is auto-pinned for importmap-rails apps
+  and supports a custom controller identifier via `stimulus:`.
+
+## [1.2.1] - 2026-07-03
+
+- No changes to the gem; this release shipped documentation-site and deploy changes only.
+
+## [1.2.0] - 2026-06-26
+
+### Added
+
 - Aura component (DaisyUI 5.6) with style variants (dual, rainbow, holo, gold, silver, glow) and sizes
 - Megamenu component (DaisyUI 5.6) with wide, full, vertical modifiers, sizes, and active_indicator sub-component
 - OTP component (DaisyUI 5.6) for one-time password inputs with configurable digit count, joined modifier, sizes, and color variants
@@ -127,34 +182,27 @@ wins. `Button(:sm, class: "btn-lg")` renders `btn btn-lg` (1.x rendered
   positioning fallback (Safari < 26, Firefox < 147) and optional roving
   keyboard navigation. The default `:popover` dropdown remains zero-JS, and the
   gem stays a plain Phlex library when Rails is absent.
-- `Tooltip` `:popover` modifier for collision-aware tooltips. It renders real
-  tooltip content in the browser top layer, opens on hover or focus, flips and
-  shifts within the visual viewport, follows scroll/resize while open, and
-  exposes `role="tooltip"`/`aria-describedby` semantics. The bundled
-  `daisy-tooltip` Stimulus controller is auto-pinned for importmap-rails apps
-  and supports a custom controller identifier via `stimulus:`.
 
 ### Changed
-
-- The gem ships minified Stimulus controllers with linked sourcemaps, and the
-  importmap pins them without preloading, so with the lazy registration the
-  README shows (`lazyLoadControllersFrom`) a page that never uses one never
-  fetches it. `daisy_dropdown_controller` 6.1 KB → 2.8 KB (2.4 → 1.3 KB gzipped),
-  `daisy_tooltip_controller` 8.8 KB → 5.2 KB (2.4 → 1.8 KB gzipped). The
-  `daisy_ui/controllers/*` specifiers and the bundler import paths are unchanged.
-- Maintainers cut releases with `bin/release` (`list`, `--dry-run`, `patch`/`minor`/`major`/`X.Y.Z`), which checks the lockfiles for gems that do not accept the new version yet and then drives `rake release`.
 
 - Range component: added range-vertical modifier for vertical orientation (DaisyUI 5.6)
 - Tooltip component: added alignment modifiers (tooltip-start, tooltip-center, tooltip-end) and tooltip-content sub-component (DaisyUI 5.6)
 
-### Fixed
+## [1.1.1] - 2026-04-05
 
-- Modifiers added with `config.modifiers.add(component: X)` now apply to
-  subclasses of `X` too; the closest class wins.
-- Popover tooltips no longer clip arrows that extend beyond the tooltip card.
-- Button renders the `disabled` attribute on `button`/`input` elements when given
-  `:disabled` or `disabled: true`, so a disabled submit button no longer submits
-  its form from the keyboard (#52).
+### Changed
+
+- The gem packages only `exe/`, `lib/`, `CHANGELOG.md`, `LICENSE.txt` and
+  `README.md`, listed with `git ls-files` (#14).
+
+## [1.1.0] - 2026-04-05
+
+### Changed
+
+- Components aligned with DaisyUI 5 (#13): new `Hover3d` and `TextRotate`
+  components; `Link` sets the `link` class; `MenuItem` uses
+  `menu-disabled`/`menu-active`/`menu-focus`; Button's `no_animation` and
+  `glass`, Mask's `parallelogram` shapes and Menu's color modifiers are removed.
 
 ## [0.1.0] - 2024-08-02
 
