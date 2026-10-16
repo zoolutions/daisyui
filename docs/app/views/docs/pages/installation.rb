@@ -68,11 +68,14 @@ module Views
             DocsUI::Prose() do
               p do
                 plain "The gem renders the class names; Tailwind + the daisyUI "
-                plain "plugin produce the CSS. Load the daisyUI plugin in your "
-                plain "Tailwind entry and include the gem's source so its "
-                plain "render-time class names are detected:"
+                plain "plugin produce the CSS. Generate Tailwind sources for just "
+                plain "the components your app uses, then import them from your "
+                plain "Tailwind entry:"
               end
             end
+            DocsUI::Code(<<~SHELL, lexer: :shell)
+              bundle exec daisyui-tailwind app -o app/assets/stylesheets/generated/daisyui.css
+            SHELL
             DocsUI::Code(<<~CSS, lexer: :plaintext, filename: "application.tailwind.css")
               @import "tailwindcss";
 
@@ -80,14 +83,50 @@ module Views
                 themes: all;
               }
 
-              /* Detect class names the gem generates at render time. */
-              @source "../../../.bundle/gems/daisyui*/**/*.rb";
+              /* Your own classes, as before. */
+              @source "../../views";
+
+              /* One @source inline(...) per DaisyUI component the app uses. */
+              @import "./generated/daisyui.css";
             CSS
-            DocsUI::Callout(:warning, title: "Render-time classes") do
-              plain "daisyUI components (like Drawer) emit some class names only "
-              plain "at render time. Add an @source for the gem so Tailwind does "
-              plain "not tree-shake their CSS."
+            tailwind_sources_details
+          end
+        end
+
+        def tailwind_sources_details
+          DocsUI::Prose() do
+            p do
+              plain "daisyui-tailwind finds the components your Ruby and "
+              plain "templates reference (a kit call like "
+              code { "Button(:primary)" }
+              plain " or "
+              code { "Badge :primary do" }
+              plain ", "
+              code { "Card.new" }
+              plain ", "
+              code { "DaisyUI::Navbar" }
+              plain "), adds the components those render, and writes each "
+              plain "one's classes. Run it before Tailwind in your CSS build: it "
+              plain "rewrites the file only when it changes, and the file names "
+              plain "no path, so it is the same on every machine. "
+              code { "--format json" }
+              plain " gives a Node build script the components, classes and "
+              plain "files instead; "
+              code { "DaisyUI::Tailwind.sources(scan: [\"app\"])" }
+              plain " does the same from Ruby."
             end
+          end
+          DocsUI::Callout(:tip, title: "Smaller, and more complete") do
+            plain "On an app using 33 of the 77 components, the CSS the gem's "
+            plain "classes add went from 210 KB (scanning the whole gem) to "
+            plain "126 KB. Tailwind v4 cannot see a Symbol component class "
+            plain "(component_class = :navbar) or a Ruby comment, so a whole-gem "
+            plain "scan misses .navbar, .card and the rules daisyUI nests under "
+            plain "them; the generated sources carry them."
+          end
+          DocsUI::Callout(:note, title: "Scanning the whole gem still works") do
+            plain "An @source pointing at the gem's lib/ (resolved at build time "
+            plain "with bundle info daisyui --path) builds the same CSS as before."
           end
         end
       end

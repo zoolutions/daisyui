@@ -1,5 +1,37 @@
 ## [Unreleased]
 
+### Tailwind sources for only the components an app uses
+
+`bundle exec daisyui-tailwind app -o app/assets/stylesheets/generated/daisyui.css`
+writes the Tailwind sources for the DaisyUI components an app's Ruby and
+templates reference, plus the components those render (Dropdown renders
+Button and Menu): one `@source inline("…")` per component, for the Tailwind
+entry to `@import`. See the README's "Tailwind sources".
+
+- Smaller: pointing `@source` at the whole gem hands Tailwind every class of
+  every component and ClassMerge's catalogue of Tailwind utilities. On an app
+  using 33 of the 77 components the gem's share of the CSS went from 210 KB to
+  126 KB (32 → 19 KB gzipped).
+- More complete: Tailwind v4 drops Ruby comments when it scans a `.rb` file
+  and cannot see a Symbol component class (`self.component_class = :navbar`),
+  so a whole-gem scan generated no `.navbar`, `.card` or `.drawer` rule, nor
+  the rules daisyUI nests under them (`indicator-item`, `stack-top`), unless
+  the app spelled the class out itself. The generated sources carry them.
+- No path in the output, so it is the same on every machine; `--output`
+  rewrites the file only when its content changes, so a CSS watcher does not
+  loop on it.
+- `--format json` gives a build script the components, their classes and
+  their absolute files; `DaisyUI::Tailwind.sources(scan: ["app"])` and
+  `DaisyUI::Tailwind.used_components` do the same from Ruby.
+- `--responsive sm,md,lg` adds breakpoint variants of each component class and
+  modifier, for apps that render `responsive:` modifiers (off by default: it
+  multiplies the CSS); `--prefix` matches `DaisyUI.configuration.prefix`.
+- The manifest behind it, `data/daisyui/tailwind_manifest.json`, lists every
+  component's class, daisyUI name, file, the components it renders and its
+  classes. It is built from the components (`rake tailwind:manifest`) and a
+  spec fails when it is stale. It lives in the gem's data dir, not `lib/`:
+  an app that keeps scanning the gem's `lib/` builds the same CSS as before.
+
 ## [2.1.0] - 2026-10-15
 
 ### DaisyUI finalizes itself at boot: class merging in any Ractor (#58)
