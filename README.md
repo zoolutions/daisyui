@@ -183,9 +183,10 @@ nests under them (`indicator-item`, `stack-top`). The manifest carries both.
 
 ### The manifest
 
-The command reads `data/daisyui/tailwind_manifest.json` in the gem
-(`Gem.datadir("daisyui")`), built from the components themselves and checked in
-(`bundle exec rake tailwind:manifest` in this repo). A build script in another
+The command reads `data/daisyui/tailwind_manifest.json` in the gem, built from
+the components themselves and checked in (`bundle exec rake tailwind:manifest`
+in this repo). It sits outside `lib/`, so an `@source` on the gem's `lib/` or
+its `**/*.rb` never sees it. A build script in another
 language can read it directly from `$(bundle info daisyui --path)`:
 
 ```json

@@ -32,7 +32,7 @@ RSpec.describe DaisyUI::Tailwind do
 
   # An app that still points Tailwind at the gem's lib/ (or its **/*.rb) must
   # not start seeing every component's classes in the manifest.
-  it "keeps the manifest in the gem's data dir (Gem.datadir), out of lib/" do
+  it "keeps the manifest in the gem's data/ dir, out of lib/" do
     expect(described_class::MANIFEST_PATH).to eq(File.join(described_class::ROOT, "data/daisyui/tailwind_manifest.json"))
     expect(described_class::MANIFEST_PATH).not_to start_with(File.join(described_class::ROOT, "lib"))
   end

@@ -19,8 +19,8 @@ module DaisyUI
   # from a build script.
   module Tailwind
     ROOT = File.expand_path("../..", __dir__).freeze
-    # In the gem's data dir (Gem.datadir("daisyui")), not lib/: an app that
-    # still points Tailwind at the gem's lib/ must not start scanning it.
+    # In the gem's data/ dir, not lib/: an app that still points Tailwind at
+    # the gem's lib/ must not start scanning it.
     MANIFEST_PATH = File.join(ROOT, "data", "daisyui", "tailwind_manifest.json").freeze
 
     class << self
