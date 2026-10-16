@@ -1,0 +1,2278 @@
+{
+  "schema": 1,
+  "shared": {
+    "files": [
+      "lib/daisy_ui/base.rb"
+    ],
+    "classes": [
+      "bg-accent",
+      "bg-base-100",
+      "bg-base-200",
+      "bg-base-300",
+      "bg-error",
+      "bg-info",
+      "bg-neutral",
+      "bg-primary",
+      "bg-secondary",
+      "bg-success",
+      "bg-warning",
+      "skeleton",
+      "text-accent-content",
+      "text-base-content",
+      "text-error-content",
+      "text-info-content",
+      "text-neutral-content",
+      "text-primary-content",
+      "text-secondary-content",
+      "text-success-content",
+      "text-warning-content"
+    ]
+  },
+  "components": {
+    "Accordion": {
+      "class": "DaisyUI::Accordion",
+      "name": "collapse",
+      "files": [
+        "lib/daisy_ui/accordion.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "collapse-arrow",
+        "collapse-close",
+        "collapse-open",
+        "collapse-plus"
+      ],
+      "classes": [
+        "collapse",
+        "collapse-arrow",
+        "collapse-close",
+        "collapse-content",
+        "collapse-open",
+        "collapse-plus",
+        "collapse-title"
+      ]
+    },
+    "Alert": {
+      "class": "DaisyUI::Alert",
+      "name": "alert",
+      "files": [
+        "lib/daisy_ui/alert.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "alert-accent",
+        "alert-dash",
+        "alert-error",
+        "alert-horizontal",
+        "alert-info",
+        "alert-neutral",
+        "alert-outline",
+        "alert-primary",
+        "alert-secondary",
+        "alert-soft",
+        "alert-success",
+        "alert-vertical",
+        "alert-warning"
+      ],
+      "classes": [
+        "alert",
+        "alert-accent",
+        "alert-dash",
+        "alert-error",
+        "alert-horizontal",
+        "alert-info",
+        "alert-neutral",
+        "alert-outline",
+        "alert-primary",
+        "alert-secondary",
+        "alert-soft",
+        "alert-success",
+        "alert-vertical",
+        "alert-warning"
+      ]
+    },
+    "Aura": {
+      "class": "DaisyUI::Aura",
+      "name": "aura",
+      "files": [
+        "lib/daisy_ui/aura.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "aura-dual",
+        "aura-glow",
+        "aura-gold",
+        "aura-holo",
+        "aura-lg",
+        "aura-md",
+        "aura-rainbow",
+        "aura-silver",
+        "aura-sm",
+        "aura-xl",
+        "aura-xs"
+      ],
+      "classes": [
+        "aura",
+        "aura-dual",
+        "aura-glow",
+        "aura-gold",
+        "aura-holo",
+        "aura-lg",
+        "aura-md",
+        "aura-rainbow",
+        "aura-silver",
+        "aura-sm",
+        "aura-xl",
+        "aura-xs"
+      ]
+    },
+    "Avatar": {
+      "class": "DaisyUI::Avatar",
+      "name": "avatar",
+      "files": [
+        "lib/daisy_ui/avatar.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "avatar-offline",
+        "avatar-online",
+        "avatar-placeholder"
+      ],
+      "classes": [
+        "avatar",
+        "avatar-offline",
+        "avatar-online",
+        "avatar-placeholder"
+      ]
+    },
+    "AvatarGroup": {
+      "class": "DaisyUI::AvatarGroup",
+      "name": "avatar-group",
+      "files": [
+        "lib/daisy_ui/avatar_group.rb"
+      ],
+      "depends_on": [
+        "Avatar"
+      ],
+      "modifiers": [],
+      "classes": [
+        "avatar-group"
+      ]
+    },
+    "Badge": {
+      "class": "DaisyUI::Badge",
+      "name": "badge",
+      "files": [
+        "lib/daisy_ui/badge.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "badge-accent",
+        "badge-dash",
+        "badge-error",
+        "badge-ghost",
+        "badge-info",
+        "badge-lg",
+        "badge-md",
+        "badge-neutral",
+        "badge-outline",
+        "badge-primary",
+        "badge-secondary",
+        "badge-sm",
+        "badge-soft",
+        "badge-success",
+        "badge-warning",
+        "badge-xl",
+        "badge-xs"
+      ],
+      "classes": [
+        "badge",
+        "badge-accent",
+        "badge-dash",
+        "badge-error",
+        "badge-ghost",
+        "badge-info",
+        "badge-lg",
+        "badge-md",
+        "badge-neutral",
+        "badge-outline",
+        "badge-primary",
+        "badge-secondary",
+        "badge-sm",
+        "badge-soft",
+        "badge-success",
+        "badge-warning",
+        "badge-xl",
+        "badge-xs"
+      ]
+    },
+    "Breadcrumbs": {
+      "class": "DaisyUI::Breadcrumbs",
+      "name": "breadcrumbs",
+      "files": [
+        "lib/daisy_ui/breadcrumbs.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [],
+      "classes": [
+        "breadcrumbs"
+      ]
+    },
+    "Button": {
+      "class": "DaisyUI::Button",
+      "name": "btn",
+      "files": [
+        "lib/daisy_ui/button.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "btn-accent",
+        "btn-active",
+        "btn-block",
+        "btn-circle",
+        "btn-dash",
+        "btn-disabled",
+        "btn-error",
+        "btn-ghost",
+        "btn-info",
+        "btn-lg",
+        "btn-link",
+        "btn-md",
+        "btn-neutral",
+        "btn-outline",
+        "btn-primary",
+        "btn-secondary",
+        "btn-sm",
+        "btn-soft",
+        "btn-square",
+        "btn-success",
+        "btn-warning",
+        "btn-wide",
+        "btn-xl",
+        "btn-xs"
+      ],
+      "classes": [
+        "btn",
+        "btn-accent",
+        "btn-active",
+        "btn-block",
+        "btn-circle",
+        "btn-dash",
+        "btn-disabled",
+        "btn-error",
+        "btn-ghost",
+        "btn-info",
+        "btn-lg",
+        "btn-link",
+        "btn-md",
+        "btn-neutral",
+        "btn-outline",
+        "btn-primary",
+        "btn-secondary",
+        "btn-sm",
+        "btn-soft",
+        "btn-square",
+        "btn-success",
+        "btn-warning",
+        "btn-wide",
+        "btn-xl",
+        "btn-xs",
+        "button",
+        "input"
+      ]
+    },
+    "Calendar": {
+      "class": "DaisyUI::Calendar",
+      "name": "calendar",
+      "files": [
+        "lib/daisy_ui/calendar.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [],
+      "classes": [
+        "calendar",
+        "cally",
+        "input",
+        "pika-single"
+      ]
+    },
+    "Card": {
+      "class": "DaisyUI::Card",
+      "name": "card",
+      "files": [
+        "lib/daisy_ui/card.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "bg-accent",
+        "bg-base-100",
+        "bg-base-200",
+        "bg-base-300",
+        "bg-error",
+        "bg-info",
+        "bg-neutral",
+        "bg-primary",
+        "bg-secondary",
+        "bg-success",
+        "bg-warning",
+        "card-border",
+        "card-dash",
+        "card-lg",
+        "card-md",
+        "card-side",
+        "card-sm",
+        "card-xl",
+        "card-xs",
+        "image-full",
+        "text-accent-content",
+        "text-base-content",
+        "text-error-content",
+        "text-info-content",
+        "text-neutral-content",
+        "text-primary-content",
+        "text-secondary-content",
+        "text-success-content",
+        "text-warning-content"
+      ],
+      "classes": [
+        "bg-accent",
+        "bg-base-100",
+        "bg-base-200",
+        "bg-base-300",
+        "bg-error",
+        "bg-info",
+        "bg-neutral",
+        "bg-primary",
+        "bg-secondary",
+        "bg-success",
+        "bg-warning",
+        "card",
+        "card-actions",
+        "card-body",
+        "card-border",
+        "card-dash",
+        "card-lg",
+        "card-md",
+        "card-side",
+        "card-sm",
+        "card-title",
+        "card-xl",
+        "card-xs",
+        "image-full",
+        "text-accent-content",
+        "text-base-content",
+        "text-error-content",
+        "text-info-content",
+        "text-neutral-content",
+        "text-primary-content",
+        "text-secondary-content",
+        "text-success-content",
+        "text-warning-content"
+      ]
+    },
+    "Carousel": {
+      "class": "DaisyUI::Carousel",
+      "name": "carousel",
+      "files": [
+        "lib/daisy_ui/carousel.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "carousel-center",
+        "carousel-end",
+        "carousel-horizontal",
+        "carousel-start",
+        "carousel-vertical"
+      ],
+      "classes": [
+        "carousel",
+        "carousel-center",
+        "carousel-end",
+        "carousel-horizontal",
+        "carousel-item",
+        "carousel-start",
+        "carousel-vertical"
+      ]
+    },
+    "Chat": {
+      "class": "DaisyUI::Chat",
+      "name": "chat",
+      "files": [
+        "lib/daisy_ui/chat.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "chat-end",
+        "chat-start"
+      ],
+      "classes": [
+        "chat",
+        "chat-bubble",
+        "chat-bubble-accent",
+        "chat-bubble-error",
+        "chat-bubble-info",
+        "chat-bubble-neutral",
+        "chat-bubble-primary",
+        "chat-bubble-secondary",
+        "chat-bubble-success",
+        "chat-bubble-warning",
+        "chat-end",
+        "chat-footer",
+        "chat-header",
+        "chat-image",
+        "chat-start"
+      ]
+    },
+    "Checkbox": {
+      "class": "DaisyUI::Checkbox",
+      "name": "checkbox",
+      "files": [
+        "lib/daisy_ui/checkbox.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "checkbox-accent",
+        "checkbox-error",
+        "checkbox-info",
+        "checkbox-lg",
+        "checkbox-md",
+        "checkbox-neutral",
+        "checkbox-primary",
+        "checkbox-secondary",
+        "checkbox-sm",
+        "checkbox-success",
+        "checkbox-warning",
+        "checkbox-xl",
+        "checkbox-xs"
+      ],
+      "classes": [
+        "checkbox",
+        "checkbox-accent",
+        "checkbox-error",
+        "checkbox-info",
+        "checkbox-lg",
+        "checkbox-md",
+        "checkbox-neutral",
+        "checkbox-primary",
+        "checkbox-secondary",
+        "checkbox-sm",
+        "checkbox-success",
+        "checkbox-warning",
+        "checkbox-xl",
+        "checkbox-xs"
+      ]
+    },
+    "Collapse": {
+      "class": "DaisyUI::Collapse",
+      "name": "collapse",
+      "files": [
+        "lib/daisy_ui/collapse.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "collapse-arrow",
+        "collapse-close",
+        "collapse-open",
+        "collapse-plus"
+      ],
+      "classes": [
+        "collapse",
+        "collapse-arrow",
+        "collapse-close",
+        "collapse-content",
+        "collapse-open",
+        "collapse-plus",
+        "collapse-title"
+      ]
+    },
+    "CollapsibleSubMenu": {
+      "class": "DaisyUI::CollapsibleSubMenu",
+      "name": null,
+      "files": [
+        "lib/daisy_ui/collapsible_sub_menu.rb"
+      ],
+      "depends_on": [
+        "MenuItem"
+      ],
+      "modifiers": [
+        "bg-accent",
+        "bg-base-100",
+        "bg-base-200",
+        "bg-base-300",
+        "bg-error",
+        "bg-info",
+        "bg-neutral",
+        "bg-primary",
+        "bg-secondary",
+        "bg-success",
+        "bg-warning",
+        "text-accent-content",
+        "text-base-content",
+        "text-error-content",
+        "text-info-content",
+        "text-neutral-content",
+        "text-primary-content",
+        "text-secondary-content",
+        "text-success-content",
+        "text-warning-content"
+      ],
+      "classes": [
+        "bg-accent",
+        "bg-base-100",
+        "bg-base-200",
+        "bg-base-300",
+        "bg-error",
+        "bg-info",
+        "bg-neutral",
+        "bg-primary",
+        "bg-secondary",
+        "bg-success",
+        "bg-warning",
+        "can",
+        "collapsible",
+        "have",
+        "one",
+        "only",
+        "requires",
+        "submenu",
+        "text-accent-content",
+        "text-base-content",
+        "text-error-content",
+        "text-info-content",
+        "text-neutral-content",
+        "text-primary-content",
+        "text-secondary-content",
+        "text-success-content",
+        "text-warning-content",
+        "title"
+      ]
+    },
+    "Countdown": {
+      "class": "DaisyUI::Countdown",
+      "name": "countdown",
+      "files": [
+        "lib/daisy_ui/countdown.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [],
+      "classes": [
+        "countdown"
+      ]
+    },
+    "Diff": {
+      "class": "DaisyUI::Diff",
+      "name": "diff",
+      "files": [
+        "lib/daisy_ui/diff.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [],
+      "classes": [
+        "diff",
+        "diff-item-1",
+        "diff-item-2",
+        "diff-resizer"
+      ]
+    },
+    "Divider": {
+      "class": "DaisyUI::Divider",
+      "name": "divider",
+      "files": [
+        "lib/daisy_ui/divider.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "divider-accent",
+        "divider-end",
+        "divider-error",
+        "divider-horizontal",
+        "divider-info",
+        "divider-neutral",
+        "divider-primary",
+        "divider-secondary",
+        "divider-start",
+        "divider-success",
+        "divider-vertical",
+        "divider-warning"
+      ],
+      "classes": [
+        "divider",
+        "divider-accent",
+        "divider-end",
+        "divider-error",
+        "divider-horizontal",
+        "divider-info",
+        "divider-neutral",
+        "divider-primary",
+        "divider-secondary",
+        "divider-start",
+        "divider-success",
+        "divider-vertical",
+        "divider-warning"
+      ]
+    },
+    "Dock": {
+      "class": "DaisyUI::Dock",
+      "name": "dock",
+      "files": [
+        "lib/daisy_ui/dock.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "dock-active",
+        "dock-lg",
+        "dock-md",
+        "dock-sm",
+        "dock-xl",
+        "dock-xs"
+      ],
+      "classes": [
+        "dock",
+        "dock-active",
+        "dock-label",
+        "dock-lg",
+        "dock-md",
+        "dock-sm",
+        "dock-xl",
+        "dock-xs"
+      ]
+    },
+    "Drawer": {
+      "class": "DaisyUI::Drawer",
+      "name": "drawer",
+      "files": [
+        "lib/daisy_ui/drawer.rb"
+      ],
+      "depends_on": [
+        "Button"
+      ],
+      "modifiers": [
+        "drawer-end",
+        "drawer-open"
+      ],
+      "classes": [
+        "drawer",
+        "drawer-content",
+        "drawer-end",
+        "drawer-open",
+        "drawer-overlay",
+        "drawer-side",
+        "drawer-toggle"
+      ]
+    },
+    "Dropdown": {
+      "class": "DaisyUI::Dropdown",
+      "name": "dropdown",
+      "files": [
+        "lib/daisy_ui/dropdown.rb"
+      ],
+      "depends_on": [
+        "Button",
+        "Menu"
+      ],
+      "modifiers": [
+        "dropdown-bottom",
+        "dropdown-center",
+        "dropdown-end",
+        "dropdown-hover",
+        "dropdown-left",
+        "dropdown-open",
+        "dropdown-right",
+        "dropdown-start",
+        "dropdown-top"
+      ],
+      "classes": [
+        "auto",
+        "bottom",
+        "center",
+        "daisy-dropdown",
+        "dropdown",
+        "dropdown-bottom",
+        "dropdown-center",
+        "dropdown-content",
+        "dropdown-end",
+        "dropdown-hover",
+        "dropdown-left",
+        "dropdown-open",
+        "dropdown-right",
+        "dropdown-start",
+        "dropdown-top",
+        "end",
+        "false",
+        "left",
+        "menu",
+        "right",
+        "securerandom",
+        "start",
+        "top",
+        "trigger"
+      ]
+    },
+    "Fab": {
+      "class": "DaisyUI::Fab",
+      "name": "fab",
+      "files": [
+        "lib/daisy_ui/fab.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "fab-flower"
+      ],
+      "classes": [
+        "fab",
+        "fab-close",
+        "fab-flower",
+        "fab-main-action"
+      ]
+    },
+    "Fieldset": {
+      "class": "DaisyUI::Fieldset",
+      "name": "fieldset",
+      "files": [
+        "lib/daisy_ui/fieldset.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [],
+      "classes": [
+        "fieldset",
+        "fieldset-legend"
+      ]
+    },
+    "FileInput": {
+      "class": "DaisyUI::FileInput",
+      "name": "file-input",
+      "files": [
+        "lib/daisy_ui/file_input.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "file-input-accent",
+        "file-input-error",
+        "file-input-ghost",
+        "file-input-info",
+        "file-input-lg",
+        "file-input-md",
+        "file-input-neutral",
+        "file-input-primary",
+        "file-input-secondary",
+        "file-input-sm",
+        "file-input-success",
+        "file-input-warning",
+        "file-input-xl",
+        "file-input-xs"
+      ],
+      "classes": [
+        "file-input",
+        "file-input-accent",
+        "file-input-error",
+        "file-input-ghost",
+        "file-input-info",
+        "file-input-lg",
+        "file-input-md",
+        "file-input-neutral",
+        "file-input-primary",
+        "file-input-secondary",
+        "file-input-sm",
+        "file-input-success",
+        "file-input-warning",
+        "file-input-xl",
+        "file-input-xs"
+      ]
+    },
+    "Filter": {
+      "class": "DaisyUI::Filter",
+      "name": "filter",
+      "files": [
+        "lib/daisy_ui/filter.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [],
+      "classes": [
+        "filter",
+        "filter-reset"
+      ]
+    },
+    "Footer": {
+      "class": "DaisyUI::Footer",
+      "name": "footer",
+      "files": [
+        "lib/daisy_ui/footer.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "footer-center",
+        "footer-horizontal",
+        "footer-vertical"
+      ],
+      "classes": [
+        "footer",
+        "footer-center",
+        "footer-horizontal",
+        "footer-title",
+        "footer-vertical"
+      ]
+    },
+    "FormControl": {
+      "class": "DaisyUI::FormControl",
+      "name": "form-control",
+      "files": [
+        "lib/daisy_ui/form_control.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [],
+      "classes": [
+        "form-control"
+      ]
+    },
+    "Hero": {
+      "class": "DaisyUI::Hero",
+      "name": "hero",
+      "files": [
+        "lib/daisy_ui/hero.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [],
+      "classes": [
+        "hero",
+        "hero-content",
+        "hero-overlay"
+      ]
+    },
+    "Hover3d": {
+      "class": "DaisyUI::Hover3d",
+      "name": "hover-3d",
+      "files": [
+        "lib/daisy_ui/hover3d.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [],
+      "classes": [
+        "hover-3d"
+      ]
+    },
+    "HoverGallery": {
+      "class": "DaisyUI::HoverGallery",
+      "name": "hover-gallery",
+      "files": [
+        "lib/daisy_ui/hover_gallery.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [],
+      "classes": [
+        "hover-gallery"
+      ]
+    },
+    "Indicator": {
+      "class": "DaisyUI::Indicator",
+      "name": "indicator",
+      "files": [
+        "lib/daisy_ui/indicator.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "indicator-bottom",
+        "indicator-center",
+        "indicator-end",
+        "indicator-middle",
+        "indicator-start",
+        "indicator-top"
+      ],
+      "classes": [
+        "indicator",
+        "indicator-bottom",
+        "indicator-center",
+        "indicator-end",
+        "indicator-item",
+        "indicator-middle",
+        "indicator-start",
+        "indicator-top"
+      ]
+    },
+    "Input": {
+      "class": "DaisyUI::Input",
+      "name": "input",
+      "files": [
+        "lib/daisy_ui/input.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "input-accent",
+        "input-error",
+        "input-ghost",
+        "input-info",
+        "input-lg",
+        "input-md",
+        "input-neutral",
+        "input-primary",
+        "input-secondary",
+        "input-sm",
+        "input-success",
+        "input-warning",
+        "input-xl",
+        "input-xs"
+      ],
+      "classes": [
+        "input",
+        "input-accent",
+        "input-error",
+        "input-ghost",
+        "input-info",
+        "input-lg",
+        "input-md",
+        "input-neutral",
+        "input-primary",
+        "input-secondary",
+        "input-sm",
+        "input-success",
+        "input-warning",
+        "input-xl",
+        "input-xs"
+      ]
+    },
+    "Join": {
+      "class": "DaisyUI::Join",
+      "name": "join",
+      "files": [
+        "lib/daisy_ui/join.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "join-horizontal",
+        "join-vertical"
+      ],
+      "classes": [
+        "join",
+        "join-horizontal",
+        "join-item",
+        "join-vertical"
+      ]
+    },
+    "Kbd": {
+      "class": "DaisyUI::Kbd",
+      "name": "kbd",
+      "files": [
+        "lib/daisy_ui/kbd.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "kbd-lg",
+        "kbd-md",
+        "kbd-sm",
+        "kbd-xl",
+        "kbd-xs"
+      ],
+      "classes": [
+        "kbd",
+        "kbd-lg",
+        "kbd-md",
+        "kbd-sm",
+        "kbd-xl",
+        "kbd-xs"
+      ]
+    },
+    "Label": {
+      "class": "DaisyUI::Label",
+      "name": null,
+      "files": [
+        "lib/daisy_ui/label.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "floating-label",
+        "input",
+        "select"
+      ],
+      "classes": [
+        "floating-label",
+        "input",
+        "label",
+        "select"
+      ]
+    },
+    "Link": {
+      "class": "DaisyUI::Link",
+      "name": "link",
+      "files": [
+        "lib/daisy_ui/link.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "link-accent",
+        "link-error",
+        "link-hover",
+        "link-info",
+        "link-neutral",
+        "link-primary",
+        "link-secondary",
+        "link-success",
+        "link-warning"
+      ],
+      "classes": [
+        "link",
+        "link-accent",
+        "link-error",
+        "link-hover",
+        "link-info",
+        "link-neutral",
+        "link-primary",
+        "link-secondary",
+        "link-success",
+        "link-warning"
+      ]
+    },
+    "List": {
+      "class": "DaisyUI::List",
+      "name": "list",
+      "files": [
+        "lib/daisy_ui/list.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "list-col-grow",
+        "list-col-wrap"
+      ],
+      "classes": [
+        "list",
+        "list-col-grow",
+        "list-col-wrap",
+        "list-row"
+      ]
+    },
+    "Loading": {
+      "class": "DaisyUI::Loading",
+      "name": "loading",
+      "files": [
+        "lib/daisy_ui/loading.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "loading-ball",
+        "loading-bars",
+        "loading-dots",
+        "loading-infinity",
+        "loading-lg",
+        "loading-md",
+        "loading-ring",
+        "loading-sm",
+        "loading-spinner",
+        "loading-xl",
+        "loading-xs",
+        "text-accent",
+        "text-error",
+        "text-info",
+        "text-neutral",
+        "text-primary",
+        "text-secondary",
+        "text-success",
+        "text-warning"
+      ],
+      "classes": [
+        "loading",
+        "loading-ball",
+        "loading-bars",
+        "loading-dots",
+        "loading-infinity",
+        "loading-lg",
+        "loading-md",
+        "loading-ring",
+        "loading-sm",
+        "loading-spinner",
+        "loading-xl",
+        "loading-xs",
+        "text-accent",
+        "text-error",
+        "text-info",
+        "text-neutral",
+        "text-primary",
+        "text-secondary",
+        "text-success",
+        "text-warning"
+      ]
+    },
+    "Mask": {
+      "class": "DaisyUI::Mask",
+      "name": "mask",
+      "files": [
+        "lib/daisy_ui/mask.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "mask-circle",
+        "mask-decagon",
+        "mask-diamond",
+        "mask-half-1",
+        "mask-half-2",
+        "mask-heart",
+        "mask-hexagon",
+        "mask-hexagon-2",
+        "mask-pentagon",
+        "mask-square",
+        "mask-squircle",
+        "mask-star",
+        "mask-star-2",
+        "mask-triangle",
+        "mask-triangle-2",
+        "mask-triangle-3",
+        "mask-triangle-4"
+      ],
+      "classes": [
+        "mask",
+        "mask-circle",
+        "mask-decagon",
+        "mask-diamond",
+        "mask-half-1",
+        "mask-half-2",
+        "mask-heart",
+        "mask-hexagon",
+        "mask-hexagon-2",
+        "mask-pentagon",
+        "mask-square",
+        "mask-squircle",
+        "mask-star",
+        "mask-star-2",
+        "mask-triangle",
+        "mask-triangle-2",
+        "mask-triangle-3",
+        "mask-triangle-4"
+      ]
+    },
+    "Megamenu": {
+      "class": "DaisyUI::Megamenu",
+      "name": "megamenu",
+      "files": [
+        "lib/daisy_ui/megamenu.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "megamenu-full",
+        "megamenu-lg",
+        "megamenu-md",
+        "megamenu-sm",
+        "megamenu-vertical",
+        "megamenu-wide",
+        "megamenu-xl",
+        "megamenu-xs"
+      ],
+      "classes": [
+        "megamenu",
+        "megamenu-active",
+        "megamenu-full",
+        "megamenu-lg",
+        "megamenu-md",
+        "megamenu-sm",
+        "megamenu-vertical",
+        "megamenu-wide",
+        "megamenu-xl",
+        "megamenu-xs"
+      ]
+    },
+    "Menu": {
+      "class": "DaisyUI::Menu",
+      "name": "menu",
+      "files": [
+        "lib/daisy_ui/menu.rb"
+      ],
+      "depends_on": [
+        "CollapsibleSubMenu",
+        "MenuItem",
+        "SubMenu"
+      ],
+      "modifiers": [
+        "menu-horizontal",
+        "menu-lg",
+        "menu-md",
+        "menu-sm",
+        "menu-vertical",
+        "menu-xl",
+        "menu-xs"
+      ],
+      "classes": [
+        "menu",
+        "menu-horizontal",
+        "menu-lg",
+        "menu-md",
+        "menu-sm",
+        "menu-title",
+        "menu-vertical",
+        "menu-xl",
+        "menu-xs"
+      ]
+    },
+    "MenuItem": {
+      "class": "DaisyUI::MenuItem",
+      "name": null,
+      "files": [
+        "lib/daisy_ui/menu_item.rb"
+      ],
+      "depends_on": [
+        "CollapsibleSubMenu",
+        "SubMenu"
+      ],
+      "modifiers": [
+        "menu-active",
+        "menu-disabled",
+        "menu-focus"
+      ],
+      "classes": [
+        "menu-active",
+        "menu-disabled",
+        "menu-focus",
+        "menu-title"
+      ]
+    },
+    "MockupBrowser": {
+      "class": "DaisyUI::MockupBrowser",
+      "name": "mockup-browser",
+      "files": [
+        "lib/daisy_ui/mockup_browser.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [],
+      "classes": [
+        "mockup-browser",
+        "mockup-browser-toolbar"
+      ]
+    },
+    "MockupCode": {
+      "class": "DaisyUI::MockupCode",
+      "name": "mockup-code",
+      "files": [
+        "lib/daisy_ui/mockup_code.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [],
+      "classes": [
+        "mockup-code"
+      ]
+    },
+    "MockupPhone": {
+      "class": "DaisyUI::MockupPhone",
+      "name": "mockup-phone",
+      "files": [
+        "lib/daisy_ui/mockup_phone.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [],
+      "classes": [
+        "mockup-phone",
+        "mockup-phone-camera",
+        "mockup-phone-display"
+      ]
+    },
+    "MockupWindow": {
+      "class": "DaisyUI::MockupWindow",
+      "name": "mockup-window",
+      "files": [
+        "lib/daisy_ui/mockup_window.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [],
+      "classes": [
+        "mockup-window"
+      ]
+    },
+    "Modal": {
+      "class": "DaisyUI::Modal",
+      "name": "modal",
+      "files": [
+        "lib/daisy_ui/modal.rb"
+      ],
+      "depends_on": [
+        "Button"
+      ],
+      "modifiers": [
+        "modal-bottom",
+        "modal-end",
+        "modal-middle",
+        "modal-open",
+        "modal-start",
+        "modal-top"
+      ],
+      "classes": [
+        "modal",
+        "modal-action",
+        "modal-backdrop",
+        "modal-bottom",
+        "modal-box",
+        "modal-end",
+        "modal-middle",
+        "modal-open",
+        "modal-start",
+        "modal-top"
+      ]
+    },
+    "Navbar": {
+      "class": "DaisyUI::Navbar",
+      "name": "navbar",
+      "files": [
+        "lib/daisy_ui/navbar.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "bg-accent",
+        "bg-base-100",
+        "bg-base-200",
+        "bg-base-300",
+        "bg-error",
+        "bg-info",
+        "bg-neutral",
+        "bg-primary",
+        "bg-secondary",
+        "bg-success",
+        "bg-warning",
+        "text-accent-content",
+        "text-base-content",
+        "text-error-content",
+        "text-info-content",
+        "text-neutral-content",
+        "text-primary-content",
+        "text-secondary-content",
+        "text-success-content",
+        "text-warning-content"
+      ],
+      "classes": [
+        "bg-accent",
+        "bg-base-100",
+        "bg-base-200",
+        "bg-base-300",
+        "bg-error",
+        "bg-info",
+        "bg-neutral",
+        "bg-primary",
+        "bg-secondary",
+        "bg-success",
+        "bg-warning",
+        "navbar",
+        "navbar-center",
+        "navbar-end",
+        "navbar-start",
+        "text-accent-content",
+        "text-base-content",
+        "text-error-content",
+        "text-info-content",
+        "text-neutral-content",
+        "text-primary-content",
+        "text-secondary-content",
+        "text-success-content",
+        "text-warning-content"
+      ]
+    },
+    "Otp": {
+      "class": "DaisyUI::Otp",
+      "name": "otp",
+      "files": [
+        "lib/daisy_ui/otp.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "otp-accent",
+        "otp-error",
+        "otp-info",
+        "otp-joined",
+        "otp-lg",
+        "otp-md",
+        "otp-neutral",
+        "otp-primary",
+        "otp-secondary",
+        "otp-sm",
+        "otp-success",
+        "otp-warning",
+        "otp-xl",
+        "otp-xs"
+      ],
+      "classes": [
+        "one-time-code",
+        "otp",
+        "otp-accent",
+        "otp-error",
+        "otp-info",
+        "otp-joined",
+        "otp-lg",
+        "otp-md",
+        "otp-neutral",
+        "otp-primary",
+        "otp-secondary",
+        "otp-sm",
+        "otp-success",
+        "otp-warning",
+        "otp-xl",
+        "otp-xs"
+      ]
+    },
+    "Pagination": {
+      "class": "DaisyUI::Pagination",
+      "name": "join",
+      "files": [
+        "lib/daisy_ui/pagination.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "join-horizontal",
+        "join-vertical"
+      ],
+      "classes": [
+        "join",
+        "join-horizontal",
+        "join-item",
+        "join-vertical"
+      ]
+    },
+    "Progress": {
+      "class": "DaisyUI::Progress",
+      "name": "progress",
+      "files": [
+        "lib/daisy_ui/progress.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "progress-accent",
+        "progress-error",
+        "progress-info",
+        "progress-neutral",
+        "progress-primary",
+        "progress-secondary",
+        "progress-success",
+        "progress-warning"
+      ],
+      "classes": [
+        "progress",
+        "progress-accent",
+        "progress-error",
+        "progress-info",
+        "progress-neutral",
+        "progress-primary",
+        "progress-secondary",
+        "progress-success",
+        "progress-warning"
+      ]
+    },
+    "RadialProgress": {
+      "class": "DaisyUI::RadialProgress",
+      "name": "radial-progress",
+      "files": [
+        "lib/daisy_ui/radial_progress.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "bg-accent",
+        "bg-base-100",
+        "bg-base-200",
+        "bg-base-300",
+        "bg-error",
+        "bg-info",
+        "bg-neutral",
+        "bg-primary",
+        "bg-secondary",
+        "bg-success",
+        "bg-warning",
+        "border-accent",
+        "border-base-100",
+        "border-base-200",
+        "border-base-300",
+        "border-error",
+        "border-info",
+        "border-neutral",
+        "border-primary",
+        "border-secondary",
+        "border-success",
+        "border-warning",
+        "text-accent",
+        "text-accent-content",
+        "text-base-100",
+        "text-base-200",
+        "text-base-300",
+        "text-base-content",
+        "text-error-content",
+        "text-info",
+        "text-info-content",
+        "text-neutral",
+        "text-neutral-content",
+        "text-primary",
+        "text-primary-content",
+        "text-secondary",
+        "text-secondary-content",
+        "text-success",
+        "text-success-content",
+        "text-warning",
+        "text-warning-content"
+      ],
+      "classes": [
+        "bg-accent",
+        "bg-base-100",
+        "bg-base-200",
+        "bg-base-300",
+        "bg-error",
+        "bg-info",
+        "bg-neutral",
+        "bg-primary",
+        "bg-secondary",
+        "bg-success",
+        "bg-warning",
+        "border-accent",
+        "border-base-100",
+        "border-base-200",
+        "border-base-300",
+        "border-error",
+        "border-info",
+        "border-neutral",
+        "border-primary",
+        "border-secondary",
+        "border-success",
+        "border-warning",
+        "radial-progress",
+        "text-accent",
+        "text-accent-content",
+        "text-base-100",
+        "text-base-200",
+        "text-base-300",
+        "text-base-content",
+        "text-error-content",
+        "text-info",
+        "text-info-content",
+        "text-neutral",
+        "text-neutral-content",
+        "text-primary",
+        "text-primary-content",
+        "text-secondary",
+        "text-secondary-content",
+        "text-success",
+        "text-success-content",
+        "text-warning",
+        "text-warning-content"
+      ]
+    },
+    "Radio": {
+      "class": "DaisyUI::Radio",
+      "name": "radio",
+      "files": [
+        "lib/daisy_ui/radio.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "radio-accent",
+        "radio-error",
+        "radio-info",
+        "radio-lg",
+        "radio-md",
+        "radio-neutral",
+        "radio-primary",
+        "radio-secondary",
+        "radio-sm",
+        "radio-success",
+        "radio-warning",
+        "radio-xl",
+        "radio-xs"
+      ],
+      "classes": [
+        "radio",
+        "radio-accent",
+        "radio-error",
+        "radio-info",
+        "radio-lg",
+        "radio-md",
+        "radio-neutral",
+        "radio-primary",
+        "radio-secondary",
+        "radio-sm",
+        "radio-success",
+        "radio-warning",
+        "radio-xl",
+        "radio-xs"
+      ]
+    },
+    "Range": {
+      "class": "DaisyUI::Range",
+      "name": "range",
+      "files": [
+        "lib/daisy_ui/range.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "range-accent",
+        "range-error",
+        "range-info",
+        "range-lg",
+        "range-md",
+        "range-neutral",
+        "range-primary",
+        "range-secondary",
+        "range-sm",
+        "range-success",
+        "range-vertical",
+        "range-warning",
+        "range-xl",
+        "range-xs"
+      ],
+      "classes": [
+        "range",
+        "range-accent",
+        "range-error",
+        "range-info",
+        "range-lg",
+        "range-md",
+        "range-neutral",
+        "range-primary",
+        "range-secondary",
+        "range-sm",
+        "range-success",
+        "range-vertical",
+        "range-warning",
+        "range-xl",
+        "range-xs"
+      ]
+    },
+    "Rating": {
+      "class": "DaisyUI::Rating",
+      "name": "rating",
+      "files": [
+        "lib/daisy_ui/rating.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "rating-half",
+        "rating-hidden",
+        "rating-lg",
+        "rating-md",
+        "rating-sm",
+        "rating-xl",
+        "rating-xs"
+      ],
+      "classes": [
+        "rating",
+        "rating-half",
+        "rating-hidden",
+        "rating-lg",
+        "rating-md",
+        "rating-sm",
+        "rating-xl",
+        "rating-xs"
+      ]
+    },
+    "Select": {
+      "class": "DaisyUI::Select",
+      "name": "select",
+      "files": [
+        "lib/daisy_ui/select.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "select-accent",
+        "select-error",
+        "select-ghost",
+        "select-info",
+        "select-lg",
+        "select-md",
+        "select-neutral",
+        "select-primary",
+        "select-secondary",
+        "select-sm",
+        "select-success",
+        "select-warning",
+        "select-xl",
+        "select-xs"
+      ],
+      "classes": [
+        "select",
+        "select-accent",
+        "select-error",
+        "select-ghost",
+        "select-info",
+        "select-lg",
+        "select-md",
+        "select-neutral",
+        "select-primary",
+        "select-secondary",
+        "select-sm",
+        "select-success",
+        "select-warning",
+        "select-xl",
+        "select-xs"
+      ]
+    },
+    "Skeleton": {
+      "class": "DaisyUI::Skeleton",
+      "name": "skeleton",
+      "files": [
+        "lib/daisy_ui/skeleton.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "skeleton-text"
+      ],
+      "classes": [
+        "skeleton",
+        "skeleton-text"
+      ]
+    },
+    "Stack": {
+      "class": "DaisyUI::Stack",
+      "name": "stack",
+      "files": [
+        "lib/daisy_ui/stack.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "stack-bottom",
+        "stack-end",
+        "stack-start",
+        "stack-top"
+      ],
+      "classes": [
+        "stack",
+        "stack-bottom",
+        "stack-end",
+        "stack-start",
+        "stack-top"
+      ]
+    },
+    "Stat": {
+      "class": "DaisyUI::Stat",
+      "name": "stats",
+      "files": [
+        "lib/daisy_ui/stat.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "stats-horizontal",
+        "stats-vertical"
+      ],
+      "classes": [
+        "stat",
+        "stat-actions",
+        "stat-desc",
+        "stat-figure",
+        "stat-title",
+        "stat-value",
+        "stats",
+        "stats-horizontal",
+        "stats-vertical"
+      ]
+    },
+    "Status": {
+      "class": "DaisyUI::Status",
+      "name": "status",
+      "files": [
+        "lib/daisy_ui/status.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "status-accent",
+        "status-error",
+        "status-info",
+        "status-lg",
+        "status-md",
+        "status-neutral",
+        "status-primary",
+        "status-secondary",
+        "status-sm",
+        "status-success",
+        "status-warning",
+        "status-xl",
+        "status-xs"
+      ],
+      "classes": [
+        "status",
+        "status-accent",
+        "status-error",
+        "status-info",
+        "status-lg",
+        "status-md",
+        "status-neutral",
+        "status-primary",
+        "status-secondary",
+        "status-sm",
+        "status-success",
+        "status-warning",
+        "status-xl",
+        "status-xs"
+      ]
+    },
+    "Steps": {
+      "class": "DaisyUI::Steps",
+      "name": "steps",
+      "files": [
+        "lib/daisy_ui/steps.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "steps-horizontal",
+        "steps-vertical"
+      ],
+      "classes": [
+        "step",
+        "step-accent",
+        "step-error",
+        "step-icon",
+        "step-info",
+        "step-neutral",
+        "step-primary",
+        "step-secondary",
+        "step-success",
+        "step-warning",
+        "steps",
+        "steps-horizontal",
+        "steps-vertical"
+      ]
+    },
+    "SubMenu": {
+      "class": "DaisyUI::SubMenu",
+      "name": "sub-menu",
+      "files": [
+        "lib/daisy_ui/sub_menu.rb"
+      ],
+      "depends_on": [
+        "MenuItem"
+      ],
+      "modifiers": [],
+      "classes": [
+        "sub-menu"
+      ]
+    },
+    "Swap": {
+      "class": "DaisyUI::Swap",
+      "name": "swap",
+      "files": [
+        "lib/daisy_ui/swap.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "swap-active",
+        "swap-flip",
+        "swap-rotate"
+      ],
+      "classes": [
+        "swap",
+        "swap-active",
+        "swap-flip",
+        "swap-indeterminate",
+        "swap-off",
+        "swap-on",
+        "swap-rotate"
+      ]
+    },
+    "Tab": {
+      "class": "DaisyUI::Tab",
+      "name": "tab",
+      "files": [
+        "lib/daisy_ui/tab.rb"
+      ],
+      "depends_on": [
+        "TabWithContent",
+        "TabWithoutContent"
+      ],
+      "modifiers": [],
+      "classes": [
+        "add",
+        "an",
+        "content",
+        "id",
+        "if",
+        "must",
+        "pass",
+        "tab",
+        "tab-content",
+        "to",
+        "want",
+        "you"
+      ]
+    },
+    "TabWithContent": {
+      "class": "DaisyUI::TabWithContent",
+      "name": "tab",
+      "files": [
+        "lib/daisy_ui/tab_with_content.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "tab-active",
+        "tab-disabled"
+      ],
+      "classes": [
+        "tab",
+        "tab-active",
+        "tab-disabled"
+      ]
+    },
+    "TabWithoutContent": {
+      "class": "DaisyUI::TabWithoutContent",
+      "name": "tab",
+      "files": [
+        "lib/daisy_ui/tab_without_content.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "tab-active",
+        "tab-disabled"
+      ],
+      "classes": [
+        "tab",
+        "tab-active",
+        "tab-disabled"
+      ]
+    },
+    "Table": {
+      "class": "DaisyUI::Table",
+      "name": "table",
+      "files": [
+        "lib/daisy_ui/table.rb"
+      ],
+      "depends_on": [
+        "TableRow"
+      ],
+      "modifiers": [
+        "table-lg",
+        "table-md",
+        "table-pin-cols",
+        "table-pin-rows",
+        "table-sm",
+        "table-xl",
+        "table-xs",
+        "table-zebra"
+      ],
+      "classes": [
+        "table",
+        "table-lg",
+        "table-md",
+        "table-pin-cols",
+        "table-pin-rows",
+        "table-sm",
+        "table-xl",
+        "table-xs",
+        "table-zebra"
+      ]
+    },
+    "TableRow": {
+      "class": "DaisyUI::TableRow",
+      "name": null,
+      "files": [
+        "lib/daisy_ui/table_row.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "bg-accent",
+        "bg-base-100",
+        "bg-base-200",
+        "bg-base-300",
+        "bg-error",
+        "bg-info",
+        "bg-neutral",
+        "bg-primary",
+        "bg-secondary",
+        "bg-success",
+        "bg-warning",
+        "hover",
+        "text-accent-content",
+        "text-base-content",
+        "text-error-content",
+        "text-info-content",
+        "text-neutral-content",
+        "text-primary-content",
+        "text-secondary-content",
+        "text-success-content",
+        "text-warning-content"
+      ],
+      "classes": [
+        "bg-accent",
+        "bg-base-100",
+        "bg-base-200",
+        "bg-base-300",
+        "bg-error",
+        "bg-info",
+        "bg-neutral",
+        "bg-primary",
+        "bg-secondary",
+        "bg-success",
+        "bg-warning",
+        "hover",
+        "text-accent-content",
+        "text-base-content",
+        "text-error-content",
+        "text-info-content",
+        "text-neutral-content",
+        "text-primary-content",
+        "text-secondary-content",
+        "text-success-content",
+        "text-warning-content"
+      ]
+    },
+    "Tabs": {
+      "class": "DaisyUI::Tabs",
+      "name": "tabs",
+      "files": [
+        "lib/daisy_ui/tabs.rb"
+      ],
+      "depends_on": [
+        "Tab"
+      ],
+      "modifiers": [
+        "tabs-border",
+        "tabs-bottom",
+        "tabs-box",
+        "tabs-lg",
+        "tabs-lift",
+        "tabs-md",
+        "tabs-sm",
+        "tabs-top",
+        "tabs-xl",
+        "tabs-xs"
+      ],
+      "classes": [
+        "tabs",
+        "tabs-border",
+        "tabs-bottom",
+        "tabs-box",
+        "tabs-lg",
+        "tabs-lift",
+        "tabs-md",
+        "tabs-sm",
+        "tabs-top",
+        "tabs-xl",
+        "tabs-xs"
+      ]
+    },
+    "TextRotate": {
+      "class": "DaisyUI::TextRotate",
+      "name": "text-rotate",
+      "files": [
+        "lib/daisy_ui/text_rotate.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [],
+      "classes": [
+        "text-rotate"
+      ]
+    },
+    "Textarea": {
+      "class": "DaisyUI::Textarea",
+      "name": "textarea",
+      "files": [
+        "lib/daisy_ui/textarea.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "textarea-accent",
+        "textarea-error",
+        "textarea-ghost",
+        "textarea-info",
+        "textarea-lg",
+        "textarea-md",
+        "textarea-neutral",
+        "textarea-primary",
+        "textarea-secondary",
+        "textarea-sm",
+        "textarea-success",
+        "textarea-warning",
+        "textarea-xl",
+        "textarea-xs"
+      ],
+      "classes": [
+        "textarea",
+        "textarea-accent",
+        "textarea-error",
+        "textarea-ghost",
+        "textarea-info",
+        "textarea-lg",
+        "textarea-md",
+        "textarea-neutral",
+        "textarea-primary",
+        "textarea-secondary",
+        "textarea-sm",
+        "textarea-success",
+        "textarea-warning",
+        "textarea-xl",
+        "textarea-xs"
+      ]
+    },
+    "ThemeController": {
+      "class": "DaisyUI::ThemeController",
+      "name": "theme-controller",
+      "files": [
+        "lib/daisy_ui/theme_controller.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "swap",
+        "swap-flip",
+        "swap-rotate",
+        "toggle"
+      ],
+      "classes": [
+        "swap",
+        "swap-flip",
+        "swap-rotate",
+        "theme-controller",
+        "toggle"
+      ]
+    },
+    "Timeline": {
+      "class": "DaisyUI::Timeline",
+      "name": "timeline",
+      "files": [
+        "lib/daisy_ui/timeline.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "timeline-box",
+        "timeline-compact",
+        "timeline-horizontal",
+        "timeline-snap-icon",
+        "timeline-vertical"
+      ],
+      "classes": [
+        "timeline",
+        "timeline-box",
+        "timeline-compact",
+        "timeline-end",
+        "timeline-horizontal",
+        "timeline-middle",
+        "timeline-snap-icon",
+        "timeline-start",
+        "timeline-vertical"
+      ]
+    },
+    "Toast": {
+      "class": "DaisyUI::Toast",
+      "name": "toast",
+      "files": [
+        "lib/daisy_ui/toast.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "toast-bottom",
+        "toast-center",
+        "toast-end",
+        "toast-middle",
+        "toast-start",
+        "toast-top"
+      ],
+      "classes": [
+        "toast",
+        "toast-bottom",
+        "toast-center",
+        "toast-end",
+        "toast-middle",
+        "toast-start",
+        "toast-top"
+      ]
+    },
+    "Toggle": {
+      "class": "DaisyUI::Toggle",
+      "name": "toggle",
+      "files": [
+        "lib/daisy_ui/toggle.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "toggle-accent",
+        "toggle-error",
+        "toggle-info",
+        "toggle-lg",
+        "toggle-md",
+        "toggle-neutral",
+        "toggle-primary",
+        "toggle-secondary",
+        "toggle-sm",
+        "toggle-success",
+        "toggle-warning",
+        "toggle-xl",
+        "toggle-xs"
+      ],
+      "classes": [
+        "toggle",
+        "toggle-accent",
+        "toggle-error",
+        "toggle-info",
+        "toggle-lg",
+        "toggle-md",
+        "toggle-neutral",
+        "toggle-primary",
+        "toggle-secondary",
+        "toggle-sm",
+        "toggle-success",
+        "toggle-warning",
+        "toggle-xl",
+        "toggle-xs"
+      ]
+    },
+    "Tooltip": {
+      "class": "DaisyUI::Tooltip",
+      "name": "tooltip",
+      "files": [
+        "lib/daisy_ui/tooltip.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [
+        "tooltip-accent",
+        "tooltip-bottom",
+        "tooltip-center",
+        "tooltip-end",
+        "tooltip-error",
+        "tooltip-info",
+        "tooltip-left",
+        "tooltip-neutral",
+        "tooltip-open",
+        "tooltip-primary",
+        "tooltip-right",
+        "tooltip-secondary",
+        "tooltip-start",
+        "tooltip-success",
+        "tooltip-top",
+        "tooltip-warning"
+      ],
+      "classes": [
+        "after:hidden",
+        "arrow",
+        "be",
+        "bottom",
+        "content",
+        "controller",
+        "daisy-tooltip",
+        "identifier",
+        "in",
+        "left",
+        "manual",
+        "mode",
+        "must",
+        "non-empty",
+        "or",
+        "popover",
+        "right",
+        "securerandom",
+        "stimulus",
+        "tooltip",
+        "tooltip-accent",
+        "tooltip-bottom",
+        "tooltip-center",
+        "tooltip-content",
+        "tooltip-end",
+        "tooltip-error",
+        "tooltip-info",
+        "tooltip-left",
+        "tooltip-neutral",
+        "tooltip-open",
+        "tooltip-primary",
+        "tooltip-right",
+        "tooltip-secondary",
+        "tooltip-start",
+        "tooltip-success",
+        "tooltip-top",
+        "tooltip-warning",
+        "top",
+        "true"
+      ]
+    },
+    "Validator": {
+      "class": "DaisyUI::Validator",
+      "name": "validator",
+      "files": [
+        "lib/daisy_ui/validator.rb"
+      ],
+      "depends_on": [],
+      "modifiers": [],
+      "classes": [
+        "validator",
+        "validator-hint"
+      ]
+    }
+  }
+}

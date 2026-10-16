@@ -42,6 +42,18 @@ namespace :build do
   end
 end
 
+# data/daisyui/tailwind_manifest.json: what an app's Tailwind build needs per
+# component (DaisyUI::Tailwind). The manifest spec fails until it is regenerated.
+namespace :tailwind do
+  desc "Regenerate data/daisyui/tailwind_manifest.json from the components"
+  task :manifest do
+    require_relative "lib/daisyui"
+
+    path = DaisyUI::Tailwind::ManifestBuilder.write
+    puts "\e[32m✓\e[0m #{path}"
+  end
+end
+
 desc "Build gem and verify contents"
 task :build do
   sh("gem build daisyui.gemspec --strict")

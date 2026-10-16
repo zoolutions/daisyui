@@ -18,14 +18,14 @@ Gem::Specification.new do |s|
   s.files = begin
     files = IO.popen(%w[git ls-files -z], chdir: __dir__, err: IO::NULL) do |ls|
       ls.readlines("\x0", chomp: true).select do |f|
-        f.start_with?("exe/", "lib/", "app/", "config/") ||
+        f.start_with?("exe/", "lib/", "app/", "config/", "data/") ||
           f == "CHANGELOG.md" || f == "LICENSE.txt" || f == "LICENSE-tailwind_merge.txt" || f == "README.md"
       end
     end
     files.empty? ? raise(Errno::ENOENT) : files
   rescue Errno::ENOENT
     Dir[
-      "exe/*", "lib/**/*.rb", "app/**/*", "config/**/*",
+      "exe/*", "lib/**/*.rb", "app/**/*", "data/**/*", "config/**/*",
       "CHANGELOG.md", "LICENSE.txt", "LICENSE-tailwind_merge.txt", "README.md"
     ].select { |f| File.file?(f) }
   end

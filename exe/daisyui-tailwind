@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "daisyui"
+
+exit DaisyUI::Tailwind::Command.run(ARGV)
