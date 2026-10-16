@@ -21,11 +21,13 @@ entry to `@import`. See the README's "Tailwind sources".
   rewrites the file only when its content changes, so a CSS watcher does not
   loop on it.
 - `--format json` gives a build script the components, their classes and
-  their absolute files; `DaisyUI::Tailwind.sources(scan: ["app"])` and
-  `DaisyUI::Tailwind.used_components` do the same from Ruby.
+  their absolute files. From Ruby, `DaisyUI::Tailwind.sources(scan: ["app"])`
+  returns the CSS (`format: :json` for the JSON), and
+  `DaisyUI::Tailwind.used_components(scan: ["app"])` the component names.
 - `--responsive sm,md,lg` adds breakpoint variants of each component class and
   modifier, for apps that render `responsive:` modifiers (off by default: it
-  multiplies the CSS); `--prefix` matches `DaisyUI.configuration.prefix`.
+  multiplies the CSS). `--prefix` matches `DaisyUI.configuration.prefix`,
+  which `DaisyUI::Tailwind.sources` uses by default.
 - The manifest behind it, `data/daisyui/tailwind_manifest.json`, lists every
   component's class, daisyUI name, file, the components it renders and its
   classes. It is built from the components (`rake tailwind:manifest`) and a

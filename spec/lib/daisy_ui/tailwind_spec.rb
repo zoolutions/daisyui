@@ -25,6 +25,13 @@ RSpec.describe DaisyUI::Tailwind do
       expect(described_class.sources(scan: [dir])).to include("/* DaisyUI::MenuItem */\n@source inline(")
     end
 
+    it "prefixes classes with DaisyUI.configuration.prefix unless told otherwise", :finalizes do
+      DaisyUI.configure { |config| config.prefix = "d-" }
+
+      expect(described_class.sources(components: %w[Badge])).to include('@source inline("d-badge ')
+      expect(described_class.sources(components: %w[Badge], prefix: nil)).to include('@source inline("badge ')
+    end
+
     it "gives JSON" do
       expect(JSON.parse(described_class.sources(components: %w[Badge], format: :json))["components"].keys).to eq(%w[Badge])
     end

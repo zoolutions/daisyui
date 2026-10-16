@@ -11,11 +11,14 @@ module DaisyUI
     #   files for anyone who wants a literal `@source` instead.
     #
     # `responsive:` adds `<breakpoint>:` variants of the classes `responsive:`
-    # renders (a component's own class and its modifiers); `prefix:` mirrors
-    # DaisyUI.configuration.prefix.
+    # renders (a component's own class and its modifiers). `prefix:` mirrors
+    # DaisyUI.configuration.prefix: the component class and modifiers always
+    # render prefixed, while a class string in a component's Ruby may render
+    # either way (`component_classes("card-body")` is prefixed, Tooltip's
+    # "after:hidden" is not), so those are given both ways.
     class Sources
       BREAKPOINT = /\A@?[a-z0-9][a-z0-9-]*\z/
-      PREFIX = /\A[a-z][a-z0-9_-]*\z/
+      PREFIX = /\A[^\s"'`;{}\\]+\z/
 
       attr_reader :components
 
@@ -81,6 +84,7 @@ module DaisyUI
 
       def expand(classes, responsive)
         prefixed = classes.map { |token| "#{@prefix}#{token}" }
+        prefixed += classes - responsive unless @prefix.empty?
         prefixed + @breakpoints.flat_map { |breakpoint| responsive.map { |token| "#{breakpoint}:#{@prefix}#{token}" } }
       end
 

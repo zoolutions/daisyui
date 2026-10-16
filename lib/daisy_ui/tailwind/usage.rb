@@ -25,12 +25,14 @@ module DaisyUI
       }.freeze
       EXTENSIONS = COMMENTS.keys.freeze
       # What follows a name in a call: `(`, `.new`, a block, or arguments
-      # without parentheses: `:primary`, `class: …`, `"…"`, or a variable that
-      # ends the line or is followed by `,`, `do` or `{` (`Button variant do`),
-      # which keeps "Join thousands of…" in a string from counting.
+      # without parentheses: `:primary`, `class: …`, `"…"`, a splat
+      # (`*modifiers`, `**options`, `&block`), or a variable that ends the line
+      # or is followed by `,`, `do` or `{` (`Button variant do`), which keeps
+      # "Join thousands of…" in a string from counting.
       CALL = /
         \( | \.new\b | [ \t]*\{ |
-        [ \t]+ (?: do\b | :[a-z_] | ["'] | [a-z_]\w*:[ \t] | [a-z_@][\w@]* (?: \.[a-z_]\w* )* [ \t]* (?: , | do\b | \{ | $ ) )
+        [ \t]+ (?: do\b | :[a-z_] | ["'] | [a-z_]\w*:[ \t] | (?: \*\*? | & ) [a-z_@(] |
+                  [a-z_@][\w@]* (?: \.[a-z_]\w* )* [ \t]* (?: , | do\b | \{ | $ ) )
       /x
 
       def initialize(names)

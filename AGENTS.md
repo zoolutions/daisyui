@@ -85,7 +85,7 @@ register_modifiers(
 3. Use `register_modifiers` with responsive comments, grouping mutually exclusive modifiers
 4. Create spec: `spec/lib/daisy_ui/component_name_spec.rb`
 5. Add example in docs: `bin/rails generate example_view ComponentName Category`
-6. Regenerate the Tailwind manifest: `bundle exec rake tailwind:manifest` (apps' `daisyui-tailwind` reads it)
+6. From the repository root, regenerate the Tailwind manifest: `bundle exec rake tailwind:manifest` (apps' `daisyui-tailwind` reads it)
 
 ## Docs Architecture
 

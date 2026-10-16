@@ -146,7 +146,7 @@ DaisyUI::Tailwind.sources(components: %w[Navbar], format: :json)
 | `-f, --format css\|json` | `css` (default) is the partial to import; `json` is for build scripts. |
 | `-o, --output FILE` | Write to FILE instead of stdout, only when its content changes. |
 | `--responsive sm,md,lg` | Add those breakpoint variants of each component class and modifier, for apps that render `responsive:` modifiers. Off by default: they multiply each component's CSS (sm,md,lg made the sample below 3.7 times larger). |
-| `--prefix d-` | Prefix every class, for an app that sets `DaisyUI.configuration.prefix`. |
+| `--prefix d-` | Prefix the classes the way an app that sets `DaisyUI.configuration.prefix` renders them. `DaisyUI::Tailwind.sources` uses the configured prefix by default. |
 
 What counts as a use: a kit call with or without parentheses (`Button(:primary)`,
 `Badge :primary do`, `Button variant do`, `Hero do`), an instance (`Card.new`)

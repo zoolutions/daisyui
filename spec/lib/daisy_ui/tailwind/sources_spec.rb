@@ -62,13 +62,20 @@ RSpec.describe DaisyUI::Tailwind::Sources do
     end
 
     context "with a prefix" do
-      let(:options) { { prefix: "d-", responsive: %w[md] } }
+      let(:components) { %w[Button Tooltip] }
+      let(:options)    { { prefix: "d-", responsive: %w[md] } }
 
-      it "prefixes every class the way DaisyUI.configuration.prefix renders them" do
+      it "prefixes the component class and modifiers, as DaisyUI.configuration.prefix renders them" do
         button = inline_classes(inline_lines[1])
 
         expect(button).to include("d-btn", "d-btn-primary", "md:d-btn-primary")
-        expect(button).not_to include("btn")
+        expect(button).not_to include("btn", "btn-primary")
+      end
+
+      # A class string in a component's Ruby may render unprefixed (Tooltip
+      # merges "after:hidden" as is), so it is given both ways.
+      it "keeps the class strings from the Ruby unprefixed as well" do
+        expect(inline_classes(inline_lines[2])).to include("d-tooltip", "after:hidden", "d-after:hidden")
       end
     end
   end

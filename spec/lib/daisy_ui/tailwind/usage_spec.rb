@@ -17,6 +17,8 @@ RSpec.describe DaisyUI::Tailwind::Usage do
       "a kit call with a positional argument and no parentheses" => "Button variant do\nend",
       "a kit call with positional arguments and no parentheses" => "Badge @kind, size",
       "a kit call with one positional argument and no parentheses" => "Toast notice",
+      "a kit call with splatted modifiers and no parentheses" => "Button *modifiers do\nend",
+      "a kit call with splatted options and no parentheses" => "Card **options",
       "a kit call with a string and no parentheses" => "Badge \"New\""
     }.each do |shape, source|
       it "finds #{shape}" do

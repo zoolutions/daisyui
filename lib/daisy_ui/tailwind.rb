@@ -35,9 +35,9 @@ module DaisyUI
 
       # CSS (`format: :css`, for Tailwind to @import) or JSON for those
       # components. `responsive:` adds breakpoint variants (`%w[sm md]`) of the
-      # classes `responsive:` renders; `prefix:` matches
-      # DaisyUI.configuration.prefix.
-      def sources(scan: [], components: [], format: :css, responsive: [], prefix: nil)
+      # classes `responsive:` renders; `prefix:` defaults to the
+      # DaisyUI.configuration.prefix the components render with.
+      def sources(scan: [], components: [], format: :css, responsive: [], prefix: DaisyUI.configuration.prefix)
         manifest = self.manifest
         used = used_components(scan:, components:, manifest:)
         Sources.new(manifest, used, responsive:, prefix:).render(format)
