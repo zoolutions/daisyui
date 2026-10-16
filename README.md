@@ -149,9 +149,12 @@ DaisyUI::Tailwind.sources(components: %w[Navbar], format: :json)
 | `--prefix d-` | Prefix every class, for an app that sets `DaisyUI.configuration.prefix`. |
 
 What counts as a use: a kit call with or without parentheses (`Button(:primary)`,
-`Badge :primary do`, `Hero do`), an instance (`Card.new`) or the constant
-(`DaisyUI::Navbar`, `class AppNavbar < DaisyUI::Navbar`). Full-line comments
-do not count. A gem that renders DaisyUI components for you (phlex-forms wraps
+`Badge :primary do`, `Button variant do`, `Hero do`), an instance (`Card.new`)
+or the constant (`DaisyUI::Navbar`, `class AppNavbar < DaisyUI::Navbar`).
+Comments do not count (`#` lines in Ruby, `<%# %>` in ERB, `-#` in HAML, `/` in
+Slim), nor does a name starting a sentence in a string ("Join thousands of…").
+Matching is textual and errs on the side of including a component: a false hit
+costs a little CSS, a miss would leave a component unstyled. A gem that renders DaisyUI components for you (phlex-forms wraps
 Input, Select, Range...) is scanned like your app:
 `daisyui-tailwind app "$(bundle info phlex-forms --path)/lib"`; the classes it
 writes in its own Ruby still need its own `@source`. Classes your code builds

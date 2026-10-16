@@ -73,6 +73,13 @@ RSpec.describe DaisyUI::Tailwind::Command do
       expect(err.string).to include("nope")
     end
 
+    it "exits 1 when it cannot write the output" do
+      blocker = File.join(dir, "home_view.rb")
+
+      expect(run("--output", File.join(blocker, "daisyui.css"), dir)).to eq(1)
+      expect(err.string).to start_with("daisyui-tailwind: ")
+    end
+
     it "exits 1 on an unknown format or option" do
       expect(run("--format", "yaml", dir)).to eq(1)
       expect(run("--frobnicate")).to eq(1)

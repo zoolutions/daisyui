@@ -34,7 +34,7 @@ module DaisyUI
         result = Tailwind.sources(scan: paths, **options.slice(:components, :format, :responsive, :prefix))
         options[:output] ? write(options[:output], result) : @out.write(result)
         0
-      rescue OptionParser::ParseError, ArgumentError => e
+      rescue OptionParser::ParseError, ArgumentError, SystemCallError => e
         @err.puts "daisyui-tailwind: #{e.message}"
         1
       end
