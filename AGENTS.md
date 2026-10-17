@@ -1,7 +1,7 @@
 # DaisyUI
 
 Project instructions for every agent: Claude Code (`CLAUDE.md` imports this file), Grok, Cursor,
-Copilot, Codex. Claude-only extras (rules, skills, commands) live under `.claude/`.
+Copilot, Codex. Claude-only extras (skills, commands) live under `.claude/`; the delivery workflow comes from the `flow` and `ruby-gem` plugins (`.claude/settings.json`).
 
 ## Repository Structure
 
@@ -28,6 +28,21 @@ bundle exec rspec              # Run docs tests (includes Playwright)
 bin/rubocop                    # Lint docs code
 bun run build:css              # Build Tailwind CSS
 ```
+
+## Workflow
+
+- **Verify:** `bundle exec rubocop lib spec` · `bundle exec rspec` · `bundle exec conformance-kit check` · docs (`cd docs`): `bin/rubocop` · `bun run lint:js` · `bun run lint:css` · `bundle exec rspec`; after editing a Stimulus controller `bundle exec rake build:js`, after a component change `bundle exec rake tailwind:manifest`
+- **Specs:** fast loop `bundle exec rspec spec/lib/daisy_ui/<name>_spec.rb`; full suite gem `bundle exec rspec` + docs `cd docs && bundle exec rspec`; two worktrees at once: yes, but docs system specs bind Capybara port `3001 + TEST_ENV_NUMBER`, so give each worktree its own `TEST_ENV_NUMBER`
+- **CI:** required `Lint`, `Gem Tests (Ruby 3.2|3.3|3.4|4.0)`, `Docs Lint`, `Docs Tests`, `cubic · AI code reviewer`, `conformance / Conformance settings`, `conformance / Conformance (Ruby 4.0)`; full suite on the PR (`main.yml`; `conformance.yml` also on merge_group); failure report none (Docs Tests uploads a `playwright-screenshots` artifact)
+- **Review bot:** cubic
+- **Merge:** squash (ruleset `main`: squash only, linear history, no merge queue) — `gh pr merge <PR> --squash --delete-branch`
+- **PR contract:** `## Summary`, `## Test plan`; exactly one `type` + at least one `area` label (Labels below); before/after screenshots for markup or docs-page changes (Screenshots below)
+- **Conflicts:** `Gemfile.lock` `docs/Gemfile.lock` `docs/bun.lock` — take main's, re-run `bundle install` (root and/or `docs/`) / `bun install` in `docs/`, commit the regenerated file; `CHANGELOG.md` — union under `[Unreleased]`, no duplicate subheads; `lib/daisy_ui/version.rb` — keep the branch's bump (a release-prep PR) unless accidental; `lib/daisy_ui/updated_at.rb` — main's; `*.min.js`/`*.min.js.map` — `bundle exec rake build:js`; `data/daisyui/tailwind_manifest.json` — `bundle exec rake tailwind:manifest`; `register_modifiers` — keep both sides' modifiers and all six comment lines
+- **Worktree setup:** `bundle install` and `cd docs && bundle install && bun install` (remove the worktree to undo)
+- **Release:** `bin/release patch|minor|major|X.Y.Z` (`-n` dry run) via `/ruby-gem:release`, never by hand or `gem push`; changelog `CHANGELOG.md`, heading `## [X.Y.Z] - YYYY-MM-DD` under `## [Unreleased]`; lockfiles `Gemfile.lock` `docs/Gemfile.lock`; `deploy-docs.yml` on release published; the release kit files (`bin/release`, `rakelib/release.rake`, `release.yml` shared jobs) are byte-identical across the zoolutions gems: change in every repo or none
+- **Main health:** `gh run list --workflow main.yml --branch main --event push --limit 1 --json conclusion,headSha`
+- **Upstream:** libraries we own `zoolutions/*`; scrub none
+- **Bench:** none
 
 ## Command output (rtk)
 
@@ -76,7 +91,7 @@ register_modifiers(
 )
 ```
 
-**CRITICAL**: Always include responsive variant comments (sm:, md:, lg:) above each modifier. Tailwind CSS needs these to generate responsive classes.
+**CRITICAL**: Every modifier carries six comment lines, one per `sm:`/`@sm:`/`md:`/`@md:`/`lg:`/`@lg:` (the container-query `@` variants included; the example above abbreviates). Tailwind scans them to generate responsive classes; a dropped line silently breaks the variant. Sub-components follow `def body(**options, &) = div(class: component_classes("card-body", options:), **options, &)`. One component per file. Verify class names with `mcp__daisyui__daisyUI-Snippets` before creating or changing a component.
 
 ### Adding a New Component
 
@@ -133,6 +148,8 @@ bundle exec rspec spec/lib/daisy_ui/button_spec.rb  # Single file
 bundle exec rspec --format documentation             # Verbose output
 ```
 
+Coverage: specs should exercise every modifier mapping, `DaisyUI::Base` (classes, attributes, responsive) and configuration. A component spec covers: default render, each modifier alone, modifiers combined, one responsive viewport, `class:`, `data:`, `as:` (when supported), and sub-component methods. Specs use `subject(:output) { render described_class.new(:primary) }` and compare against `html <<~HTML`. Docs examples get system specs in `docs/spec/system/`.
+
 ### Docs Tests (with Playwright)
 ```bash
 cd docs
@@ -143,42 +160,30 @@ HEADLESS=false bundle exec rspec         # Watch browser tests run
 
 ## Slash Commands
 
+Delivery (`/flow:lfg`, `/flow:plan`, `/flow:tdd`, `/flow:review-pr`, `/flow:github-review-pr|failures|comments`, `/flow:finish-prs`, `/flow:follow-through`, `/flow:debug-flaky`, agent `flow:fable-validator`) comes from the `flow` plugin; `/ruby-gem:release` and `/ruby-gem:perf` from `ruby-gem`. Local commands:
+
 | Command | Purpose |
 |---------|---------|
-| `/plan` | Fable-powered planning → GitHub issue or `docs/plans/` markdown (read-only; execute with `/lfg`) |
-| `/lfg` | Full autonomous engineering workflow with verification |
 | `/add-component` | Create a new DaisyUI component with tests and docs |
 | `/check-component` | Verify a single component against DaisyUI 5 spec |
 | `/audit-components` | Audit all components against DaisyUI 5 |
-| `/tdd` | RED → GREEN → REFACTOR cycle |
 | `/test-all` | Run complete test suite (gem + docs) |
 | `/fix-docs-tests` | Fix failing docs specs |
-| `/review-pr` | Review a GitHub PR for quality and patterns |
-| `/github-review-pr` | Full PR pass: resolve merge conflicts, then fix CI failures, then resolve review comments (in that order) |
-| `/github-review-comments` | Respond to unresolved PR review comments |
-| `/github-ci-failures` | Diagnose and fix CI failures |
 
-### Model tier convention
+Every spawned agent names its `model:`; one that does not runs on `sonnet` (`CLAUDE_CODE_SUBAGENT_MODEL` in `.claude/settings.json`). Sessions run on `opus` with `fable` as the advisor.
 
-**Models.** Sessions run on `opus` (Opus 5.5) with `fable` (Fable 5.1) as the advisor (`.claude/settings.json`). Fable is spent where judgment matters most: `/plan` runs on Fable, the advisor is consulted at decision points (before choosing an approach, a schema or public API, a migration, a dependency, anything irreversible, and when a failure repeats), and the `fable-validator` agent checks every finished implementation before its pull request opens (`/lfg`, Phase 5.5). Commands pin their tier by alias, never by full model ID: `opus` for orchestration, security, full PR review, payments and production debugging; `sonnet` for the implementation specialists and TDD; `haiku` for mechanical scans. Every spawned agent names its `model:`; one that does not runs on `sonnet` (`CLAUDE_CODE_SUBAGENT_MODEL`), never on the session's model. Plan mode cannot take a model of its own: it runs on Opus and asks the advisor.
+## Conformance
 
-## CI Pipeline
-
-All jobs run in parallel:
-- `lint`: RuboCop on gem
-- `gem-test`: Gem specs on Ruby 3.2, 3.3, 3.4, 4.0
-- `docs-lint`: RuboCop, Biome, Stylelint on docs
-- `docs-test`: Playwright browser tests on docs
-- `conformance` (its own workflow): conformance-kit's `conformance-kit check` on Ruby 4.0: the `:ractor` specs and `conformance-audit --strict`. Ractor-readable state is frozen by `DaisyUI.finalize!`, which `DaisyUI.configure` runs, so the suite's configuration is frozen: specs change settings through `DaisyUI.configure` (or tag `:finalizes` for a writable copy); per-Ractor caches go through `DaisyUI::Store`
+The `conformance` workflow runs conformance-kit's `conformance-kit check` on Ruby 4.0: the `:ractor` specs and `conformance-audit --strict`. Ractor-readable state is frozen by `DaisyUI.finalize!`, which `DaisyUI.configure` runs, so the suite's configuration is frozen: specs change settings through `DaisyUI.configure` (or tag `:finalizes` for a writable copy); per-Ractor caches go through `DaisyUI::Store`.
 
 ## Labels
 
 Every pull request carries exactly one `type` label and at least one `area`
-label from `.github/labels.yml` — never a `status` label. `/plan` labels the
-issue, `/lfg` copies the issue's `type` and `area` labels onto the PR (never
+label from `.github/labels.yml` — never a `status` label. `/flow:plan` labels the
+issue, `/flow:lfg` copies the issue's `type` and `area` labels onto the PR (never
 `plan` or another status label). Without an issue, the type comes from the
 change's conventional-commit prefix and the areas from
-`bin/labels infer $(git diff --name-only origin/main...HEAD)`. Labels change in
+`bin/labels infer $(git diff --name-only origin/main...HEAD)`. Labels go on the PR as `--label` flags of the create call (or `--add-label` on an edit if it is already open). Labels change in
 the manifest and reach GitHub with `bin/labels sync`, never through the UI.
 Rules: `.github/LABELS.md`. `bin/labels` + `.github/LABELS.md` are the shared
 labels kit (canonical copy in docs-kit): never edit them in place.
