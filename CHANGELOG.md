@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.1.1] - 2026-10-17
+
 ### Tailwind sources for only the components an app uses
 
 `bundle exec daisyui-tailwind app -o app/assets/stylesheets/generated/daisyui.css`
