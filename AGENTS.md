@@ -148,7 +148,7 @@ bundle exec rspec spec/lib/daisy_ui/button_spec.rb  # Single file
 bundle exec rspec --format documentation             # Verbose output
 ```
 
-Coverage: 80% minimum, 100% for modifier mappings, `DaisyUI::Base` (classes, attributes, responsive) and configuration. A component spec covers: default render, each modifier alone, modifiers combined, one responsive viewport, `class:`, `data:`, `as:` (when supported), and sub-component methods. Specs use `subject(:output) { render described_class.new(:primary) }` and compare against `html <<~HTML`. Docs examples get system specs in `docs/spec/system/`.
+Coverage: specs should exercise every modifier mapping, `DaisyUI::Base` (classes, attributes, responsive) and configuration. A component spec covers: default render, each modifier alone, modifiers combined, one responsive viewport, `class:`, `data:`, `as:` (when supported), and sub-component methods. Specs use `subject(:output) { render described_class.new(:primary) }` and compare against `html <<~HTML`. Docs examples get system specs in `docs/spec/system/`.
 
 ### Docs Tests (with Playwright)
 ```bash
