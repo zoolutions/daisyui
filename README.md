@@ -92,32 +92,129 @@ Consider not including DaisyUI in ApplicationComponent if:
 
 In this scenario, including both DaisyUI and your own component library in `ApplicationComponent` will lead to naming conflicts.
 
-3. Update your `tailwind.config.js` file to include DaisyUI component styles:
+3. Tell Tailwind which classes the gem renders: see [Tailwind sources](#tailwind-sources).
 
-```js
-const execSync = require("child_process").execSync;
-const outputDaisyUI = execSync("bundle show daisyui", { encoding: "utf-8" });
-const daisyUIPath = outputDaisyUI.trim() + "/**/*.rb";
-module.exports = {
-  content: [
-    // ... other paths
-    daisyUIPath,
-  ],
-};
+## Tailwind sources
+
+The gem renders daisyUI class names from Ruby, so Tailwind has to be told
+which ones to generate CSS for. Give it the classes of just the components your
+app uses: `daisyui-tailwind` finds the components your Ruby and templates
+reference, adds the components those render (Dropdown renders Button and Menu,
+Menu renders MenuItem), and writes one `@source inline(...)` per component for
+your Tailwind entry to import.
+
+```sh
+bundle exec daisyui-tailwind app -o app/assets/stylesheets/generated/daisyui.css
 ```
 
-4. Update your tailwind.config.js file to detect TailwindCSS classes in Ruby files.
+```css
+/* app/assets/stylesheets/application.tailwind.css */
+@import "tailwindcss";
+@plugin "daisyui";
+
+@source "../../views";                  /* your own classes, as before */
+@import "./generated/daisyui.css";      /* the DaisyUI components you use */
+```
+
+Run it before Tailwind in your CSS build (it rewrites the file only when its
+content changes, so a watcher does not loop on it). The output names no path,
+so it is the same on every machine: commit it, or generate it on every build.
+
+**From a Node build script**, spawn the command, or read JSON:
 
 ```js
-module.exports = {
-  content: [
-    // ... other paths
-    //
-    // Note the "rb" extension at the end
-    "./app/views/**/*.{erb,haml,html,slim,rb}",
-  ],
-};
+// build-css.js (bun)
+Bun.spawnSync(["bundle", "exec", "daisyui-tailwind", "app", "-o", "app/assets/stylesheets/generated/daisyui.css"])
+
+// or per bundle, as JSON: { components, classes, files, shared, daisyui }
+const out = Bun.spawnSync(["bundle", "exec", "daisyui-tailwind", "app/views/admin", "--format", "json"])
+const { components, classes, files } = JSON.parse(out.stdout.toString())
 ```
+
+**From Ruby** (a rake task, a build script):
+
+```ruby
+DaisyUI::Tailwind.used_components(scan: ["app"])         # => ["Button", "Menu", "MenuItem", ...]
+DaisyUI::Tailwind.sources(scan: ["app"])                  # => the CSS partial
+DaisyUI::Tailwind.sources(components: %w[Navbar], format: :json)
+```
+
+| Option | |
+|---|---|
+| `PATH...` | Directories (every `.rb`, `.erb`, `.haml`, `.slim` below) or files to scan. A path that does not exist is an error. |
+| `-c, --component Button,Navbar` | Components to include whether or not a path references them (repeatable). |
+| `-f, --format css\|json` | `css` (default) is the partial to import; `json` is for build scripts. |
+| `-o, --output FILE` | Write to FILE instead of stdout, only when its content changes. |
+| `--responsive sm,md,lg` | Add those breakpoint variants of each component class and modifier, for apps that render `responsive:` modifiers. Off by default: they multiply each component's CSS (sm,md,lg made the sample below 3.7 times larger). |
+| `--prefix d-` | Prefix the classes the way an app that sets `DaisyUI.configuration.prefix` renders them. `DaisyUI::Tailwind.sources` uses the configured prefix by default. |
+
+What counts as a use: a kit call with or without parentheses (`Button(:primary)`,
+`Badge :primary do`, `Button variant do`, `Hero do`), an instance (`Card.new`)
+or the constant (`DaisyUI::Navbar`, `class AppNavbar < DaisyUI::Navbar`).
+Comments do not count (`#` lines in Ruby, `<%# %>` in ERB, `-#` in HAML, `/` in
+Slim), nor does a name starting a sentence in a string ("Join thousands of…").
+Matching is textual and errs on the side of including a component: a false hit
+costs a little CSS, a miss would leave a component unstyled. A gem that renders DaisyUI components for you (phlex-forms wraps
+Input, Select, Range...) is scanned like your app:
+`daisyui-tailwind app "$(bundle info phlex-forms --path)/lib"`; the classes it
+writes in its own Ruby still need its own `@source`. Classes your code builds
+by interpolation (`"badge-#{color}"`) are invisible to Tailwind either way:
+spell them out.
+
+**The size win.** Measured on [cosmos](https://github.com/zoolutions/cosmos)
+(33 of the gem's 77 components), the CSS the gem's classes add to a bundle
+(Tailwind 4.3.2, daisyUI 5.6.13, minified):
+
+| Sources | CSS | gzip |
+|---|---|---|
+| `@source` the gem's whole `lib/` | 210.1 KB | 31.9 KB |
+| `daisyui-tailwind` | 125.7 KB | 19.1 KB |
+| `daisyui-tailwind --responsive sm,md,lg` | 466.5 KB | 64.3 KB |
+
+It is also more complete. Tailwind v4 drops Ruby comments when it scans a `.rb`
+file and cannot see a Symbol component class (`self.component_class = :navbar`),
+so the whole-gem scan generated no `.navbar`, `.card`, `.drawer`... rule (the app
+only got them by spelling the class itself) and none of the sub-rules daisyUI
+nests under them (`indicator-item`, `stack-top`). The manifest carries both.
+
+**Scanning the whole gem still works** as it did:
+
+```css
+/* bundle info daisyui --path, resolved by your build script */
+@source "/path/to/gems/daisyui-x.y.z/lib";
+```
+
+### The manifest
+
+The command reads `data/daisyui/tailwind_manifest.json` in the gem, built from
+the components themselves and checked in (`bundle exec rake tailwind:manifest`
+in this repo). It sits outside `lib/`, so an `@source` on the gem's `lib/` or
+its `**/*.rb` never sees it. A build script in another
+language can read it directly from `$(bundle info daisyui --path)`:
+
+```json
+{
+  "schema": 1,
+  "shared": { "files": ["lib/daisy_ui/base.rb"], "classes": ["bg-primary", "skeleton", "..."] },
+  "components": {
+    "Dropdown": {
+      "class": "DaisyUI::Dropdown",
+      "name": "dropdown",
+      "files": ["lib/daisy_ui/dropdown.rb"],
+      "depends_on": ["Button", "Menu"],
+      "modifiers": ["dropdown-end", "dropdown-top", "..."],
+      "classes": ["dropdown", "dropdown-content", "dropdown-end", "..."]
+    }
+  }
+}
+```
+
+- `name`: the daisyUI component class (`null` where it depends on the modifiers, as for Label).
+- `files`: relative to the gem root, for a literal `@source` instead of `inline()`.
+- `depends_on`: the components it renders; resolve them transitively.
+- `modifiers`: the classes `responsive:` can prefix (with `name`).
+- `classes`: everything it can render: `name`, the modifiers and the class words in its Ruby. Words that are not classes cost nothing.
+- `shared`: base.rb's classes, which every component can render (`:skeleton`, the colour modifiers). Include them with any component.
 
 ## Class merging
 
