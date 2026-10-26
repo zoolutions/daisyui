@@ -1,0 +1,89 @@
+spec/lib/daisy_ui/tailwind/command_spec.rb
+  s_351286cd00060b::t_49938e42c39481 93,95,107,115,117
+  s_351286cd00060b::t_4616c49d4b14d1 89-92,94,96-106,108-114,116,118-130
+README.md
+  s_351286cd00060b::t_90fdc070f87682 369-371,431,443
+  s_351286cd00060b::t_2120a68c50a3e6 219-254,345-368,372-411,413-415,418-430,432-442,444
+  s_351286cd00060b::t_469afa389cb692 416-417
+  s_351286cd00060b::t_127593b537e3d0 412
+lib/daisy_ui/tailwind/app_sources.rb
+  s_351286cd00060b::t_a9fd437f434238 1-70
+lib/daisy_ui/variants/schema.rb
+  s_351286cd00060b::t_53dffcb867e13b 67-68
+  s_351286cd00060b::t_337b9357aca30b 1-66,69-73
+spec/lib/daisy_ui/tailwind/app_sources_spec.rb
+  s_351286cd00060b::t_adf7ff79008325 1-98,103-104
+  s_351286cd00060b::t_90bbb048cdafd4 99-102
+lib/daisy_ui/engine.rb
+  s_351286cd00060b::t_a02bdda97fe41c 14-17
+lib/daisy_ui/tailwind/command.rb
+  s_351286cd00060b::t_3d22adeea3ea6f 16-18
+  s_351286cd00060b::t_4de52298ccd4b6 19,32,36,38,41,60-63,76
+  s_351286cd00060b::t_ee366d625cb44b 68-75
+lib/daisy_ui/base.rb
+  s_351286cd00060b::t_fa903d81797df6 38-39,150-159,198,232-235,240,266,268-270,277,279
+Gemfile
+  s_351286cd00060b::t_2c07d363f15842 19
+spec/support/variants_fixtures.rb
+  s_351286cd00060b::t_2225d877118a6e 86-87
+  s_351286cd00060b::t_83bf91d3dec02b 1-85,88-106
+lib/daisy_ui/variants/resolution.rb
+  s_351286cd00060b::t_b056f214d19f82 26
+  s_351286cd00060b::t_3ddfd1340a809f 1-25,27-39,48-53
+  s_351286cd00060b::t_63969c45391f9e 40-47
+lib/daisy_ui/tailwind/sources.rb
+  s_351286cd00060b::t_6edad45ec75216 103
+  s_351286cd00060b::t_13b182dc4b3a1b 25-34
+lib/daisy_ui/tailwind.rb
+  s_351286cd00060b::t_fb34fca5f783e6 40-46,51-58,60-65,68-82
+  s_351286cd00060b::t_d29490ec6e9fb5 59
+  s_351286cd00060b::t_13b182dc4b3a1b 66-67
+spec/lib/daisy_ui/variants_spec.rb
+  s_351286cd00060b::t_b504459040fc34 1-3,5-17,19,21-100,102-108,111-122,124-127,129-131,133,135-181,183-216,219-287
+  s_351286cd00060b::t_2225d877118a6e 101,109-110,182,217-218
+  s_351286cd00060b::t_1b2f335baaf016 4,20,123,128,134
+  s_351286cd00060b::t_fcdca003809e53 18
+  s_351286cd00060b::t_071fd16c14277b 132
+lib/tasks/daisyui.rake
+  s_351286cd00060b::t_7eb59d29731fdf 1-12
+lib/daisy_ui/unknown_modifier_error.rb
+  s_351286cd00060b::t_3d573744c83569 26-33,35
+spec/lib/tasks/daisyui_rake_spec.rb
+  s_351286cd00060b::t_4e59738000c3af 34-37
+  s_351286cd00060b::t_7eb59d29731fdf 1-33,38-39
+lib/daisy_ui.rb
+  s_351286cd00060b::t_4e59738000c3af 17-18
+lib/daisy_ui/variants.rb
+  s_351286cd00060b::t_fb429f9d6c2600 1-160
+lib/daisy_ui/variants/match.rb
+  s_351286cd00060b::t_1c5b9c8b356e4a 1-89
+daisyui.gemspec
+  s_351286cd00060b::t_a02bdda97fe41c 28
+spec/lib/daisy_ui/tailwind_spec.rb
+  s_351286cd00060b::t_a02bdda97fe41c 47,56
+spec/lib/daisy_ui/tailwind_app_spec.rb
+  s_351286cd00060b::t_dc506154151dac 1-17,20-71
+  s_351286cd00060b::t_f555049ecbaaee 18-19
+CHANGELOG.md
+  s_351286cd00060b::t_05db835587225e 3-53
+spec/lib/daisy_ui/finalize_spec.rb
+  s_351286cd00060b::t_5c7b0981e26928 11-15
+lib/daisy_ui/variants/rendering.rb
+  s_351286cd00060b::t_a41c0ff594d62c 1-68
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "8ca18f274665a5fbed07701b3ddf9d98c6101378",
+  "prompts": {},
+  "sessions": {
+    "s_351286cd00060b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1bf7ef06-fc2e-48cd-915c-465968613e78",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "mhenrixon <mikael@mhenrixon.com>"
+    }
+  }
+}
