@@ -344,6 +344,15 @@ Keyword arguments are not validated: `Toggle(primray: true)` renders a
 
 ## Variants, states and slots
 
+The full guide, with when to use which declaration, is on the docs site:
+[Variants, states and slots](https://daisyui.phlex.fun/docs/variants). Four things
+to know before you write one:
+
+- A `default` renders after the caller's modifiers, so it beats one that sets the same property. Put such a value in `base`.
+- A `compound` or `on` rule also renders after the caller's modifiers. Leave the member it would override out of the match (`layout: [nil, :row]`).
+- `on` writes `"<state>:<class>"`, the state outermost. A rule that needs a child selector first (`[&_li]:hover:...`) stays literal in `base`.
+- `on` classes appear nowhere literally: generate [Tailwind sources](#your-own-components---app) for your components or Tailwind never compiles them.
+
 `register_modifiers` maps a symbol to classes. A component that owns its design
 also needs classes for two modifiers together, the same declarations under a
 browser state, and classes for its parts. Declare them in a `variants` block:
@@ -691,6 +700,9 @@ Add to your Claude Code MCP settings (`~/.claude.json` or project `.claude.json`
 - **list_components** - List all available DaisyUI components
 - **get_component** - Get detailed info about a specific component (modifiers, usage examples)
 - **search_components** - Search components by name or modifier
+- **variants_guide** - How to declare a component with `variants`: which declaration to use, the match values, render order and the pitfalls
+
+`get_component` also returns the component's variants schema (groups, flags, defaults, compounds, `on` rules, states and slots).
 
 # Usage
 

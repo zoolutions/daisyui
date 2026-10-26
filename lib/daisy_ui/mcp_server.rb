@@ -18,7 +18,7 @@ module DaisyUI
       },
       {
         name: "get_component",
-        description: "Get detailed information about a specific DaisyUI component including all modifiers and usage examples",
+        description: "Get detailed information about a specific DaisyUI component including all modifiers, its variants schema (groups, flags, defaults, compounds, on rules, states, slots) and usage examples",
         inputSchema: {
           type: "object",
           properties: {
@@ -37,6 +37,11 @@ module DaisyUI
           },
           required: ["query"]
         }
+      },
+      {
+        name: "variants_guide",
+        description: "How to declare a component's design with the variants DSL (variant, flag, default, compound, state/on, slot): when to use which, the match values, render order and the pitfalls",
+        inputSchema: { type: "object", properties: {}, required: [] }
       }
     ].freeze
     Shareable.make(TOOLS) # the Hashes inside too
@@ -113,6 +118,8 @@ module DaisyUI
         get_component(arguments["component"])
       when "search_components"
         search_components(arguments["query"])
+      when "variants_guide"
+        VariantsGuide::TEXT
       else
         return { content: [{ type: "text", text: "Unknown tool: #{tool_name}" }], isError: true }
       end
@@ -159,6 +166,14 @@ module DaisyUI
 
         ## Available Modifiers
         #{modifier_list.empty? ? 'No modifiers' : modifier_list}
+
+        ## Variants schema
+
+        Groups, flags, defaults, compounds, `on` rules, states and slots. `variants_guide` explains them.
+
+        ```json
+        #{JSON.pretty_generate(klass.variants.schema)}
+        ```
 
         ## Usage Examples
 

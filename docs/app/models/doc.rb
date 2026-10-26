@@ -11,6 +11,8 @@ class Doc
     { slug: "getting-started", title: "Getting started", group: "Guide", view: "GettingStarted" },
     { slug: "theming", title: "Theming", group: "Guide", view: "Theming" },
     { slug: "class-merging", title: "Class merging", group: "Guide", view: "ClassMerging" },
+    { slug: "variants", title: "Variants, states and slots", group: "Guide", view: "Variants" },
+    { slug: "app-tailwind-sources", title: "Tailwind sources for your components", group: "Guide", view: "AppTailwindSources" },
   ].freeze
 
   attr_reader :slug, :title, :group, :view_name
