@@ -85,7 +85,7 @@ module Views
 
               Every key must hold. `set: { group: :member }` on a compound selects members
               for the caller's empty groups, in declaration order, and later compounds see
-              them. `class` and `set` are reserved: no group can be called that.
+              them. `class` and `set` are reserved keys: a group called that could never be matched, and nothing stops you naming one.
             MD
           end
         end

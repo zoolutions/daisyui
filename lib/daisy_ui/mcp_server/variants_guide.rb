@@ -48,7 +48,7 @@ module DaisyUI
         | `true` / `false` | for a flag: on / off |
 
         `set: { group: :member }` on a compound selects a member for the caller's empty
-        groups; later compounds see it. `class` and `set` are reserved: no group is called that.
+        groups; later compounds see it. `class` and `set` are reserved keys: a group called that could never be matched.
         A `class:` or a modifier value can be a Hash keyed by slot (`root` is the component).
 
         ## Render order

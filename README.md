@@ -407,7 +407,7 @@ the given modifiers, the defaulted and set members, compounds, `on` rules,
 `DaisyUI.configuration.prefix` like a modifier (`hover:d-…` with `prefix = "d-"`).
 A typo fails where it is declared, at boot: a `compound`, `on`, `default` or
 `set:` naming a group, member, flag, state or slot the component does not have
-raises `ArgumentError`. `class` and `set` are reserved: no group can be called that.
+raises `ArgumentError`. `class` and `set` are reserved keys: a group called that could never be matched, and nothing stops you naming one.
 
 **Slots.** A component with parts declares each one; a variant, compound or `on`
 value can be a Hash keyed by slot (`root` is the component itself):
