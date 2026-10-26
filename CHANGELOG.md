@@ -1,5 +1,15 @@
 ## [Unreleased]
 
+### Documentation for the variants API
+
+- Docs site: "Variants, states and slots" (when to use `variant`, `flag`,
+  `compound`, `state`/`on` and `slot`, the match values, render order and its
+  three pitfalls, introspection) and "Tailwind sources for your components"
+  (`--app`, the rake task, committing the file, the `stale?` spec, stylelint).
+- MCP server: `get_component` includes the component's `variants.schema`, and a
+  new `variants_guide` tool returns a short guide to the DSL with the pitfalls.
+- README: the variants section links the guide and lists the pitfalls.
+
 ### Variants, states and slots
 
 A `variants` block declares what a component that owns its design needs

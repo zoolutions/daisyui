@@ -38,6 +38,22 @@ RSpec.describe "Pages", type: :request do
       expect(response.body).to include("dropdown dropdown-top dropdown-end")
     end
 
+    it "renders the variants guide with its pitfalls" do
+      get doc_path("variants"), headers: headers
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Variants, states and slots", "Render order", "Three pitfalls")
+      expect(response.body).to include("A default renders after the caller")
+      expect(response.body).to include("The state prefix is outermost")
+    end
+
+    it "renders the guide to Tailwind sources for an app's own components" do
+      get doc_path("app-tailwind-sources"), headers: headers
+
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Commit it and fail on stale", "generated/daisyui_app.css")
+    end
+
     it "404s for an unknown slug" do
       get doc_path("nope"), headers: headers
 
