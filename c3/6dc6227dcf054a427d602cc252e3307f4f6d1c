@@ -1,0 +1,26 @@
+spec/lib/daisy_ui/tailwind_app_spec.rb
+  s_351286cd00060b::t_1db6b6a116193c 17-32
+spec/lib/daisy_ui/tailwind/app_sources_spec.rb
+  s_351286cd00060b::t_7613bc5d9bd048 42,46-57
+lib/daisy_ui/tailwind.rb
+  s_351286cd00060b::t_8e8dfcb68c3e50 53-56,59
+  s_351286cd00060b::t_557af92529794b 78-83
+lib/daisy_ui/tailwind/app_sources.rb
+  s_351286cd00060b::t_3efa5a832b9410 19-21
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "c36dc6227dcf054a427d602cc252e3307f4f6d1c",
+  "prompts": {},
+  "sessions": {
+    "s_351286cd00060b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "1bf7ef06-fc2e-48cd-915c-465968613e78",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "mhenrixon <mikael@mhenrixon.com>"
+    }
+  }
+}
