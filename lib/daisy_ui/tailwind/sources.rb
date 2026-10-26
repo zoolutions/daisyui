@@ -22,6 +22,16 @@ module DaisyUI
 
       attr_reader :components
 
+      # @api private Shared with AppSources.
+      def self.validate_options!(breakpoints, prefix)
+        breakpoints.each do |breakpoint|
+          raise ArgumentError, "invalid breakpoint #{breakpoint.inspect}: give the variant name, e.g. sm or @md" unless BREAKPOINT.match?(breakpoint)
+        end
+        return if prefix.empty? || PREFIX.match?(prefix)
+
+        raise ArgumentError, "invalid prefix #{prefix.inspect}"
+      end
+
       def initialize(manifest, components, responsive: [], prefix: nil)
         @manifest = manifest
         @components = components
@@ -90,14 +100,7 @@ module DaisyUI
 
       def inline(classes) = %(@source inline("#{classes.join(' ')}");)
 
-      def validate!
-        @breakpoints.each do |breakpoint|
-          raise ArgumentError, "invalid breakpoint #{breakpoint.inspect}: give the variant name, e.g. sm or @md" unless BREAKPOINT.match?(breakpoint)
-        end
-        return if @prefix.empty? || PREFIX.match?(@prefix)
-
-        raise ArgumentError, "invalid prefix #{@prefix.inspect}"
-      end
+      def validate! = self.class.validate_options!(@breakpoints, @prefix)
     end
   end
 end

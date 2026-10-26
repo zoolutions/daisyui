@@ -44,7 +44,7 @@ RSpec.describe DaisyUI::Tailwind do
     expect(described_class::MANIFEST_PATH).not_to start_with(File.join(described_class::ROOT, "lib"))
   end
 
-  it "ships the manifest and the executable in the gem, with or without git" do
+  it "ships the manifest, the executable and the rake task in the gem, with or without git" do
     gemspec = File.join(described_class::ROOT, "daisyui.gemspec")
     from_git = Gem::Specification.load(gemspec)
     # The gemspec falls back to a Dir glob where there is no .git (the docs
@@ -53,7 +53,7 @@ RSpec.describe DaisyUI::Tailwind do
     without_git = eval(File.read(gemspec), TOPLEVEL_BINDING, gemspec) # rubocop:disable Security/Eval -- how RubyGems loads a gemspec
 
     [from_git, without_git].each do |spec|
-      expect(spec.files).to include("data/daisyui/tailwind_manifest.json", "exe/daisyui-tailwind")
+      expect(spec.files).to include("data/daisyui/tailwind_manifest.json", "exe/daisyui-tailwind", "lib/tasks/daisyui.rake")
       expect(spec.executables).to include("daisyui-tailwind")
     end
   end

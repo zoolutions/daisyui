@@ -1,5 +1,56 @@
 ## [Unreleased]
 
+### Variants, states and slots
+
+A `variants` block declares what a component that owns its design needs
+beyond `register_modifiers`, as data the gem owns (#67). See the README's
+"Variants, states and slots".
+
+```ruby
+class Widget < DaisyUI::Button
+  variants do
+    base "font-medium"
+    default :size, :md
+    compound style: :outline, color: nil, class: "[--btn-bg:var(--color-base-100)]"
+    state :hover, "hover"
+    state :open, "[.dropdown:is(:focus-within,[open],:has(:popover-open))>&]"
+    on %i[hover open], style: %i[ghost link], class: "[--btn-bg:transparent]"
+  end
+end
+```
+
+- `variant` and `flag` are `register_modifiers` (groups, ClassMerge,
+  inheritance unchanged); `base` appends to the inherited base; `default`
+  applies when the caller names no member of a group.
+- `compound(**match, class:, set:)` adds classes when modifiers hold together
+  or one holds and another is absent (`color: nil`, `shape: [nil, :row]`,
+  `color: true`, flags `true`/`false`); `set:` selects members for the
+  caller's empty groups, in declaration order.
+- `state :name, "variant"` names a Tailwind variant once; `on(states, …)`
+  writes a declaration once and renders it under each state.
+- `slot :name, "classes"`, per-slot Hash values, and `slot_classes` /
+  `slot_options` for components with parts.
+- Defaults and `set:` members are resolved, not left to ClassMerge: a default
+  never renders beside the member the caller gave, with class merging off too.
+- A typo (a group, member, flag, state or slot the component does not have)
+  raises `ArgumentError` where it is declared.
+- `Component.variants.schema` returns plain, frozen data: variants, flags,
+  defaults, compounds, `on` rules, states and slots.
+- An unknown modifier's error now lists the component's groups:
+  `… has no modifier :huge. Variants: size: xs, sm, …`.
+- Registries are frozen by `DaisyUI.finalize!` like the others.
+
+### Tailwind sources for an app's own components
+
+State-prefixed classes appear nowhere literally in an app's source, so
+`bin/rails "daisyui:tailwind[app/assets/stylesheets/generated/daisyui_app.css]"`
+(or `daisyui-tailwind --app --require FILE`) writes `@source inline(…)` for
+every `DaisyUI::Base` subclass the app defines: its classes, compounds, slots
+and each `on` class per state. Sorted, versionless output meant to be
+committed; `DaisyUI::Tailwind.stale?(path)` fails a spec when a declaration
+changed and the file was not regenerated. From Ruby:
+`DaisyUI::Tailwind.sources(app: true)`.
+
 ## [2.1.1] - 2026-10-17
 
 ### Tailwind sources for only the components an app uses

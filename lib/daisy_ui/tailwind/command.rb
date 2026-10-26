@@ -13,6 +13,10 @@ module DaisyUI
         that the Ruby and templates under each PATH use, plus the components those
         render. @import the output from your Tailwind entry.
 
+        With --app, prints the sources of the app's own components (DaisyUI::Base
+        subclasses, after requiring each --require FILE) instead: their variants,
+        compounds and state-prefixed classes, for a file you commit.
+
       TEXT
 
       def self.run(argv, out: $stdout, err: $stderr) = new(out:, err:).run(argv)
@@ -25,16 +29,16 @@ module DaisyUI
       def run(argv)
         require "optparse"
 
-        options = { components: [], format: "css", responsive: [] }
+        options = { components: [], format: "css", responsive: [], require: [] }
         parser = parser(options)
         paths = parser.parse(argv)
         return help(parser) if options[:help]
-        return usage(parser) if paths.empty? && options[:components].empty?
+        return usage(parser) if paths.empty? && options[:components].empty? && !options[:app]
 
-        result = Tailwind.sources(scan: paths, **options.slice(:components, :format, :responsive, :prefix))
+        result = Tailwind.sources(scan: paths, **sources_options(options))
         options[:output] ? write(options[:output], result) : @out.write(result)
         0
-      rescue OptionParser::ParseError, ArgumentError, SystemCallError => e
+      rescue OptionParser::ParseError, ArgumentError, SystemCallError, LoadError => e
         @err.puts "daisyui-tailwind: #{e.message}"
         1
       end
@@ -53,8 +57,21 @@ module DaisyUI
             options[:responsive].concat(breakpoints)
           end
           opts.on("--prefix PREFIX", "The DaisyUI.configuration.prefix your app sets") { |prefix| options[:prefix] = prefix }
+          opts.on("--app", "The app's own components instead of the gem's") { options[:app] = true }
+          opts.on("-r", "--require FILE", "With --app: load FILE first, e.g. config/environment.rb (repeatable)") do |file|
+            options[:require] << file
+          end
           opts.on("-h", "--help", "Show this help") { options[:help] = true }
         end
+      end
+
+      # With --app: load the app's files, then freeze DaisyUI as boot does.
+      def sources_options(options)
+        if options[:app]
+          options[:require].each { |file| require File.expand_path(file) }
+          DaisyUI.finalize!
+        end
+        options.slice(:components, :format, :responsive, :prefix, :app)
       end
 
       def help(parser)

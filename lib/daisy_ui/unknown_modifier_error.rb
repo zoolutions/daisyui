@@ -23,9 +23,16 @@ module DaisyUI
       name = "#{name}##{part}" if part
       message = "#{name} has no modifier #{modifier.inspect}"
       suggestions = DidYouMean::SpellChecker.new(dictionary: known.map(&:to_s)).correct(modifier.to_s)
-      return message if suggestions.empty?
+      message = "#{message}. Did you mean? #{suggestions.map { |s| ":#{s}" }.join(', ')}" unless suggestions.empty?
+      groups.empty? ? message : "#{message}. Variants: #{groups}"
+    end
 
-      "#{message}. Did you mean? #{suggestions.map { |s| ":#{s}" }.join(', ')}"
+    # The component's groups and their members, "size: sm, lg; color: …";
+    # a sub-component part has modifiers of its own, so none for it.
+    def groups
+      return "" if part || !component.respond_to?(:modifier_groups)
+
+      component.modifier_groups.map { |group, members| "#{group}: #{members.join(', ')}" }.join("; ")
     end
   end
 end
