@@ -2,6 +2,7 @@
 
 require "json"
 require "open3"
+require "rbconfig"
 require "tmpdir"
 
 RSpec.describe DaisyUI::Tailwind::AppSources do
@@ -38,8 +39,22 @@ RSpec.describe DaisyUI::Tailwind::AppSources do
       expect(picker).to include("dropdown", "picker-trigger", "mt-2", "picker-wide", "w-96", "w-48", "btn-block", "#{VariantsFixtures::OPEN}:shadow-lg")
     end
 
-    it "is byte-identical from one run to the next" do
+    it "does not depend on the order it is given the components" do
       expect(described_class.new(components.reverse).to_css).to eq(sources.to_css)
+    end
+
+    it "is byte-identical from one process to the next" do
+      exe = File.join(DaisyUI::Tailwind::ROOT, "exe", "daisyui-tailwind")
+      fixtures = File.join(DaisyUI::Tailwind::ROOT, "spec", "support", "variants_fixtures.rb")
+      runs = Array.new(2) { Open3.capture3(RbConfig.ruby, exe, "--app", "--require", fixtures) }
+
+      expect(runs.map(&:last)).to all(be_success)
+      expect(runs.first.first).to include("/* VariantsFixtures::Widget */").and eq(runs.last.first)
+    end
+
+    it "raises for an anonymous class, which has no name to label its block" do
+      expect { described_class.new([VariantsFixtures::Thing, Class.new(DaisyUI::Base)]) }
+        .to raise_error(ArgumentError, /anonymous/)
     end
 
     context "with a prefix" do

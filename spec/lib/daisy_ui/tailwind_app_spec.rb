@@ -14,6 +14,22 @@ RSpec.describe DaisyUI::Tailwind do
       expect(described_class.app_components).to eq(described_class.app_components.sort_by(&:name))
     end
 
+    context "with a gem component the app reopens to declare variants" do
+      around do |example|
+        definitions = DaisyUI::Badge.variant_definitions
+        example.run
+      ensure
+        DaisyUI::Badge.variant_definitions = definitions
+      end
+
+      it "lists it, since the gem's manifest knows nothing of its declarations" do
+        DaisyUI::Badge.variants { base "reopened-badge" }
+
+        expect(described_class.app_components).to include(DaisyUI::Badge)
+        expect(described_class.sources(app: true)).to include("/* DaisyUI::Badge */")
+      end
+    end
+
     it "skips a class its constant no longer names, as after a code reload" do
       stale = stub_const("ReloadedApp::Widget", Class.new(DaisyUI::Base))
       fresh = stub_const("ReloadedApp::Widget", Class.new(DaisyUI::Base))

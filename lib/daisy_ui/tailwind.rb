@@ -50,14 +50,13 @@ module DaisyUI
       end
 
       # The app's DaisyUI::Base subclasses, sorted by name: every named one
-      # defined outside the gem's lib/ whose constant still names it (a class
-      # a code reload replaced is skipped). A Rails app is eager-loaded first.
+      # whose constant still names it (a class a code reload replaced is
+      # skipped), defined outside the gem's lib/ or a gem component the app
+      # reopened to declare variants (the gem's own never do). A Rails app is
+      # eager-loaded first.
       def app_components
         ::Rails.application.eager_load! if defined?(::Rails) && ::Rails.respond_to?(:application) && ::Rails.application
-        gem_lib = File.join(ROOT, "lib", "")
-        ClassMerge::DaisyGroups.components.select do |component|
-          current?(component) && !Object.const_source_location(component.name)&.first.to_s.start_with?(gem_lib)
-        end.sort_by(&:name)
+        ClassMerge::DaisyGroups.components.select { |component| current?(component) && app_owned?(component) }.sort_by(&:name)
       end
 
       # Whether the committed app sources at `path` differ from what the
@@ -74,6 +73,12 @@ module DaisyUI
 
         raise ArgumentError, "app: gives the app's own components, a file of its own; " \
                              "scan: and components: give the gem's (#{app.inspect} with #{(scan + components).inspect})"
+      end
+
+      def app_owned?(component)
+        return true unless Object.const_source_location(component.name)&.first.to_s.start_with?(File.join(ROOT, "lib", ""))
+
+        !component.variant_definitions.equal?(Variants::EMPTY)
       end
 
       def current?(component)
