@@ -1,0 +1,21 @@
+CHANGELOG.md
+  s_f91c17b2016e99::t_2a12240f6625de 64-72
+spec/lib/daisy_ui/tailwind/app_sources_spec.rb
+  s_f91c17b2016e99::t_347f19862fe9a8 92-95,97-101,103-119
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "b4ba7c9963ba24bb830996f9ba6d45721bcb600c",
+  "prompts": {},
+  "sessions": {
+    "s_f91c17b2016e99": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "722f745a-234a-4686-baf5-841a74fbe28d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "mhenrixon <mikael@mhenrixon.com>"
+    }
+  }
+}
