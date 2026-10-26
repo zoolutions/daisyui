@@ -16,4 +16,5 @@ group :development do
   gem "rubocop-rspec"
   gem "rubocop-thread_safety", ">= 0.8", require: false # conformance-kit's config/rubocop.yml
   gem "super_diff"
+  gem "tailwindcss-ruby", "~> 4.1", require: false # the Tailwind CLI for the app-sources integration spec
 end

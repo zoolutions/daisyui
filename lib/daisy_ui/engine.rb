@@ -11,6 +11,10 @@ module DaisyUI
   #   * appends the JS dir to the asset load path so Propshaft/Sprockets serve
   #     the .min.js and its sourcemap (Sprockets also needs them precompiled).
   #
+  # Rails also loads lib/tasks/daisyui.rake from here: `bin/rails
+  # daisyui:tailwind[OUTPUT]` writes the Tailwind sources of the app's own
+  # components (DaisyUI::Tailwind::AppSources).
+  #
   # The controllers are opt-in at the markup level (`Dropdown(:popover, stimulus:
   # true)`, `Tooltip(:popover)`) and not preloaded, so a page that never uses
   # one never fetches it.

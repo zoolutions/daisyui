@@ -35,6 +35,8 @@ module DaisyUI
   # This renders: <div class="[generated classes]" id="..." data-...="..." ...>
   #
   class Base < Phlex::HTML
+    include Variants::Rendering
+
     BOOLS = [true, false].freeze
     # Shared color modifiers used across multiple components
     # Maps color names to their DaisyUI background/text class combinations
@@ -145,6 +147,16 @@ module DaisyUI
         @component_class = Shareable.share(component_class)
       end
 
+      # What a `variants` block declared beyond modifiers: base, defaults,
+      # compounds, states, `on` rules and slots (see DaisyUI::Variants).
+      def variant_definitions
+        @variant_definitions || Variants::EMPTY
+      end
+
+      def variant_definitions=(definitions)
+        @variant_definitions = Shareable.share(definitions)
+      end
+
       # Positional symbols a component handles itself (e.g. Dropdown's
       # :popover): accepted as modifiers, but they emit no class.
       def flags
@@ -183,6 +195,7 @@ module DaisyUI
         subclass.modifiers = (modifiers || {}).dup
         subclass.modifier_groups = modifier_groups.transform_values(&:dup)
         subclass.flags = flags.dup
+        subclass.variant_definitions = variant_definitions
         # Inherit component_class if it was explicitly set
         return unless instance_variable_defined?(:@component_class)
 
@@ -216,11 +229,15 @@ module DaisyUI
         ClassMerge.reset!
       end
 
+      # Declares variants, compounds, defaults, states and slots; returns the
+      # declarations, so `Widget.variants.schema` describes them.
+      def variants(&) = Variants.build(self, &)
+
       # @api private Called by DaisyUI.finalize! for every component: derives
       # component_class on the main Ractor and makes sure every registry is
       # frozen for non-main Ractors.
       def finalize!
-        [component_class, modifiers, modifier_groups, flags].each { |registry| Shareable.share(registry) }
+        [component_class, modifiers, modifier_groups, flags, variant_definitions].each { |registry| Shareable.share(registry) }
         self
       end
     end
@@ -246,17 +263,20 @@ module DaisyUI
     # Main extension points - override these in your project!
 
     # Builds the final CSS class string from:
-    # 1. Component base class (e.g., "dropdown")
+    # 1. Component base class (e.g., "dropdown"), then a `variants` base
     # 2. Modifier classes (e.g., "dropdown-top")
-    # 3. Responsive classes (e.g., "sm:dropdown-hover")
-    # 4. User-provided classes via `class:` option
+    # 3. What a `variants` block derives: defaults, compounds, `on` states
+    # 4. Responsive classes (e.g., "sm:dropdown-hover")
+    # 5. User-provided classes via `class:` option
     #
     # Note: This method DESTRUCTIVELY removes :class from options
     # so it won't appear again in attributes
     def classes
       merge_classes(
         base_class,
+        variant_base_classes,
         *modifier_classes,
+        *variant_classes,
         *responsive_classes,
         options.delete(:class)
       )

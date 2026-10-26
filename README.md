@@ -216,6 +216,42 @@ language can read it directly from `$(bundle info daisyui --path)`:
 - `classes`: everything it can render: `name`, the modifiers and the class words in its Ruby. Words that are not classes cost nothing.
 - `shared`: base.rb's classes, which every component can render (`:skeleton`, the colour modifiers). Include them with any component.
 
+### Your own components (`--app`)
+
+A component you declare with [`variants`](#variants-states-and-slots) renders
+classes that appear nowhere literally in your source: an `on %i[hover open]`
+rule writes `hover:…` and `[.dropdown…>&]:…` at render time. Tailwind only
+compiles what it finds written out, so hand it your components' classes too:
+
+```sh
+bin/rails "daisyui:tailwind[app/assets/stylesheets/generated/daisyui_app.css]"
+# without Rails: load your components, then walk them
+bundle exec daisyui-tailwind --app --require ./config/components.rb -o app/assets/stylesheets/generated/daisyui_app.css
+```
+
+```css
+@import "./generated/daisyui.css";      /* the gem's components you use */
+@import "./generated/daisyui_app.css";  /* your own: variants, compounds, states, slots */
+```
+
+With the app loaded (the rake task eager-loads Rails), it walks every
+`DaisyUI::Base` subclass defined outside the gem and writes one
+`@source inline(…)` per component, sorted by name: its component class,
+modifiers, `base`, compound and slot classes, and each `on` class once per
+state. `--responsive` and `--prefix` work as above; `--format json` too. From
+Ruby: `DaisyUI::Tailwind.sources(app: true)`, or `app: [Widget, Picker]` for
+some. The header carries no version and nothing depends on the machine, so the
+file only changes when a declaration does: **commit it**, and let a spec fail
+when it is stale, the way this gem checks its own manifest:
+
+```ruby
+# spec/daisyui_tailwind_spec.rb
+it("has fresh Tailwind sources") { expect(DaisyUI::Tailwind.stale?("app/assets/stylesheets/generated/daisyui_app.css")).to be(false) }
+```
+
+`stale?` eager-loads a Rails app before it compares. The CSS build then never
+boots the app; it only imports the file.
+
 ## Class merging
 
 Components merge their classes so the last conflicting class wins, for Tailwind
@@ -305,6 +341,107 @@ end
 
 Keyword arguments are not validated: `Toggle(primray: true)` renders a
 `primray` attribute, because unknown keywords are HTML attributes.
+
+## Variants, states and slots
+
+`register_modifiers` maps a symbol to classes. A component that owns its design
+also needs classes for two modifiers together, the same declarations under a
+browser state, and classes for its parts. Declare them in a `variants` block:
+
+```ruby
+class Widget < DaisyUI::Button
+  OPEN = "[.dropdown:is(:focus-within,[open],:has(:popover-open))>&]"
+
+  variants do
+    base "font-medium"                                        # after the inherited base (btn)
+    variant :size, sm: "btn-sm [--fontsize:var(--text-sm)]"  # overrides one inherited member
+    default :size, :md                                        # when the caller names no size
+
+    compound style: :outline, color: nil, class: "[--btn-bg:var(--color-base-100)]"
+    compound style: %i[ghost link], class: "[--btn-border:transparent]"
+
+    state :hover, "hover"
+    state :open, OPEN
+    on %i[hover open], style: %i[ghost link], class: "[--btn-bg:color-mix(in_oklab,var(--color-base-content)_8%,transparent)]"
+  end
+end
+
+Widget()            # btn font-medium btn-md
+Widget(:ghost, :sm) # btn font-medium btn-ghost btn-sm [--fontsize:…] [--btn-border:transparent]
+                    #   hover:[--btn-bg:…] [.dropdown…>&]:[--btn-bg:…]
+```
+
+| Declaration | |
+|---|---|
+| `variant :group, member: "classes", …` | Alternatives: the grouped `register_modifiers(group: { … })`. Members merge as one ClassMerge group. |
+| `flag :name, "classes"` | An on/off modifier: an ungrouped `register_modifiers` entry. `flag :name` alone is a `register_flags` flag, no class, for compounds to match. |
+| `base "classes"` | Classes every instance gets, appended to the inherited base. |
+| `default :group, :member` | The member used when the caller names none of the group. Never rendered beside a member the caller gives. |
+| `compound(**match, class:, set: {})` | `class:` when every key of `match` holds. `set: { group: :member }` selects members for the caller's empty groups; later compounds see them. Applied in order, after defaults. |
+| `state :name, "variant"` | Names a Tailwind variant once: `"hover"`, `"focus-visible"`, `"[.dropdown[open]>&]"`. |
+| `on(states, **match, class:)` | Like `compound`, with each class written once per state: `on %i[hover open], class: "a"` renders `hover:a [.dropdown…>&]:a`. |
+| `slot :name, "classes"` | A part of the component (see below). |
+
+A `match` value says when a group or flag holds:
+
+| Value | Holds when |
+|---|---|
+| `:member` | that member is selected: given, defaulted or set by an earlier compound |
+| `[:a, :b]` | any of them is; a `nil` in the list means "or none": `shape: [nil, :row]` |
+| `nil` / `false` | no member of the group is |
+| `true` | any member of the group is: `color: true` |
+| `true` / `false` | for a flag: it is on / off |
+
+Classes render in this order, merged by ClassMerge: the component class, `base`,
+the given modifiers, the defaulted and set members, compounds, `on` rules,
+`responsive:`, then `class:`. Every declared class goes through
+`DaisyUI.configuration.prefix` like a modifier (`hover:d-…` with `prefix = "d-"`).
+A typo fails where it is declared, at boot: a `compound`, `on`, `default` or
+`set:` naming a group, member, flag, state or slot the component does not have
+raises `ArgumentError`. `class` and `set` are reserved: no group can be called that.
+
+**Slots.** A component with parts declares each one; a variant, compound or `on`
+value can be a Hash keyed by slot (`root` is the component itself):
+
+```ruby
+class Picker < DaisyUI::Dropdown
+  variants do
+    slot :trigger
+    slot :menu, "mt-2"
+    variant :reach, wide: { root: "picker-wide", menu: "w-96" }
+    state :open, "[.dropdown:is(:focus-within,[open],:has(:popover-open))>&]"
+    on :open, class: { menu: "shadow-lg" }
+  end
+
+  def trigger(*mods, **options, &) = render DaisyUI::Button.new(*mods, **slot_options(:trigger, options), &)
+  def list(*mods, **options, &) = render DaisyUI::Menu.new(*mods, class: slot_classes(:menu, options), **options, &)
+end
+```
+
+`slot_classes(:menu, options)` returns the slot's classes, those of every
+selected member, compound and `on` rule for it, then `options.delete(:class)`,
+merged. `slot_options(:trigger, options)` returns `options` with that `class:`.
+
+**Introspection.** `Widget.variants.schema` is plain, frozen data for a docs
+page, a component gallery or a design-tool parity check:
+
+```ruby
+{
+  base: "btn font-medium",
+  variants: { style: %i[ghost link outline dash soft], size: %i[lg md xs xl sm], … }, # a re-declared member moves last
+  flags: %i[active disabled wide block],
+  defaults: { size: :md },
+  compounds: [{ match: { style: :outline, color: nil }, class: "[--btn-bg:…]", set: {} }, …],
+  on: [{ states: %i[hover open], match: { style: %i[ghost link] }, class: "[--btn-bg:…]" }],
+  states: { hover: "hover", open: "[.dropdown…>&]" },
+  slots: { root: "btn font-medium" }
+}
+```
+
+A component that only calls `register_modifiers` has a schema too (variants and
+flags). An unknown modifier's error names the groups:
+`Widget has no modifier :huge. Variants: style: ghost, link, outline, dash, soft; size: lg, md, xs, xl, sm; …`.
+The state-prefixed classes need [Tailwind sources of their own](#your-own-components---app).
 
 ## Threads, fibers and Ractors
 

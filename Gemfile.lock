@@ -116,6 +116,9 @@ GEM
       attr_extras (>= 6.2.4, < 8)
       diff-lcs (~> 1.5)
       patience_diff (~> 1.2)
+    tailwindcss-ruby (4.3.3)
+    tailwindcss-ruby (4.3.3-arm64-darwin)
+    tailwindcss-ruby (4.3.3-x86_64-linux-gnu)
     traces (0.18.2)
     tsort (0.2.0)
     unicode-display_width (3.3.0)
@@ -126,6 +129,7 @@ GEM
 PLATFORMS
   arm64-darwin-23
   ruby
+  x86_64-linux
 
 DEPENDENCIES
   async
@@ -141,6 +145,7 @@ DEPENDENCIES
   rubocop-rspec
   rubocop-thread_safety (>= 0.8)
   super_diff
+  tailwindcss-ruby (~> 4.1)
 
 BUNDLED WITH
   4.1.0.beta1

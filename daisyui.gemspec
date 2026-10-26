@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
     files.empty? ? raise(Errno::ENOENT) : files
   rescue Errno::ENOENT
     Dir[
-      "exe/*", "lib/**/*.rb", "app/**/*", "data/**/*", "config/**/*",
+      "exe/*", "lib/**/*.rb", "lib/**/*.rake", "app/**/*", "data/**/*", "config/**/*",
       "CHANGELOG.md", "LICENSE.txt", "LICENSE-tailwind_merge.txt", "README.md"
     ].select { |f| File.file?(f) }
   end

@@ -37,10 +37,49 @@ module DaisyUI
       # components. `responsive:` adds breakpoint variants (`%w[sm md]`) of the
       # classes `responsive:` renders; `prefix:` defaults to the
       # DaisyUI.configuration.prefix the components render with.
-      def sources(scan: [], components: [], format: :css, responsive: [], prefix: DaisyUI.configuration.prefix)
+      #
+      # `app: true` gives the app's own components instead (app_components),
+      # or `app: [Widget, …]` the ones named: see AppSources. Their file is
+      # separate from the gem components' and meant to be committed.
+      def sources(scan: [], components: [], app: false, format: :css, responsive: [], prefix: DaisyUI.configuration.prefix)
+        return app_sources(app, scan:, components:).new(app == true ? app_components : app, responsive:, prefix:).render(format) if app
+
         manifest = self.manifest
         used = used_components(scan:, components:, manifest:)
         Sources.new(manifest, used, responsive:, prefix:).render(format)
+      end
+
+      # The app's DaisyUI::Base subclasses, sorted by name: every named one
+      # defined outside the gem's lib/ whose constant still names it (a class
+      # a code reload replaced is skipped). A Rails app is eager-loaded first.
+      def app_components
+        ::Rails.application.eager_load! if defined?(::Rails) && ::Rails.respond_to?(:application) && ::Rails.application
+        gem_lib = File.join(ROOT, "lib", "")
+        ClassMerge::DaisyGroups.components.select do |component|
+          current?(component) && !Object.const_source_location(component.name)&.first.to_s.start_with?(gem_lib)
+        end.sort_by(&:name)
+      end
+
+      # Whether the committed app sources at `path` differ from what the
+      # declarations give now (or the file is missing): a spec can fail on it,
+      # the way the gem's own manifest spec does.
+      def stale?(path, app: true, **)
+        !File.file?(path) || File.read(path) != sources(app:, **)
+      end
+
+      private
+
+      def app_sources(app, scan:, components:)
+        return AppSources if scan.empty? && components.empty?
+
+        raise ArgumentError, "app: gives the app's own components, a file of its own; " \
+                             "scan: and components: give the gem's (#{app.inspect} with #{(scan + components).inspect})"
+      end
+
+      def current?(component)
+        Object.const_get(component.name).equal?(component)
+      rescue NameError
+        false
       end
     end
   end

@@ -14,6 +14,8 @@ loader.ignore("#{__dir__}/daisy_ui/updated_at.rb")
 # The Rails engine references Rails::Engine, so it is required explicitly below
 # (only when Rails is present) rather than autoloaded.
 loader.ignore("#{__dir__}/daisy_ui/engine.rb")
+# lib/tasks holds the engine's rake tasks, no constants.
+loader.ignore("#{__dir__}/tasks")
 loader.setup # ready!
 loader.load_file("#{__dir__}/daisy_ui/base.rb")
 

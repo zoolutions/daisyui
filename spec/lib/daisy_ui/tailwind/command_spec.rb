@@ -86,6 +86,48 @@ RSpec.describe DaisyUI::Tailwind::Command do
     end
   end
 
+  describe "--app" do
+    let(:app_file) { File.join(dir, "command_app_widget.rb") }
+
+    before do
+      stub_const("CommandApp", Module.new) # the namespace the file defines its component in
+      File.write(app_file, <<~RUBY)
+        class CommandApp::Widget < DaisyUI::Base
+          variants do
+            base "command-app-base"
+            state :hover, "hover"
+            on :hover, class: "command-app-tint"
+          end
+        end
+      RUBY
+    end
+
+    it "requires the app's files and prints its own components' sources" do
+      expect(run("--app", "--require", app_file)).to eq(0)
+      expect(out.string).to include("/* CommandApp::Widget */\n@source inline(\"command-app-base hover:command-app-tint widget\");")
+      expect(out.string).not_to include("DaisyUI::Button")
+    end
+
+    it "writes JSON, or to --output, like the gem's sources" do
+      output = File.join(dir, "daisyui_app.css")
+
+      expect(run("--app", "--require", app_file, "--output", output)).to eq(0)
+      expect(File.read(output)).to include("/* CommandApp::Widget */")
+      expect(run("--app", "--require", app_file, "--format", "json")).to eq(0)
+      expect(JSON.parse(out.string)["components"]).to have_key("CommandApp::Widget")
+    end
+
+    it "exits 1 when given paths or components as well" do
+      expect(run("--app", dir)).to eq(1)
+      expect(err.string).to include("daisyui-tailwind: app: gives the app's own components")
+    end
+
+    it "exits 1 on a file it cannot require" do
+      expect(run("--app", "--require", File.join(dir, "nope.rb"))).to eq(1)
+      expect(err.string).to include("nope.rb")
+    end
+  end
+
   it "--help prints usage and exits 0" do
     expect(run("--help")).to eq(0)
     expect(out.string).to include("Usage: daisyui-tailwind [options] [PATH...]")

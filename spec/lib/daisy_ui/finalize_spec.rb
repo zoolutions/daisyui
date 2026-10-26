@@ -8,7 +8,11 @@ RSpec.describe DaisyUI, ".finalize!", :finalizes do
       "DaisyUI.configuration.modifiers" => -> { described_class.configuration.modifiers },
       # Every gem component's registries, e.g. "DaisyUI::Button.modifiers".
       **DaisyUI::ClassMerge::DaisyGroups.gem_components
-        .product(%i[component_class modifiers modifier_groups flags])
+        .product(%i[component_class modifiers modifier_groups flags variant_definitions])
+        .to_h { |component, reader| ["#{component.name}.#{reader}", component.method(reader)] },
+      # Components that declare defaults, compounds, states and slots.
+      **[VariantsFixtures::Thing, VariantsFixtures::Picker]
+        .product(%i[modifiers modifier_groups flags variant_definitions])
         .to_h { |component, reader| ["#{component.name}.#{reader}", component.method(reader)] }
     },
     finalize: -> { described_class.finalize! }
