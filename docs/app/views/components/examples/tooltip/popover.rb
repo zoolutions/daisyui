@@ -9,6 +9,7 @@ module Views
 
           title "Viewport-aware popover"
           order 6
+          description "On a touch screen a tap toggles the tooltip, and a tap anywhere else closes it."
 
           def example
             div(class: "flex w-full justify-between overflow-hidden p-2") do

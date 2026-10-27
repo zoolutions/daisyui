@@ -674,6 +674,9 @@ it as `daisy-tooltip`.
 Popover tooltips:
 
 - open on pointer hover or keyboard focus and close on leave, blur, or Escape;
+- toggle on a touch or pen tap and then stay open until a tap outside, a second
+  tap on the trigger, Escape, or focus moving elsewhere (`toggle` is also a
+  Stimulus action, e.g. `click->daisy-tooltip#toggle`);
 - use `role="tooltip"` and merge their id into the first interactive trigger's
   `aria-describedby`;
 - preserve caller-supplied Stimulus controllers;

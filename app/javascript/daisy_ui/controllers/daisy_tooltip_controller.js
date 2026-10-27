@@ -6,6 +6,7 @@ const ARROW_WIDTH = 10
 const ARROW_HEIGHT = 4
 const FOCUSABLE_SELECTOR = 'button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
 const OPPOSITE = { top: "bottom", bottom: "top", left: "right", right: "left" }
+const TAP_POINTERS = ["touch", "pen"]
 
 // daisy-tooltip — positions a :popover Tooltip in the browser top layer.
 //
@@ -13,16 +14,29 @@ const OPPOSITE = { top: "bottom", bottom: "top", left: "right", right: "left" }
 // hover/focus lifecycle expected of a tooltip, then flips and shifts the real
 // tooltip element only while it is open so it remains inside the visual
 // viewport. No global listeners remain attached while the tooltip is closed.
+//
+// A touch or pen tap toggles the tooltip: it stays open after the finger lifts
+// (pointerleave/focusout no longer close it) until a tap outside, a second tap
+// on the trigger, or Escape. `toggle` is also a Stimulus action, for a host
+// that wires `click->daisy-tooltip#toggle` on its own trigger.
 export default class extends Controller {
   static targets = ["content", "arrow"]
   static values = { placement: { type: String, default: "top" } }
 
   connect() {
+    // Stimulus reuses this instance when the same element is re-inserted.
+    this.openedByTap = false
+    this.tapPending = false
     if (!this.hasContentTarget) return
 
     this.originalMaxWidth = this.contentTarget.style.maxWidth
-    this.onPointerEnter = () => this.show()
+    this.onPointerEnter = (event) => this.#handlePointerEnter(event)
     this.onPointerLeave = () => this.#hideUnlessFocused()
+    this.onPointerDown = () => {
+      this.tapPending = false
+    }
+    this.onPointerUp = (event) => this.#handlePointerUp(event)
+    this.onOutsidePointerDown = (event) => this.#handleOutsidePointerDown(event)
     this.onFocusIn = () => this.show()
     this.onFocusOut = (event) => this.#handleFocusOut(event)
     this.onKeydown = (event) => this.#handleKeydown(event)
@@ -30,6 +44,8 @@ export default class extends Controller {
 
     this.element.addEventListener("pointerenter", this.onPointerEnter)
     this.element.addEventListener("pointerleave", this.onPointerLeave)
+    this.element.addEventListener("pointerdown", this.onPointerDown)
+    this.element.addEventListener("pointerup", this.onPointerUp)
     this.element.addEventListener("focusin", this.onFocusIn)
     this.element.addEventListener("focusout", this.onFocusOut)
     this.#describeTrigger()
@@ -40,6 +56,8 @@ export default class extends Controller {
   disconnect() {
     this.element.removeEventListener("pointerenter", this.onPointerEnter)
     this.element.removeEventListener("pointerleave", this.onPointerLeave)
+    this.element.removeEventListener("pointerdown", this.onPointerDown)
+    this.element.removeEventListener("pointerup", this.onPointerUp)
     this.element.removeEventListener("focusin", this.onFocusIn)
     this.element.removeEventListener("focusout", this.onFocusOut)
     this.#teardownOpen()
@@ -57,15 +75,34 @@ export default class extends Controller {
   }
 
   hide() {
+    this.openedByTap = false
     if (this.#isOpen()) this.contentTarget.hidePopover()
     this.contentTarget.style.visibility = "hidden"
     this.#teardownOpen()
+  }
+
+  // Stimulus action. Closes a tooltip a tap opened; otherwise opens it (or
+  // keeps a hover/focus-opened one open) until an outside tap or Escape.
+  toggle(event) {
+    if (event?.type === "click" && this.tapPending) {
+      this.tapPending = false
+      return
+    }
+
+    if (this.openedByTap && this.#isOpen()) {
+      this.hide()
+      return
+    }
+
+    this.show()
+    this.openedByTap = this.#isOpen()
   }
 
   #setupOpen() {
     window.addEventListener("resize", this.onGeometryChange)
     window.addEventListener("scroll", this.onGeometryChange, true)
     window.addEventListener("keydown", this.onKeydown)
+    document.addEventListener("pointerdown", this.onOutsidePointerDown, true)
     window.visualViewport?.addEventListener("resize", this.onGeometryChange)
     window.visualViewport?.addEventListener("scroll", this.onGeometryChange)
   }
@@ -75,6 +112,7 @@ export default class extends Controller {
     window.removeEventListener("resize", this.onGeometryChange)
     window.removeEventListener("scroll", this.onGeometryChange, true)
     window.removeEventListener("keydown", this.onKeydown)
+    document.removeEventListener("pointerdown", this.onOutsidePointerDown, true)
     window.visualViewport?.removeEventListener("resize", this.onGeometryChange)
     window.visualViewport?.removeEventListener("scroll", this.onGeometryChange)
   }
@@ -188,11 +226,38 @@ export default class extends Controller {
     }
   }
 
+  #handlePointerEnter(event) {
+    // A finger's pointerenter is the start of the tap that pointerup handles.
+    if (event.pointerType === "touch") return
+
+    this.show()
+  }
+
+  #handlePointerUp(event) {
+    if (!TAP_POINTERS.includes(event.pointerType)) return
+
+    this.toggle()
+    this.tapPending = true
+  }
+
+  #handleOutsidePointerDown(event) {
+    if (!this.openedByTap) return
+    if (this.element.contains(event.target)) return
+
+    this.hide()
+  }
+
   #handleFocusOut(event) {
-    if (!this.element.contains(event.relatedTarget)) this.hide()
+    if (this.element.contains(event.relatedTarget)) return
+    // A tap elsewhere blurs with no relatedTarget; the outside tap closes it.
+    // Focus moving to another element (Tab) closes it even when tapped open.
+    if (this.openedByTap && !event.relatedTarget) return
+
+    this.hide()
   }
 
   #hideUnlessFocused() {
+    if (this.openedByTap) return
     if (!this.element.matches(":focus-within")) this.hide()
   }
 
