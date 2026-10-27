@@ -242,7 +242,7 @@ export default class extends Controller {
 
   #handleOutsidePointerDown(event) {
     if (!this.openedByTap) return
-    if (this.element.contains(event.target) || this.contentTarget.contains(event.target)) return
+    if (this.element.contains(event.target)) return
 
     this.hide()
   }
