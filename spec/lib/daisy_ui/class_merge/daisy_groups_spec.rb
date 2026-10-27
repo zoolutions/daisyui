@@ -142,6 +142,25 @@ RSpec.describe DaisyUI::ClassMerge::DaisyGroups do
     end
   end
 
+  context "with a global configured modifier in a group" do
+    around do |example|
+      DaisyUI.configure do |config|
+        config.modifiers.add(:calm, classes: "tone-calm", group: :tone)
+        config.modifiers.add(:loud, classes: "tone-loud", group: :tone)
+      end
+      example.run
+    ensure
+      DaisyUI.configure do |config|
+        config.modifiers.remove(:calm)
+        config.modifiers.remove(:loud)
+      end
+    end
+
+    it "groups its classes, having no component to own them" do
+      expect(merge("tone-calm tone-loud")).to eq("tone-loud")
+    end
+  end
+
   context "with a configured modifier without a group" do
     around do |example|
       DaisyUI.configure { |config| config.modifiers.add(:huge, classes: "btn-huge", component: DaisyUI::Button) }
@@ -217,6 +236,11 @@ RSpec.describe DaisyUI::ClassMerge::DaisyGroups do
     it "renders every class of the member" do
       expect(render(Probe.new(:a)))
         .to eq('<div class="motion-opacity-in-0 motion-translate-y-in-[8px] motion-duration-[400ms]"></div>')
+    end
+
+    it "keeps a caller's class naming another member's class" do
+      expect(render(Probe.new(:a, class: "motion-opacity-out-0")))
+        .to eq('<div class="motion-opacity-in-0 motion-translate-y-in-[8px] motion-duration-[400ms] motion-opacity-out-0"></div>')
     end
 
     it "leaves the classes out of every group" do

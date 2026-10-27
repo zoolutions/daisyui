@@ -272,7 +272,9 @@ groups). Ungrouped modifiers (`btn-wide`, `btn-active`) never conflict.
 A group holds only the component's own `<component_class>-*` classes: a
 member's Tailwind utilities resolve by Tailwind's groups, and any other class
 in it (a plugin utility such as `motion-duration-[400ms]`) never conflicts, so
-the classes of one member never knock each other out.
+the classes of one member never knock each other out. To make such classes
+alternatives, set the component's `component_class` and name them
+`<component_class>-*`, or register them with `class_groups` (below).
 Component base classes such as `table` and `collapse` are never dropped.
 
 Register custom utilities so the merger knows what they are. Unregistered,
