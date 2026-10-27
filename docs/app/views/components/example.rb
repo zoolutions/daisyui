@@ -46,6 +46,13 @@ module Views
           @order = value if value
           @order || 100
         end
+
+        # Optional one-paragraph note shown under the heading, for behaviour the
+        # live preview cannot show (e.g. touch). Nil renders nothing.
+        def description(value = nil)
+          @description = value if value
+          @description
+        end
       end
 
       # Override with the live component render(s) to demonstrate.

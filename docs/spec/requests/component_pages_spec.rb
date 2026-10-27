@@ -17,6 +17,15 @@ RSpec.describe "Component pages", type: :request do
     expect(DaisyUI.configuration.unknown_modifiers).to eq(:raise)
   end
 
+  it "explains under the popover tooltip example that a tap toggles it" do
+    get component_path("tooltip"), headers: headers
+
+    section = response.parsed_body.at_css("section#viewport-aware-popover")
+    expect(section.at_css("h2 + p").text).to eq(
+      "On a touch screen a tap toggles the tooltip, and a tap anywhere else closes it."
+    )
+  end
+
   ComponentDoc.all.select { it.examples&.any? }.each do |component|
     it "renders /components/#{component.slug}" do
       get component_path(component.slug), headers: headers

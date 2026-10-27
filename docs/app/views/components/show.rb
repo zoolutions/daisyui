@@ -34,6 +34,7 @@ module Views
       def example_section(example_class)
         section(class: "mb-10 scroll-mt-20", id: example_class.title.parameterize) do
           h2(class: "mb-3 text-lg font-semibold") { example_class.title }
+          p(class: "mb-3 text-sm opacity-70") { example_class.description } if example_class.description
           render ExampleViewerComponent.new(example: example_class.name)
         end
       end

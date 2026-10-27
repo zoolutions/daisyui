@@ -70,4 +70,38 @@ RSpec.describe "Popover tooltip", type: :system do
     find("h1", text: "Tooltip").hover
     expect(page).to have_no_css("#left_edge_tooltip:popover-open")
   end
+
+  # iOS Safari sends pointerenter → pointerdown → pointerup → pointerleave for
+  # one tap and does not focus the tapped button, so nothing but the tap
+  # lifecycle can keep the tooltip open.
+  it "toggles on a touch tap and closes on a tap outside" do
+    visit component_path("tooltip")
+    find_button("Right edge")
+
+    tap = <<~JS
+      ((selector) => {
+        const target = document.querySelector(selector)
+        const init = { bubbles: true, cancelable: true, composed: true, pointerType: "touch", isPrimary: true }
+        target.dispatchEvent(new PointerEvent("pointerenter", { ...init, bubbles: false }))
+        target.dispatchEvent(new PointerEvent("pointerdown", init))
+        target.dispatchEvent(new PointerEvent("pointerup", init))
+        target.dispatchEvent(new PointerEvent("pointerleave", { ...init, bubbles: false }))
+      })
+    JS
+    tap_on = ->(selector) { page.execute_script("#{tap}(arguments[0])", selector) }
+    trigger = '[data-controller~="daisy-tooltip"]:has(#right_edge_tooltip)'
+
+    tap_on.call(trigger)
+    expect(page).to have_css("#right_edge_tooltip:popover-open", visible: true)
+    expect(page.evaluate_script('getComputedStyle(document.querySelector("#right_edge_tooltip")).visibility'))
+      .to eq("visible")
+
+    tap_on.call("h1")
+    expect(page).to have_no_css("#right_edge_tooltip:popover-open")
+
+    tap_on.call(trigger)
+    expect(page).to have_css("#right_edge_tooltip:popover-open", visible: true)
+    tap_on.call(trigger)
+    expect(page).to have_no_css("#right_edge_tooltip:popover-open")
+  end
 end
