@@ -1,0 +1,20 @@
+spec/lib/daisy_ui/class_merge/daisy_groups_spec.rb
+  s_f91c17b2016e99::t_168e004b005077 200-256,259-261,265-275
+  s_f91c17b2016e99::t_79ac2950e41b55 257-258
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "5dc02e4ac0449bfdd74b44b2ebdfff6cd0fabf69",
+  "prompts": {},
+  "sessions": {
+    "s_f91c17b2016e99": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "722f745a-234a-4686-baf5-841a74fbe28d",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "mhenrixon <mikael@mhenrixon.com>"
+    }
+  }
+}
