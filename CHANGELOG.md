@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [2.2.2] - 2026-10-27
+
 ### Fixed
 
 - A variant member's classes no longer knock each other out. A group now holds
