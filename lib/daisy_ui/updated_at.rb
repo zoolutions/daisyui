@@ -3,5 +3,5 @@
 module DaisyUI
   # This timestamp is automatically updated when releasing a new version
   # Format: YYYY-MM-DD HH:MM:SS UTC
-  UPDATED_AT = "2026-10-27 04:51:27 UTC"
+  UPDATED_AT = "2026-10-27 17:15:32 UTC"
 end
