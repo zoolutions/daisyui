@@ -18,7 +18,7 @@ module DaisyUI
     module Candidate
       SHAPE = /\A[a-z@!\[*-][^\s"'`;{}\\]*[a-z0-9\])%!]\z/
       PATH = %r{/(?![0-9\[])}
-      NAMED = %r{\A(?<head>.+)/[A-Za-z0-9_-]+\z}
+      NAMED = %r{\A(?<head>.+)/[A-Za-z0-9_-]+!?\z}
       CLOSING = { ")" => "(", "]" => "[" }.freeze
 
       class << self

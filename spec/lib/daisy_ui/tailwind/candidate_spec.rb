@@ -9,10 +9,18 @@ RSpec.describe DaisyUI::Tailwind::Candidate do
       group/item peer/field group-hover/item:underline group-has-[[data-state=error]]/item:block
       group-[.is-open]/item:flex peer-checked/field:block md:group-hover/item:underline
       motion-ease-in-out/opacity motion-duration-[9s]/opacity hover:motion-ease-in-out/scale
+      motion-ease-in-out/opacity!
     ].each do |token|
       it "accepts #{token.inspect}" do
         expect(described_class.valid?(token)).to be(true)
       end
+    end
+
+    # A hyphenated head before one `/<name>` reads as a utility's modifier, so
+    # a hyphenated gem's require path passes too: harmless noise in
+    # @source inline, the price of accepting plugin modifiers (#71).
+    it "accepts a hyphenated require path, which has a modifier's shape" do
+      expect(described_class.valid?("phlex-rails/version")).to be(true)
     end
 
     # Each of these is a real string from a component's Ruby. One unbalanced
@@ -25,7 +33,12 @@ RSpec.describe DaisyUI::Tailwind::Candidate do
       # A `/` before a letter is a path unless it names a group, a peer or a
       # plugin utility's modifier.
       "app/components", "vendor/foo", "group/item/extra", "lib/daisy_ui/base.rb",
-      "hover/item:underline", "foo/bar/baz", "bg-[url(/images/x.png)]", "-/x", "--/x"
+      "hover/item:underline", "foo/bar/baz", "-/x", "--/x",
+      # Named containers share an npm scope's shape, so both stay out.
+      "@container/main", "@sm/main:flex", "@hotwired/stimulus",
+      # A known limitation, not a rule: a path inside an arbitrary value is
+      # still read as a path, although Tailwind would compile it.
+      "bg-[url(/images/x.png)]"
     ].each do |token|
       it "rejects #{token.inspect}" do
         expect(described_class.valid?(token)).to be(false)
