@@ -8,8 +8,14 @@ module DaisyUI
     #
     # gives the group `daisy:group:btn-size` = ["btn-sm", "btn-lg"], so
     # `btn-sm btn-lg` merges to `btn-lg`. Ungrouped modifiers never conflict.
+    #
+    # A group holds only the component's own `<component_class>-*` classes.
     # Tokens Tailwind already classifies (`bg-primary text-primary-content`)
-    # are left to the Tailwind groups, which resolve them per utility.
+    # are left to the Tailwind groups, which resolve them per utility. Any
+    # other class (a plugin utility such as `motion-duration-[400ms]`) is left
+    # ungrouped, as a flag is: a group would make the classes of one member
+    # knock each other out. A component without a component_class groups
+    # nothing of its own.
     #
     # Every gem component base class (`btn`, `table`) also gets a group of its
     # own and is never dropped, even where Tailwind has a utility of the same
@@ -33,14 +39,16 @@ module DaisyUI
           components.each do |component|
             component.modifier_groups.each do |group, members|
               tokens = members.flat_map { |member| component.modifiers[member].to_s.split }
-              add(groups, "daisy:group:#{component.component_class || component.name}-#{group}", tokens, prefix)
+              add(groups, "daisy:group:#{component.component_class || component.name}-#{group}", own(tokens, component), prefix)
             end
           end
 
           # Configured modifiers join the component's own group of that name.
+          # A global one has no component to own its classes: all are grouped.
           configuration.modifiers.groups.each do |(component, group), classes|
             owner = component ? component.component_class || component.name : "global"
-            add(groups, "daisy:group:#{owner}-#{group}", classes.flat_map(&:split), prefix)
+            tokens = classes.flat_map(&:split)
+            add(groups, "daisy:group:#{owner}-#{group}", component ? own(tokens, component) : tokens, prefix)
           end
 
           groups
@@ -67,6 +75,13 @@ module DaisyUI
         end
 
         private
+
+        # The component's own modifier classes: `btn-sm` for `btn`.
+        def own(tokens, component)
+          return [] unless (base = component.component_class)
+
+          tokens.select { |token| token.start_with?("#{base}-") }
+        end
 
         # Subclasses share their parent's component_class and group names, so
         # their tokens land in the same group id and are unioned.
