@@ -1,0 +1,23 @@
+lib/daisy_ui/tailwind/candidate.rb
+  s_abe177fe163c74::t_ca99608820fb58 21
+spec/lib/daisy_ui/tailwind/candidate_spec.rb
+  s_abe177fe163c74::t_a79b685409decb 12,19-25,36-41
+CHANGELOG.md
+  s_abe177fe163c74::t_9ee38a8ebc556e 3-12
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "c2187e53f4433bd009e66dab34cda2fed6f7a292",
+  "prompts": {},
+  "sessions": {
+    "s_abe177fe163c74": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ded3890a-c001-4cca-98be-2a63fa677a11",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "mhenrixon <mikael@mhenrixon.com>"
+    }
+  }
+}
