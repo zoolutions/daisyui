@@ -61,6 +61,14 @@ committed; `DaisyUI::Tailwind.stale?(path)` fails a spec when a declaration
 changed and the file was not regenerated. From Ruby:
 `DaisyUI::Tailwind.sources(app: true)`.
 
+### Fixed
+
+- The Tailwind sources generator accepts named groups and peers
+  (`group/item`, `group-has-[…]/item:block`, `peer-checked/field:block`) and a
+  plugin utility's named modifier (`motion-ease-in-out/opacity`) instead of
+  raising on them as paths. A bare word before the `/` (`app/components`) and a
+  second `/` (`lib/daisy_ui/base.rb`) are still rejected (#71).
+
 ## [2.1.1] - 2026-10-17
 
 ### Tailwind sources for only the components an app uses

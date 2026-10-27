@@ -89,6 +89,26 @@ RSpec.describe DaisyUI::Tailwind::AppSources do
 
       expect { described_class.new([broken]).to_css }.to raise_error(ArgumentError, /BrokenWidget.*"w-\[calc\(100%"/)
     end
+
+    context "with a named group" do
+      let(:components) do
+        named = Class.new(DaisyUI::Base) do
+          variants do
+            base "group/item"
+            slot :fallback, "hidden group-has-[[data-state=error]]/item:block"
+          end
+        end
+        [stub_const("NamedGroupWidget", named)]
+      end
+
+      it "writes the group and the classes that name it" do
+        expect(block(sources.to_css, "NamedGroupWidget")).to include("group/item", "group-has-[[data-state=error]]/item:block")
+      end
+
+      it "writes the prefixed group" do
+        expect(block(described_class.new(components, prefix: "d-").to_css, "NamedGroupWidget")).to include("d-group/item")
+      end
+    end
   end
 
   describe "#to_json" do
