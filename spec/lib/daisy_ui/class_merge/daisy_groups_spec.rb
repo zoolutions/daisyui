@@ -142,6 +142,25 @@ RSpec.describe DaisyUI::ClassMerge::DaisyGroups do
     end
   end
 
+  context "with a global configured modifier in a group" do
+    around do |example|
+      DaisyUI.configure do |config|
+        config.modifiers.add(:calm, classes: "tone-calm", group: :tone)
+        config.modifiers.add(:loud, classes: "tone-loud", group: :tone)
+      end
+      example.run
+    ensure
+      DaisyUI.configure do |config|
+        config.modifiers.remove(:calm)
+        config.modifiers.remove(:loud)
+      end
+    end
+
+    it "groups its classes, having no component to own them" do
+      expect(merge("tone-calm tone-loud")).to eq("tone-loud")
+    end
+  end
+
   context "with a configured modifier without a group" do
     around do |example|
       DaisyUI.configure { |config| config.modifiers.add(:huge, classes: "btn-huge", component: DaisyUI::Button) }
@@ -197,8 +216,87 @@ RSpec.describe DaisyUI::ClassMerge::DaisyGroups do
     end
   end
 
+  context "with a variant member of several classes Tailwind does not classify" do
+    let(:probe) do
+      Class.new(DaisyUI::Base) do
+        self.component_class = nil
+
+        variants do
+          variant :part,
+            a: "motion-opacity-in-0 motion-translate-y-in-[8px] motion-duration-[400ms]",
+            b: "motion-opacity-out-0"
+        end
+
+        def view_template = div(class: classes)
+      end
+    end
+
+    before { stub_const("Probe", probe) }
+
+    it "renders every class of the member" do
+      expect(render(Probe.new(:a)))
+        .to eq('<div class="motion-opacity-in-0 motion-translate-y-in-[8px] motion-duration-[400ms]"></div>')
+    end
+
+    it "keeps a caller's class naming another member's class" do
+      expect(render(Probe.new(:a, class: "motion-opacity-out-0")))
+        .to eq('<div class="motion-opacity-in-0 motion-translate-y-in-[8px] motion-duration-[400ms] motion-opacity-out-0"></div>')
+    end
+
+    it "leaves the classes out of every group" do
+      expect(described_class.build.values.flatten).not_to include("motion-opacity-in-0", "motion-opacity-out-0")
+    end
+  end
+
+  context "with a member mixing the component's own modifier and plugin utilities" do
+    let(:widget) do
+      Class.new(DaisyUI::Base) do
+        self.component_class = :widget
+
+        variants do
+          variant :size,
+            sm: "widget-sm motion-opacity-in-0 motion-duration-[400ms]",
+            lg: "widget-lg"
+          flag :fade, "motion-opacity-in-0"
+        end
+
+        def view_template = div(class: classes)
+      end
+    end
+
+    before { stub_const("Widget", widget) }
+
+    it "renders every class of the member" do
+      expect(render(Widget.new(:sm)))
+        .to eq('<div class="widget widget-sm motion-opacity-in-0 motion-duration-[400ms]"></div>')
+    end
+
+    it "still replaces one member's modifier with another's" do
+      expect(merge("widget-sm widget-lg")).to eq("widget-lg")
+      expect(render(Widget.new(:sm, class: "widget-lg")))
+        .to eq('<div class="widget motion-opacity-in-0 motion-duration-[400ms] widget-lg"></div>')
+    end
+
+    it "keeps a flag that shares a class with a member next to another member" do
+      expect(render(Widget.new(:lg, :fade))).to eq('<div class="widget widget-lg motion-opacity-in-0"></div>')
+      expect(render(Widget.new(:fade, :lg))).to eq('<div class="widget motion-opacity-in-0 widget-lg"></div>')
+    end
+  end
+
   describe ".build" do
     subject(:groups) { described_class.build }
+
+    it "groups every modifier class of every gem component" do
+      missing = described_class.gem_components.flat_map do |component|
+        component.modifier_groups.flat_map do |group, members|
+          tokens = members.flat_map { |member| component.modifiers[member].split }
+          tokens.reject { |token| described_class.tailwind_class?(token) } -
+            groups.fetch("daisy:group:#{component.component_class}-#{group}", [])
+        end
+      end
+
+      expect(missing).to be_empty
+    end
 
     it "has no empty group" do
       expect(groups.select { |_id, tokens| tokens.empty? }).to be_empty

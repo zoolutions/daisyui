@@ -60,7 +60,10 @@ module Views
                 plain "Tailwind utilities follow tailwind-merge's rules. daisyUI modifiers "
                 plain "conflict when the component declares them as alternatives in one "
                 plain "group (sizes, colors, styles, placements, ...); ungrouped modifiers "
-                plain "never conflict. Variants such as "
+                plain "never conflict. A group holds only the component's own "
+                code { "<component_class>-*" }
+                plain " classes, so a plugin utility in a member never drops the member's "
+                plain "other classes. Variants such as "
                 code { "sm:" }
                 plain " or "
                 code { "hover:" }

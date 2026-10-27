@@ -2,6 +2,18 @@
 
 ### Fixed
 
+- A variant member's classes no longer knock each other out. A group now holds
+  only the component's own `<component_class>-*` classes; a member's other
+  classes Tailwind does not classify (plugin utilities such as
+  `motion-opacity-in-0 motion-duration-[400ms]`) are ungrouped, as a flag's
+  are, so all of them render. A component without a `component_class` groups
+  none of its own classes; globally configured grouped modifiers are unchanged
+  (#73).
+
+## [2.2.1] - 2026-10-27
+
+### Fixed
+
 - The Tailwind sources generator accepts named groups and peers
   (`group/item`, `group-has-[…]/item:block`, `peer-checked/field:block`) and a
   plugin utility's named modifier (`motion-ease-in-out/opacity`) instead of

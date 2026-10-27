@@ -269,6 +269,12 @@ dependency). daisyUI modifiers conflict when the component declares them as
 alternatives in one group: `btn-sm btn-lg` keeps `btn-lg`, while
 `dropdown-top dropdown-end` keeps both (placement and alignment are separate
 groups). Ungrouped modifiers (`btn-wide`, `btn-active`) never conflict.
+A group holds only the component's own `<component_class>-*` classes: a
+member's Tailwind utilities resolve by Tailwind's groups, and any other class
+in it (a plugin utility such as `motion-duration-[400ms]`) never conflicts, so
+the classes of one member never knock each other out. To make such classes
+alternatives, set the component's `component_class` and name them
+`<component_class>-*`, or register them with `class_groups` (below).
 Component base classes such as `table` and `collapse` are never dropped.
 
 Register custom utilities so the merger knows what they are. Unregistered,
@@ -382,7 +388,7 @@ Widget(:ghost, :sm) # btn font-medium btn-ghost btn-sm [--fontsize:…] [--btn-b
 
 | Declaration | |
 |---|---|
-| `variant :group, member: "classes", …` | Alternatives: the grouped `register_modifiers(group: { … })`. Members merge as one ClassMerge group. |
+| `variant :group, member: "classes", …` | Alternatives: the grouped `register_modifiers(group: { … })`. Members' own `<component_class>-*` classes merge as one ClassMerge group. |
 | `flag :name, "classes"` | An on/off modifier: an ungrouped `register_modifiers` entry. `flag :name` alone is a `register_flags` flag, no class, for compounds to match. |
 | `base "classes"` | Classes every instance gets, appended to the inherited base. |
 | `default :group, :member` | The member used when the caller names none of the group. Never rendered beside a member the caller gives. |
