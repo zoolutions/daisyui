@@ -1,5 +1,15 @@
 ## [Unreleased]
 
+### Fixed
+
+- The Tailwind sources generator accepts named groups and peers
+  (`group/item`, `group-has-[…]/item:block`, `peer-checked/field:block`) and a
+  plugin utility's named modifier (`motion-ease-in-out/opacity`) instead of
+  raising on them as paths. A bare word before the `/` (`app/components`) and a
+  second `/` (`lib/daisy_ui/base.rb`) are still rejected (#71).
+
+## [2.2.0] - 2026-10-26
+
 ### Documentation for the variants API
 
 - Docs site: "Variants, states and slots" (when to use `variant`, `flag`,
