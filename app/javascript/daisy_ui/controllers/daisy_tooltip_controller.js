@@ -24,6 +24,9 @@ export default class extends Controller {
   static values = { placement: { type: String, default: "top" } }
 
   connect() {
+    // Stimulus reuses this instance when the same element is re-inserted.
+    this.openedByTap = false
+    this.tapPending = false
     if (!this.hasContentTarget) return
 
     this.originalMaxWidth = this.contentTarget.style.maxWidth

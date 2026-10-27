@@ -103,5 +103,13 @@ RSpec.describe "Popover tooltip", type: :system do
     expect(page).to have_css("#right_edge_tooltip:popover-open", visible: true)
     tap_on.call(trigger)
     expect(page).to have_no_css("#right_edge_tooltip:popover-open")
+
+    # Chromium focuses a tapped button; Tab must take the tooltip away with focus.
+    right_edge = find_button("Right edge")
+    page.execute_script("arguments[0].focus()", right_edge)
+    tap_on.call(trigger)
+    expect(page).to have_css("#right_edge_tooltip:popover-open", visible: true)
+    right_edge.send_keys(:tab)
+    expect(page).to have_no_css("#right_edge_tooltip:popover-open")
   end
 end
