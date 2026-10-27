@@ -245,8 +245,12 @@ export default class extends Controller {
   }
 
   #handleFocusOut(event) {
-    if (this.openedByTap) return
-    if (!this.element.contains(event.relatedTarget)) this.hide()
+    if (this.element.contains(event.relatedTarget)) return
+    // A tap elsewhere blurs with no relatedTarget; the outside tap closes it.
+    // Focus moving to another element (Tab) closes it even when tapped open.
+    if (this.openedByTap && !event.relatedTarget) return
+
+    this.hide()
   }
 
   #hideUnlessFocused() {

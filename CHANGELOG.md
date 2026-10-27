@@ -4,9 +4,9 @@
 
 - A `:popover` `Tooltip` opens on a touch screen. The `daisy-tooltip`
   controller toggles it on a touch or pen tap and keeps it open after the
-  finger lifts, until a tap outside, a second tap on the trigger or Escape;
-  before, a tap showed it for one frame and hid it again on iOS Safari.
-  `toggle` is also a Stimulus action (`click->daisy-tooltip#toggle`). Hover
+  finger lifts, until a tap outside, a second tap on the trigger, Escape or
+  focus moving to another element; before, a tap showed it for one frame and
+  hid it again on iOS Safari. `toggle` is also a Stimulus action (`click->daisy-tooltip#toggle`). Hover
   and keyboard behaviour are unchanged, and no window or document listener is
   attached while the tooltip is closed (#76).
 
