@@ -1,0 +1,31 @@
+lib/daisy_ui/otp.rb
+  s_dbb35781f011ee::t_c2d0ce0356dff3 8-9,11
+docs/app/assets/stylesheets/application.tailwind.css
+  s_dbb35781f011ee::t_f92555606d6e36 52-58
+docs/package.json
+  ai_agent 10
+docs/bun.lock
+  ai_agent 20,196
+spec/lib/daisy_ui/otp_spec.rb
+  s_dbb35781f011ee::t_5baf67d087bf8e 93,95-125
+data/daisyui/tailwind_manifest.json
+  s_dbb35781f011ee::t_97a3aba3352126 1384-1388,1404-1407
+docs/spec/requests/component_pages_spec.rb
+  s_dbb35781f011ee::t_e0326ec98227b0 29-41,43-44
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "817be2e796b9fec4a37429dda015a894d585b0ab",
+  "prompts": {},
+  "sessions": {
+    "s_dbb35781f011ee": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ed2c432d-ae12-474c-a4ba-9d39b26229d4",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "mhenrixon <mikael@mhenrixon.com>"
+    }
+  }
+}
