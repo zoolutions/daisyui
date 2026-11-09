@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Documentation website for the DaisyUI Ruby gem (Phlex components wrapping daisyUI).
 A registry-driven Rails 8.1+ app modeled on phlex-reactive's `site/`, with live,
 zero-custom-JS reactive demos powered by the `phlex-reactive` gem. Stack: Phlex-Rails,
-Tailwind CSS 4 + daisyUI 5.6, importmap + Stimulus + Turbo 8, Propshaft.
+Tailwind CSS 4 + daisyUI 5.7, importmap + Stimulus + Turbo 8, Propshaft.
 
 ## Common Commands
 
@@ -80,7 +80,7 @@ shows Demo / Call-site / Component tabs. Templates: `counter_component.rb`,
 `searchable_combobox_component.rb`.
 
 ### Frontend Stack
-- Tailwind CSS 4 + daisyUI 5.6 (entry: `app/assets/stylesheets/application.tailwind.css`,
+- Tailwind CSS 4 + daisyUI 5.7 (entry: `app/assets/stylesheets/application.tailwind.css`,
   built to `app/assets/builds/application.css` via `bun run build:css`)
 - Theme switcher is zero-JS (daisyUI `theme-controller` + CSS `:has()`)
 - Lucide icons via `rails_icons` (`Views::Icon` / `IconHelper#_lucide`)

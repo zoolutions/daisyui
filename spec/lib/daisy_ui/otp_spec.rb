@@ -90,6 +90,39 @@ describe DaisyUI::Otp do
     end
   end
 
+  describe "digits" do
+    context "when given 8, the most boxes daisyUI sizes .otp for" do
+      subject(:output) { render described_class.new(digits: 8) }
+
+      it "renders 8 spans and adjusts input attributes" do
+        expected_html = html <<~HTML
+          <label class="otp">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+            <input type="text" autocomplete="one-time-code" inputmode="numeric" maxlength="8" pattern="[0-9]{8}" required>
+          </label>
+        HTML
+
+        expect(output).to eq(expected_html)
+      end
+    end
+
+    [0, 9].each do |digits|
+      context "when given #{digits}" do
+        it "raises ArgumentError" do
+          expect { described_class.new(digits:) }
+            .to raise_error(ArgumentError, /digits must be within 1..8/)
+        end
+      end
+    end
+
+    context "when given a String" do
+      it "raises ArgumentError" do
+        expect { described_class.new(digits: "6") }
+          .to raise_error(ArgumentError, /digits must be within 1..8.*got "6"/)
+      end
+    end
+  end
+
   describe "data" do
     subject(:output) do
       render described_class.new(:primary, data: { foo: "bar" })

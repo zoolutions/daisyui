@@ -26,6 +26,22 @@ RSpec.describe "Component pages", type: :request do
     )
   end
 
+  it "shows the OTP input wired for a form, named for assistive technology" do
+    get component_path("otp"), headers: headers
+
+    section = response.parsed_body.at_css("section#in-a-form")
+    expect(section.at_css('input[name="code"][id="otp-code"][aria-label="Verification code"][maxlength="6"]'))
+      .to be_present
+    expect(section.at_css("h2 + p").text).to include("input_attributes:", "aria-label", "required", "pattern")
+  end
+
+  it "shows a disabled OTP input" do
+    get component_path("otp"), headers: headers
+
+    section = response.parsed_body.at_css("section#disabled")
+    expect(section.at_css('.otp input[disabled][value="1234"]')).to be_present
+  end
+
   ComponentDoc.all.select { it.examples&.any? }.each do |component|
     it "renders /components/#{component.slug}" do
       get component_path(component.slug), headers: headers
