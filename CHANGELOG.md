@@ -1,5 +1,14 @@
 ## [Unreleased]
 
+### Changed
+
+- `Otp` raises `ArgumentError` for `digits:` outside 1..8 (or not an
+  Integer); daisyUI sizes `.otp` for one to eight boxes, so a ninth rendered
+  with the width of eight. Docs: the OTP page gains "In a form" and "Disabled"
+  examples, the docs site builds on daisyUI 5.7, and the docs CSS makes
+  `.otp > input` inherit its font-size, which `@tailwindcss/forms` had reset
+  to 1rem so typed digits drifted out of their boxes (#78).
+
 ### Fixed
 
 - A `:popover` `Tooltip` opens on a touch screen. The `daisy-tooltip`

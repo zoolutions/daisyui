@@ -1381,6 +1381,11 @@
         "otp-xs"
       ],
       "classes": [
+        "be",
+        "digits",
+        "for",
+        "got",
+        "must",
         "one-time-code",
         "otp",
         "otp-accent",
@@ -1396,7 +1401,10 @@
         "otp-success",
         "otp-warning",
         "otp-xl",
-        "otp-xs"
+        "otp-xs",
+        "sizes",
+        "to",
+        "within"
       ]
     },
     "Pagination": {

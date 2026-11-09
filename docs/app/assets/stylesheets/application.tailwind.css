@@ -49,6 +49,13 @@
   background-image: none !important;
 }
 
+/* @tailwindcss/forms sets font-size: 1rem on input[type=text]; daisyUI's OTP
+   derives its letter-spacing from the input's inherited 1ch, so the digits
+   drift out of their boxes unless the input inherits the .otp font-size. */
+.otp > input {
+  font-size: inherit;
+}
+
 /* FAB uses position:fixed — contain it within the preview panel */
 .fab-preview-container {
   position: relative;

@@ -4,7 +4,12 @@ module DaisyUI
   class Otp < Base
     self.component_class = :otp
 
+    # daisyUI sizes the container with `.otp:has(> span:nth-child(1..8))` only.
+    DIGITS = (1..8)
+
     def initialize(*, digits: 4, as: :label, input_attributes: {}, **)
+      raise ArgumentError, "digits must be within #{DIGITS} (daisyUI sizes .otp for 1 to 8 boxes), got #{digits.inspect}" unless digits.is_a?(Integer) && DIGITS.cover?(digits)
+
       super(*, as:, **)
       @digits = digits
       @input_attributes = input_attributes
