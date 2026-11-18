@@ -8,6 +8,13 @@
   examples, the docs site builds on daisyUI 5.7, and the docs CSS makes
   `.otp > input` inherit its font-size, which `@tailwindcss/forms` had reset
   to 1rem so typed digits drifted out of their boxes (#78).
+- A component's modifier map is built once per class and published
+  configuration and shared by every instance, instead of merged anew on each
+  lookup (five times for `Button.new(:primary, :sm, :outline)`). Rendering that
+  button allocates about 60% fewer objects. The map is now frozen: a subclass
+  that overrides the private `modifier_map` and mutates `super`'s Hash must
+  `dup` it first. The private `configured_modifiers` became the class method
+  `configured_modifiers_for(configuration)` (#80).
 
 ### Fixed
 
