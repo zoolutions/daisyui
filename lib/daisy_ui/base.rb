@@ -202,18 +202,20 @@ module DaisyUI
         subclass.component_class = @component_class
       end
 
-      # Every modifier an instance accepts, built once per configuration and
-      # modifiers registry and shared by every instance. Both are replaced,
-      # never mutated, once frozen (configure publishes a new configuration,
-      # register_modifiers assigns a new registry), so a cache keyed on their
-      # identity misses after either change. Remembered on the main Ractor
-      # only, and only for a frozen (published) configuration; otherwise
-      # built per call.
+      # @api private Every modifier an instance accepts, built once per
+      # configuration and modifiers registry and shared by every instance.
+      # Both are replaced, never mutated, once frozen (configure publishes a
+      # new configuration, register_modifiers assigns a new registry), so a
+      # cache keyed on their identity misses after either change; the class
+      # is in the key too, as Class#dup copies the ivar. Remembered on the
+      # main Ractor only, and only for a frozen (published) configuration;
+      # otherwise built per call.
       def modifier_map_for(configuration)
         cacheable = configuration.frozen? && Store.main_ractor?
         registry = modifiers
-        if cacheable && (cached = @modifier_map_cache) && cached[0].equal?(configuration) && cached[1].equal?(registry)
-          return cached[2]
+        if cacheable && (cached = @modifier_map_cache) &&
+           cached[0].equal?(self) && cached[1].equal?(configuration) && cached[2].equal?(registry)
+          return cached[3]
         end
 
         map = {
@@ -222,13 +224,13 @@ module DaisyUI
           **configured_modifiers_for(configuration),
           **configuration.modifiers.for(component: nil)
         }.freeze
-        @modifier_map_cache = [configuration, registry, map].freeze if cacheable
+        @modifier_map_cache = [self, configuration, registry, map].freeze if cacheable
         map
       end
       # rubocop:enable ThreadSafety/ClassInstanceVariable
 
-      # Modifiers added with `config.modifiers.add(component:)` for this class
-      # or any DaisyUI ancestor; the closest class wins.
+      # @api private Modifiers added with `config.modifiers.add(component:)`
+      # for this class or any DaisyUI ancestor; the closest class wins.
       def configured_modifiers_for(configuration)
         ancestors.take_while { |klass| klass != Base }.reverse.reduce({}) do |result, klass|
           result.merge(configuration.modifiers.for(component: klass))

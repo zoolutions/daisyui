@@ -42,6 +42,15 @@ describe DaisyUI::Base, "#modifier_map" do
     expect(modifier_map_of(other.new)).to include(tall: "other-tall")
   end
 
+  it "does not hand a copied class the original's map" do
+    DaisyUI.configure { |config| config.modifiers.add(:huge, classes: "widget-xl", component: widget) }
+    expect(modifier_map_of(widget.new)).to include(:huge)
+
+    expect(modifier_map_of(widget.dup.new)).not_to include(:huge)
+  ensure
+    DaisyUI.configure { |config| config.modifiers.remove(:huge, component: widget) }
+  end
+
   it "sees a modifier registered after the map was cached" do
     modifier_map_of(widget.new)
     widget.register_modifiers(tall: "widget-tall")

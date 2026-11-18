@@ -11,10 +11,13 @@
 - A component's modifier map is built once per class and published
   configuration and shared by every instance, instead of merged anew on each
   lookup (five times for `Button.new(:primary, :sm, :outline)`). Rendering that
-  button allocates about 60% fewer objects. The map is now frozen: a subclass
-  that overrides the private `modifier_map` and mutates `super`'s Hash must
-  `dup` it first. The private `configured_modifiers` became the class method
-  `configured_modifiers_for(configuration)` (#80).
+  button allocates about 60% fewer objects. The cache needs a published
+  configuration: under Rails the engine finalizes DaisyUI at boot; elsewhere
+  call `DaisyUI.configure` or `DaisyUI.finalize!` once at boot, or the map is
+  still built per lookup. The map is now frozen: a subclass that overrides the
+  private `modifier_map` and mutates `super`'s Hash must `dup` it first. The
+  private instance method `configured_modifiers` is gone; overriding it no
+  longer changes the map (#80).
 
 ### Fixed
 
